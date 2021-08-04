@@ -128,14 +128,15 @@ end saveStackRequest
 
 
 on mouseMove pX, pY
-    local tThisStack, tThisCard
-    local tHalf, tMyRect, tOrigRect, tHandleSize, tHalfHandle
-    local tHandle1Rect, tHandle2Rect
-    local tMouseLoc
+    local tThisStack, tThisCard, tHalf, tMyRect, tOrigRect, tHandleSize, tHalfHandle
+    local tHandle1Rect, tHandle2Rect, tMouseLoc, tTarget, tWidth, tHeight, tCombine
+    local x, y, tNewXMiddleLoc, tNewYMiddleLoc, tNewXLoc, tNewYLoc, tNewXRightLoc, tNewYBotLoc
+    local tNewLoc
     
     put  the name of this stack into tThisStack
+    put the long id of target into tTarget
     
-    if  _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the name of the topStack  then
+    if  word 1 of tTarget is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the name of the topStack  then
         _deleteGuides
         pass MouseMove
     end if
@@ -149,17 +150,18 @@ on mouseMove pX, pY
         put false into sMouseDownInHandle
         
         _hideGuides --> hides Guides when mouse is up
-        exit MouseMove
+        pass MouseMove
     end if
     
     if sDiffX = "" then _initializeScript
     if sMouseDownInHandle then pass MouseMove --> let resizing go ahead
     
-    
-   # catch mouseDown in reisize handles
+    # catch mouseDown in reisize handles
     if sFirstRound then
+        put the rect of tTarget into tMyRect
+        put the width of tTarget into tWidth
+        put the height of tTarget into tHeight
         
-        put the rect of target into tMyRect
         put tMyRect into tOrigRect
         put false into sMouseDownInHandle
         
@@ -170,83 +172,88 @@ on mouseMove pX, pY
             put 8 into tHandleSize
         end if
         
-        put round(tHandleSize/2) + 1 into tHalfHandle
+        put round(  tHandleSize/2 ) + 1 into tHalfHandle
         
-        if (item 3 of tMyRect - item 1 of tMyRect) >= (item 4 of tMyRect - item 2 of tMyRect) then
+        if tWidth >= tHeight then
             # landscape
-            put round ((item 3 of tMyRect - item 1 of tMyRect)/2) into tHalf
+            put round (tWidth/2) into tHalf
+            
             put item 1 of tMyRect + tHalf - tHalfHandle into item 1 of tHandle1Rect
             put item 2 of tMyRect +1 into item 2 of tHandle1Rect
+            
             put item 1 of tMyRect + tHalf + tHalfHandle into item 3 of tHandle1Rect
             put item 2 of tMyRect +1 + tHandleSize into item 4 of tHandle1Rect
+            
             put tHandle1Rect into tHandle2Rect
+            
             put item 4 of tMyRect into item 4 of tHandle2Rect
             put item 4 of tMyRect -1 - tHandleSize into item 2 of tHandle2Rect
-            add tHandleSize to item 1 of tMyRect; subtract tHandleSize from item 3 of tMyRect         
+            
+            add tHandleSize to item 1 of tMyRect
+            subtract tHandleSize from item 3 of tMyRect         
         else
-            -- portrait
-            put round((item 4 of tMyRect - item 2 of tMyRect)/2) into tHalf
+            
+            # portrait
+            put round( tHeight/2 ) into tHalf
+            
             put item 1 of tMyRect into item 1 of tHandle1Rect
             put item 2 of tMyRect + tHalf - tHalfHandle into item 2 of tHandle1Rect
+            
             put item 1 of tMyRect + tHandleSize into item 3 of tHandle1Rect
             put item 2 of tMyRect + tHalf + tHalfHandle into item 4 of tHandle1Rect
+            
             put tHandle1Rect into tHandle2Rect
+            
             put item 3 of tMyRect - tHandleSize into item 1 of tHandle2Rect
             put item 3 of tMyRect into item 3 of tHandle2Rect
-            add tHandleSize to item 2 of tMyRect; subtract tHandleSize from item 4 of tMyRect
+            
+            add tHandleSize to item 2 of tMyRect
+            subtract tHandleSize from item 4 of tMyRect
         end if
         
         put pX, pY into tMouseLoc
-        if not (tMouseLoc is within tMyRect) or (tMouseLoc is within tHandle1Rect) or (tMouseLoc is within tHandle2Rect)  then
+        
+        if tMouseLoc is not within tMyRect or tMouseLoc is  not  within tHandle1Rect or  tMouseLoc is  not  within tHandle2Rect then
             put true into sMouseDownInHandle
             pass MouseMove
         end if
-        -- end test for mouseDown in resize handles
+        
         put false into sFirstRound
-    end if -- first round
+    end if
     
     if the shiftKey is down then
         _hideGuides
         pass MouseMove
     end if
     
-    local tCombine
-    if (the capsLockKey is down) then -- capsLockKey shows left and top distance in addition to guides
-        put true into tCombine
-    else
-        put false into tCombine
-    end if -- capsLockKey is down
+    # capsLockKey shows left and top distance in addition to guides
+    put the capsLockKey is down into tCombine
     
-    
-    local x, y, tNewXMiddleLoc, tNewYMiddleLoc, tNewXLoc, tNewYLoc, tNewXRightLoc, tNewYBotLoc
-    local tNewLoc
-    -- account for offset of mouse from center of control
+    # account for offset of mouse from center of control
     put pX - sDiffX into x
     put pY - sDiffY into y
-    -- end account for offset of mouse
     
     _hideGuides
     
-    -- test match for horizontal or vertical middle of any target
-    put getMiddleX(x) into tNewXMiddleLoc
+    # test match for horizontal or vertical middle of any target
+    put _getMiddleX( x ) into tNewXMiddleLoc
     
-    -- test if in vertical middle of any control
-    put getMiddleY(y) into tNewYMiddleLoc -- test for middle Y
-    -- end test for middle
+    # test if in vertical middle of any control
+    put _getMiddleY(  tTarget, y ) into tNewYMiddleLoc
     
-    -- test match for left and top
-    -- test if left is equal
-    put getLeftX(x) into tNewXLoc
-    -- test if top is equal
-    put getTopY(y) into tNewYLoc
-    -- end test for left and top
+    # test match for left and top
+    # test if left is equal
+    put _getLeftX( x ) into tNewXLoc
     
-    -- test match for right and bottom
-    put getRightX(x) into tNewXRightLoc
-    put getBotY(y) into tNewYBotLoc
-    -- end test for right and bottom
+    # test if top is equal
+    put _getTopY(  tTarget, y ) into tNewYLoc
     
-    -- now build new x,y coordinate for location of me
+    
+    # test match for right and bottom
+    put _getRightX( x ) into tNewXRightLoc
+    put _getBotY( tTarget, y ) into tNewYBotLoc
+    
+    # now build new x,y coordinate for location of me
     if tNewXMiddleLoc <> "" and tNewXLoc = "" then put tNewXMiddleLoc into tNewXLoc
     if tNewXMiddleLoc = "" and tNewXLoc = "" then put tNewXRightLoc into tNewXLoc
     
@@ -266,7 +273,7 @@ on mouseMove pX, pY
     -- end build location
     
     ## here we set the loc and test guides against this new loc in drawXXX handlers
-    set the loc of me to tNewLoc
+    set the loc of target to tNewLoc
     
     -- now check if matching guide objects still fit after setting the loc of the object
     -- xxxNeedsDrawing means there are objects within "magnetic" tolerance, only draw if tNewLoc still fits
@@ -338,7 +345,7 @@ end MouseMove
 private command _createGuides
     local tGuidePlace
     
-    lock screen; lock messages
+    lock messages
     
     reset the templateGraphic
     set the opaque of the templateGraphic to true
@@ -372,19 +379,14 @@ private command _createGuides
     create invisible grc kDontLog &"_GrcDistNumRight"
     reset the templateGraphic
     
-    put it into tGuidePlace
-    put _getOwningStackName(tGuidePlace) into tGuidePlace
-    
-    _addToStacksWithGuides tGuidePlace -- register
-    
-    unlock messages;  unlock screen
+    unlock messages
 end _createGuides
 
 
 private command _deleteGuides
-    lock screen
-    lock messages
     local tCard
+    
+    lock messages
     put the long id of this card into tCard
     
     repeat for each item i in kGuides
@@ -394,13 +396,11 @@ private command _deleteGuides
     end repeat
     
     unlock messages
-    unlock screen
 end _deleteGuides
 
 
 private command _initializeScript
-    local  tTarget, tMyLoc, tMyId, tIAmSelected, tShortName, tLongID
-    local tChildIDs
+    local  tTarget, tThisCd, tMyLoc, tMyId, tIAmSelected, tShortName, tLongID, tChildIDs
     
     put the long id of target into tTarget
     if word 1 of tTarget is in "stack card" or the tool is no "pointer tool" or there is no a grc  (kDontLog &"_GrcHorz") then exit _initializeScript
@@ -408,11 +408,12 @@ private command _initializeScript
     put empty into sNeighbors
     put empty into sAllControls
     
-    put the loc of target into tMyLoc
-    put short id of target into tMyID
-    put the selected of target into tIAmSelected
+    put the long id of this card into tThisCd
+    put the childControlIDs of tThisCd into tChildIDs
     
-    put the childControlIDs of this card into tChildIDs
+    put the loc of tTarget into tMyLoc
+    put short id of tTarget into tMyID
+    put the selected of tTarget into tIAmSelected
     
     repeat for each line tShortID in tChildIDs
         put the short name of control id tShortID into tShortName
@@ -433,23 +434,20 @@ private command _initializeScript
         put the loc of tLongID into sAllControls[ tLongID ]["loc"]
     end repeat
     
-    -- for middle of card horizontal and vertical guides
-    put item 1 of tMyLoc - the left of me into sDistCenterToLeft
-    put item 2 of tMyLoc - the top of me into sDistCenterToTop
-    put item 1 of tMyLoc - the right of me into sDistCenterToRight
-    put item 2 of tMyLoc - the bottom of me into sDistCenterToBot
+    # for middle of card horizontal and vertical guides
+    put item 1 of tMyLoc - the left of tTarget into sDistCenterToLeft
+    put item 2 of tMyLoc - the top of tTarget into sDistCenterToTop
+    put item 1 of tMyLoc - the right of tTarget into sDistCenterToRight
+    put item 2 of tMyLoc - the bottom of tTarget into sDistCenterToBot
     
-    local tMouseLoc
-    put the mouseLoc into tMouseLoc
-    if tMouseLoc <> "" then
-        put item 1 of tMouseLoc - item 1 of tMyLoc into sDiffX
-        put item 2 of tMouseLoc - item 2 of tMyLoc into sDiffY
-    end if
+    put the mouseH - item 1 of tMyLoc into sDiffX
+    put the mouseV - item 2 of tMyLoc into sDiffY
+    
     put true into sFirstRound
     put false into sMouseDownInHandle
     
-    put item 1 of the loc of this card into sCardX
-    put item 2 of the loc of this card into sCardY
+    put item 1 of the loc of tThisCd into sCardX
+    put item 2 of the loc of tThisCd into sCardY
     
     put false into sXNeedsDrawing
     put false into sYNeedsDrawing
@@ -458,31 +456,224 @@ private command _initializeScript
     put false into sRightXNeedsDrawing
     put false into sBotYneedsDrawing
     
-    unlock screen
 end _initializeScript
 
 
 private command _hideGuides 
-    // TODO:
+    local tCard
+    
+    lock messages
+    put the long id of this card into tCard
+    
+    repeat for each item i in kGuides
+        if there is a graphic (kDontLog & i) of tCard then
+            set the visible of graphic (kDontLog & i) of tCard to false
+        end if
+    end repeat
+    
+    unlock messages
 end _hideGuides
 
 
-private function _getOwningStackName   pLongId
-    local tOffset, tOffset2, tStackPart, tStackName, tCard
+private function _getMiddleX  @pMyX
+    local tLower, tUpper, tReturnValue, aX
     
-    put offset("stack", pLongID) into tOffset
-    put char tOffset to -1 of pLongID into tStackPart
-    put the name of tStackPart into tStackName
-    put offset("card", pLongID) into tOffset2
-    put char tOffset2 to tOffset -1 of pLongID & tStackName into tStackName
+    put pMyX - kTolerance into tLower
+    put pMyX + kTolerance into tUpper   
     
-    return tStackName
-end _getOwningStackName
+    put "" into sMiddleXList
+    put "" into tReturnValue
+    
+    repeat for each key anObject in sAllControls
+        put item 1 of sAllControls[anObject]["loc"] into aX
+        
+        if aX >= tLower and aX <= tUpper then 
+            put anObject & cr after sMiddleXList
+            put aX into tReturnValue
+        end if
+    end repeat
+    
+    if sCardX >= tLower and sCardX <= tUpper then
+        put the long id of this card & return into sMiddleXList
+        put sCardX into tReturnValue
+    end if
+    
+    if sMiddleXList <> "" then
+        delete char - 1 of sMiddleXList
+        put true into sXNeedsDrawing
+    else
+        put false into sXNeedsDrawing
+    end if
+    
+    return tReturnValue
+end _getMiddleX
 
 
-private command _addToStacksWithGuides pToAdd
-    put 1 into sStacksWithGuidesA[ pToAdd ]
-end _addToStacksWithGuides
+private function _getMiddleY  @pTarget, @pMyY
+    local tLowerY, tUpperY, tReturnValue, tMyYLoc, aY
+    
+    put pMyY - kTolerance into tLowerY
+    put pMyY + kTolerance into tUpperY
+    
+    put "" into sMiddleYList
+    put "" into tReturnValue
+    
+    put item 2 of the loc of pTarget into tMyYLoc
+    
+    repeat for each key anObject in sAllControls
+        put item 2 of sAllControls[anObject]["loc"] into aY
+        if aY >= tLowerY and aY <= tUpperY then 
+            put anObject & cr after sMiddleYList
+            put aY into tReturnValue
+        end if
+    end repeat
+    
+    if sCardY >= tLowerY and sCardY <= tUpperY then
+        put the long id of this card & return into sMiddleYList
+        put sCardY into tReturnValue
+    end if
+    
+    if sMiddleYList <> "" then
+        delete char - 1 of sMiddleYList
+        put true into sYNeedsDrawing
+    else
+        put false into sYNeedsDrawing
+    end if
+    
+    return tReturnValue
+end _getMiddleY
+
+
+
+private function _getLeftX  @pMyX
+    local tLower, tUpper, tReturnValue, aLeftX
+    
+    put pMyX - sDistCenterToLeft - kTolerance into tLower
+    put pMyX - sDistCenterToLeft + kTolerance into tUpper   
+    
+    put "" into sLeftXList
+    put "" into tReturnValue
+    
+    repeat for each key anObject in sAllControls
+        put item 1 of sAllControls[anObject]["rect"] into aLeftX
+        
+        if aLeftX >= tLower and aLeftX <= tUpper then 
+            put anObject & cr after sLeftXList
+            put aLeftX + sDistCenterToLeft into tReturnValue
+        end if
+    end repeat
+    
+    if sLeftXList <> "" then
+        delete char - 1 of sLeftXList
+        put true into sLeftXNeedsDrawing
+    else
+        put false into sLeftXNeedsDrawing
+    end if
+    
+    return tReturnValue
+end _getLeftX
+
+private function _getTopY  @pTarget, @pMyY
+    local tLowerY, tUpperY, tReturnValue, tMyYLoc, tMyMidX, aY
+    
+    put pMyY - sDistCenterToTop - kTolerance into tLowerY
+    put pMyY - sDistCenterToTop + kTolerance into tUpperY
+    
+    put "" into sTopYList
+    put "" into tReturnValue
+    
+    put item 2 of the loc of pTarget into tMyYLoc
+    put item 1 of the loc of pTarget into tMyMidX
+    
+    repeat for each key anObject in sAllControls
+        put item 2 of sAllControls[anObject]["rect"] into aY
+        
+        if aY >= tLowerY and aY <= tUpperY then 
+            put anObject & cr after sTopYList
+            put aY + sDistCenterToTop into tReturnValue
+        end if
+        
+    end repeat
+    
+    if sTopYList <> "" then
+        delete char - 1 of sTopYList
+        put true into sTopYneedsDrawing
+    else
+        put false into sTopYneedsDrawing
+    end if
+    
+    return tReturnValue
+end _getTopY
+
+
+private function _getRightX @pMyX
+    local tLower, tUpper, tReturnValue, aRightX
+    
+    put pMyX - sDistCenterToRight - kTolerance into tLower
+    put pMyX - sDistCenterToRight + kTolerance into tUpper
+    
+    put "" into sRightXList
+    put "" into tReturnValue
+    
+    repeat for each key anObject in sAllControls
+        put item 3 of sAllControls[anObject]["rect"] into aRightX
+        
+        if aRightX >= tLower and aRightX <= tUpper then 
+            put anObject & cr after sRightXList
+            put aRightX + sDistCenterToRight into tReturnValue
+        end if
+        
+    end repeat
+    
+    if sRightXList <> "" then
+        delete char - 1 of sRightXList
+        put true into sRightXNeedsDrawing
+    else
+        put false into sRightXNeedsDrawing
+    end if
+    
+    return tReturnValue
+end _getRightX
+
+
+private function _getBotY  @pTarget, @pMyY
+    local tUpperY, tLowerY, tReturnValue, tMyBotYLoc, tMyMidX, aY
+    
+    put pMyY - sDistCenterToBot - kTolerance into tLowerY
+    put pMyY - sDistCenterToBot + kTolerance into tUpperY
+    
+    put "" into sBotYList
+    put "" into tReturnValue
+    
+    put the bottom of pTarget into tMyBotYLoc
+    put item 1 of the loc of pTarget into tMyMidX
+    
+    repeat for each key anObject in sAllControls
+        put item 4 of sAllControls[anObject]["rect"] into aY
+        if aY >= tLowerY and aY <= tUpperY then 
+            put anObject & cr after sBotYList
+            put aY + sDistCenterToBot into tReturnValue
+        end if
+    end repeat
+    
+    if sBotYList <> "" then
+        delete char - 1 of sBotYList
+        put true into sBotYneedsDrawing
+    else
+        put false into sBotYneedsDrawing
+    end if
+    
+    return tReturnValue
+end _getBotY
+
+
+
+
+
+
+
+
+
 
 
 private function _stackNameIsIDEStack pStackName
