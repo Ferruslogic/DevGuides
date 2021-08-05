@@ -4,9 +4,9 @@ local sWLabel, sDown, tDevDeleteGuide
 
 on mouseDown
     if the word 1 of the name of me is "button" then exit mouseDown
-    
     grab me
     put true into sDown
+    
     set the width of me to 1
     set the layer of me to top
     

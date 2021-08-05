@@ -9,21 +9,54 @@ constant  kColumnLineColor = "192,192,192"
 constant kNewGuideLine = 25
 
 on preOpenStack
-    revIDESubscribe "ideNewControl"
-    revIDESubscribe "ideControlDeleted"
-    revIDESubscribe "ideSelectedObjectChanged"
+    ---  revIDESubscribe "ideNewControl"
+    --    revIDESubscribe "ideControlDeleted"
+    --    revIDESubscribe "ideSelectedObjectChanged"
     revIDESubscribe "ideToolChanged"
-    revIDESubscribe "ideWindowsChanged"
-    revIDESubscribe "ideMouseMove"
+    --  revIDESubscribe "ideWindowsChanged"
+    --    revIDESubscribe "ideMouseMove"
     
     put empty into sMessageID
+    deleteGuideControls
+    pass preOpenStack
 end preOpenStack
 
 
+on closeStack
+    deleteGuideControls
+    pass closeStack
+end closeStack
+ 
+ 
 on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
+    _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
     updateGuides the selectedObjects, the long id of this card,  the mouseH,  the mouseV
     pass resizeStack
 end resizeStack
+
+
+
+private command _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
+    local tChildControlIDs
+    
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cGuideLine  of control id tId is true  then
+            
+            if the cGuideLineType  of control id tId is "h" and pNewWidth <> pOldWidth then
+                set the width  of control id tId to pNewWidth
+                set the top  of control id tId to 0
+                
+            else if pNewHeight <> pOldHeight then
+                set the height  of control id tId to pNewHeight
+                set the top  of control id tId to 0
+                
+            end if
+        end if
+    end repeat
+    
+end _updateSizeGuideLines
 
 
 on ideToolChanged
@@ -55,22 +88,22 @@ end deleteGuideControls
  
  
  
-on ideMouseMove pX, pY
+on mouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard
     
     put the selectedObjects into tSelectedObjects
-    put the short name of this stack into tThisStack
+    put the short name of the topstack into tThisStack
+    set the defaultStack to tThisStack
     put the long id of this card into tThisCard
-    
-    
+        
     if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then 
-        exit ideMouseMove
+        pass mouseMove
     end if
     
     send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
     put the result into sMessageID
     
-end ideMouseMove
+end mouseMove
 
 --on rawKeyUp
 --    if the shiftKey is up and there is a grc "dev-designs-guide-line"  then
@@ -80,7 +113,9 @@ end ideMouseMove
 
 on updateGuides pSelectedObjects, pThisCard,  pX, pY    
     lock screen; lock messages
-    -- Crear gias
+    
+    put empty into sMessageID
+    
     if the shiftKey is down then
         switch
             case pX <= kNewGuideLine
@@ -90,18 +125,12 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
             case pY <= kNewGuideLine
                 _newGuideLine "top", 0, pThisCard
                 break
-                
-            default 
-                if there is a grc "dev-designs-guide-line"  then
-                    delete grc "dev-designs-guide-line" 
-                end if
         end switch
     end if
     
     # Displaying the Grid in this card
     _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
     
-    put empty into sMessageID
     if mouse( 1 ) is up and the altKey is up then
         _deleteDevGuides
         put empty into sGridLine
@@ -137,7 +166,6 @@ private command _saveStatus
     lock screen; lock messages
     
     put the long id of this card into tLongID
-    
     _showGridSystem false, tLongID
     
     put the childControlIDs of  tLongID into tChildControlIDs
@@ -225,6 +253,14 @@ end _stackNameIsIDEStack
 
 
 private command _deleteDevGuides
+    local tChildControlIDs
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false  then
+            delete control id tId
+        end if
+    end repeat
     
 end _deleteDevGuides
 
@@ -282,9 +318,11 @@ private command _showGridSystem pDisplaying, pThisCard
             set the height of tLongId to tHeightCd
             set the topLeft of tLongId to tLeft,0
             set the layer of tLongId to top
-            set the cDevDesigns of tLongId to true
+            set the cGuideLine of tLongId to true
             set the cantSelect of tLongId to true
             set the cName of tLongId to the short name of tLongId
+            set the cGuideLineType of  tLongId to "v"
+            
             add tGrid to tLeft
         end repeat
     end if

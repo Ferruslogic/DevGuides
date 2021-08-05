@@ -19,10 +19,10 @@
           "cREVGeneral": {"scalefactor": 1}
         },
         "fileName": "DevGuides.livecode",
-        "height": 547,
+        "height": 503,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 830
+        "width": 713
       },
       "type": "stack"
     },
@@ -37,25 +37,6 @@
       },
       "type": "button"
     },
-    "628788d7-afc7-41ce-8e22-a1eedae40abf": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 2721 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {"customKeys": {"cDevDesigns": true}},
-        "filled": true,
-        "foreColor": "255,0,128",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "587,0,588,547",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "63a3d091-b3a8-4f34-9413-9fffe21f644d": {
       "properties": {
         "backgroundColor": "244,244,244",
@@ -63,12 +44,12 @@
         "hiliteColor": "255,128,0",
         "kind": "com.livecode.widget.switchbutton",
         "name": "Switch Button",
-        "rect": "170,15,216,42"
+        "rect": "169,15,215,42"
       },
       "type": "widget"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n97bde95b-2d77-4b9d-b9aa-c2a1871992b7\n628788d7-afc7-41ce-8e22-a1eedae40abf",
+      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n97bde95b-2d77-4b9d-b9aa-c2a1871992b7",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
