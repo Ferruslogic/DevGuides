@@ -67,8 +67,6 @@ on mouseLeave
     if there is a sWLabel then delete sWLabel
     set the width of me to 1
     put false into sDown
-    
-    
 end mouseLeave
 
 

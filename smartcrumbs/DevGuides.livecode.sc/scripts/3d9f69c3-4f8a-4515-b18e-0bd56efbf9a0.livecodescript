@@ -1,5 +1,9 @@
+global gDevGuideLinesArray
+
 local sControlCachingArray, sMessageID, sNeighbors, sPrevSelectedObjects
-local sGuideStatus
+local sGuideStatus, sGridLine
+local sGridSystem, sThisCard
+
 
 constant  kColumnLineColor = "192,192,192"
 constant kNewGuideLine = 25
@@ -15,19 +19,118 @@ on preOpenStack
     put empty into sMessageID
 end preOpenStack
 
+
 on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
-    updateGuides the SelectedObjects, the long id of this card,  the mouseH,  the mouseV
+    updateGuides the selectedObjects, the long id of this card,  the mouseH,  the mouseV
     pass resizeStack
 end resizeStack
+
 
 on ideToolChanged
     if the tool is "pointer tool" then
         _restoreStatus 
-        exit ideToolChanged
+    else
+        _saveStatus   
+    end if
+end ideToolChanged
+
+
+command deleteGuideControls pLongId
+    local tChildControlIDs
+     
+    if there is a pLongId then
+        delete pLongId
+        exit deleteGuideControls
     end if
     
-    _saveStatus
-end ideToolChanged
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cDevDesigns of control id tId is true or the cGuideLine  of control id tId is true  then
+            delete control id tId
+        end if
+    end repeat
+    
+end deleteGuideControls
+ 
+ 
+ 
+on ideMouseMove pX, pY
+    local tSelectedObjects, tThisStack, tThisCard
+    
+    put the selectedObjects into tSelectedObjects
+    put the short name of this stack into tThisStack
+    put the long id of this card into tThisCard
+    
+    
+    if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then 
+        exit ideMouseMove
+    end if
+    
+    send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
+    put the result into sMessageID
+    
+end ideMouseMove
+
+--on rawKeyUp
+--    if the shiftKey is up and there is a grc "dev-designs-guide-line"  then
+--        delete grc "dev-designs-guide-line" 
+--    end if
+--end rawKeyUp
+
+on updateGuides pSelectedObjects, pThisCard,  pX, pY    
+    lock screen; lock messages
+    -- Crear gias
+    if the shiftKey is down then
+        switch
+            case pX <= kNewGuideLine
+                _newGuideLine "left", 0, pThisCard
+                break
+                
+            case pY <= kNewGuideLine
+                _newGuideLine "top", 0, pThisCard
+                break
+                
+            default 
+                if there is a grc "dev-designs-guide-line"  then
+                    delete grc "dev-designs-guide-line" 
+                end if
+        end switch
+    end if
+    
+    # Displaying the Grid in this card
+    _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
+    
+    put empty into sMessageID
+    if mouse( 1 ) is up and the altKey is up then
+        _deleteDevGuides
+        put empty into sGridLine
+        unlock messages; unlock screen
+        exit updateGuides
+    end if
+    
+    if there is no pSelectedObjects then exit updateGuides
+    
+    if the cGuideLine of pSelectedObjects or there is a sGridLine and the cGuideLine of  sGridLine then
+        set the selected of pSelectedObjects to true
+        put pSelectedObjects into sGridLine
+        exit updateGuides
+    end if
+    
+    _controlCaching pThisCard
+    
+    if the num of lines of pSelectedObjects is 1 and the word 5 of pSelectedObjects is "card" then
+        _updateGuides pSelectedObjects, pThisCard,  pX, pY
+        
+    else
+        -- Calcula la recta de la union de todos los obj seleccionado
+        -- pX, pY is not within tLaRectCalculada
+    end if
+    
+    unlock messages; unlock screen
+end updateGuides
+
+
 
 private command _saveStatus
     local tLongID, tChildControlIDs
@@ -35,9 +138,7 @@ private command _saveStatus
     
     put the long id of this card into tLongID
     
-    if there is a grc "dev-designs-guide-line" of tLongID then
-        delete grc "dev-designs-guide-line" of tLongID
-    end if
+    _showGridSystem false, tLongID
     
     put the childControlIDs of  tLongID into tChildControlIDs
     put tLongID into sGuideStatus["card"]
@@ -62,10 +163,6 @@ private command _restoreStatus
     # Displaying the Grid in this card
     _showGridSystem the cDisplayingGrid of tLongID, tLongID
     
-    if there is a grc "dev-designs-guide-line" of tLongID then
-        delete grc "dev-designs-guide-line" of tLongID
-    end if
-    
     put the childControlIDs of  tLongID into tChildControlIDs
     if tLongID is no sGuideStatus["card"] then exit _restoreStatus
     
@@ -81,104 +178,7 @@ private command _restoreStatus
     
     unlock screen; unlock messages
 end _restoreStatus
-    
-command deleteGuideControls pLongId
-    local tChildControlIDs
-    
-    if there is a grc "dev-designs-guide-line" of this card then
-        delete grc "dev-designs-guide-line" of this card
-    end if
-     
-    if there is a pLongId then
-        delete pLongId
-        exit deleteGuideControls
-    end if
-    
-    
-    put the childControlIDs of this card into tChildControlIDs
-    
-    repeat for each line tId in tChildControlIDs
-        if the cDevDesigns of control id tId is true or the cGuideLine  of control id tId is true  then
-            delete control id tId
-        end if
-    end repeat  
-end deleteGuideControls
 
-on rawKeyUp
-    pass rawKeyUp
-end rawKeyUp
-
-on ideMouseMove pX, pY
-    local tSelectedObjects, tThisStack, tThisCard
-    
-    put the selectedObjects into tSelectedObjects
-    put the short name of this stack into tThisStack
-    put the long id of this card into tThisCard
-    if there is a  grc  "dev-designs-guide-line" then
-        if not within( grc  "dev-designs-guide-line", the mouseLoc) then
-            delete grc  "dev-designs-guide-line"
-        end if
-        exit ideMouseMove
-    end if
-    
-    
-    
-    if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then exit ideMouseMove
-    
-    send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
-    put the result into sMessageID
-    
-end ideMouseMove
-
-
-local sGridLine
-on updateGuides pSelectedObjects, pThisCard,  pX, pY
-    
-    lock screen; lock messages
-    -- Crear gias
-    if the shiftKey is down then
-        switch
-            case pX <= kNewGuideLine
-                _newGuideLine "left", 0, pThisCard
-                break
-                   
-            case pY <= kNewGuideLine
-                _newGuideLine "top", 0, pThisCard
-                break
-        end switch
-    end if
-    
-    # Displaying the Grid in this card
-    _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
-    
-    put empty into sMessageID
-    if mouse( 1 ) is up and the altKey is up then
-        _deleteDevGuides
-        put empty into sGridLine
-        unlock messages; unlock screen
-        exit updateGuides
-    end if
-       
-    if there is no pSelectedObjects then exit updateGuides
-    
-    if the cGuideLine of pSelectedObjects or there is a sGridLine and the cGuideLine of  sGridLine then
-        set the selected of pSelectedObjects to true
-        put pSelectedObjects into sGridLine
-        exit updateGuides
-    end if
-    
-    _controlCaching pThisCard
-    
-    if the num of lines of pSelectedObjects is 1 and the word 5 of pSelectedObjects is "card" then
-        _updateGuides pSelectedObjects, pThisCard,  pX, pY
-        
-    else
-        -- Calcula la recta de la union de todos los obj seleccionado
-        -- pX, pY is not within tLaRectCalculada
-    end if
-    
-    unlock messages; unlock screen
-end updateGuides
 
 
 private function _mouseControl
@@ -217,6 +217,7 @@ private command _controlCaching pLongIdCd
     
 end _controlCaching
 
+
 private function _stackNameIsIDEStack pStackName
     if there is no a stack pStackName  then return false
     return  the _ideoverride of stack pStackName or pStackName begins with "rev"or pStackName is among the items of "message box,answer dialog,ask dialog,home" or pStackName begins with "com.livecode."
@@ -252,6 +253,19 @@ end _updateGuides
 # Displaying the Grid
 private command _showGridSystem pDisplaying, pThisCard
     local tWidthCd, tHeightCd, tLongId, tGrid, tLeft = 0
+    lock screen
+    repeat with x = 1 to 13
+        if there is a sGridSystem[x] then
+            delete variable sGuideStatus["controls"][ sGridSystem[ x ]]
+            delete  sGridSystem[ x ]
+        end if
+        
+        if there is a  grc("dev-designs-gridSystem-" & x) of pThisCard then
+            delete variable sGuideStatus["controls"][  the long id of  grc("dev-designs-gridSystem-" & x) of pThisCard ]
+            delete  grc("dev-designs-gridSystem-" & x) of pThisCard
+        end if
+        
+    end repeat
     
     if pDisplaying is true then
         put the width of pThisCard into tWidthCd
@@ -259,14 +273,10 @@ private command _showGridSystem pDisplaying, pThisCard
         put round(tWidthCd/12) into tGrid
         
         repeat with x = 1 to 13
+            create  grc("dev-designs-gridSystem-" & x) in pThisCard
+            put it into tLongId
             
-            if there is not a  grc("dev-designs-gridSystem-" & x) of pThisCard then
-                create  grc("dev-designs-gridSystem-" & x) in pThisCard
-                put it into tLongId
-            else
-                put the long id of grc("dev-designs-gridSystem-" & x) of pThisCard into tLongId
-            end if
-            
+            put tLongId into sGridSystem[ x ]
             set the foregroundColor of tLongId to kColumnLineColor
             set the width of tLongId to 1
             set the height of tLongId to tHeightCd
@@ -274,18 +284,12 @@ private command _showGridSystem pDisplaying, pThisCard
             set the layer of tLongId to top
             set the cDevDesigns of tLongId to true
             set the cantSelect of tLongId to true
+            set the cName of tLongId to the short name of tLongId
             add tGrid to tLeft
         end repeat
-        
-        
-    else
-        repeat with x = 1 to 13
-            if there is a grc("dev-designs-gridSystem-" & x) of pThisCard then
-                delete variable sGuideStatus["controls"][ the long id of  grc("dev-designs-gridSystem-" & x) of pThisCard]
-                delete  grc("dev-designs-gridSystem-" & x) of pThisCard
-            end if
-        end repeat
     end if
+    
+    unlock screen
 end _showGridSystem
 
 
@@ -299,7 +303,7 @@ private command _newGuideLine pProperty, pValue, pThisCard
         create  grc  "dev-designs-guide-line" in pThisCard
         put it into tLongId
     else
-        put the long id of  grc "dev-designs-guide-line" of pThisCard into tLongId  
+        exit to top
     end if
     
     set the lineSize of tLongId to 0
@@ -328,7 +332,6 @@ private command _newGuideLine pProperty, pValue, pThisCard
     show tLongId
     set the cType of  tLongId to pProperty
 end _newGuideLine
-
 
 
 private function _newGuideLineBehavior

@@ -1,14 +1,18 @@
+global gDevGuideLinesArray
+
 local sWLabel, sDown, tDevDeleteGuide
 
 on mouseDown
     if the word 1 of the name of me is "button" then exit mouseDown
+    
     grab me
     put true into sDown
     set the width of me to 1
     set the layer of me to top
-    set the cforegroundColor of me to the foregroundColor of me
-    set the foregroundColor of me to "green"
+    
+    if there is a  grc"dev-designs-guide-line" then hide grc"dev-designs-guide-line"
 end mouseDown
+
 
 local tNewV, tX
 on mouseMove pNewMouseH, pNewMouseV
@@ -75,9 +79,11 @@ on mouseMove pNewMouseH, pNewMouseV
             put it into tDevDeleteGuide
             set the cDevDesigns of tDevDeleteGuide to true
             set the width of tDevDeleteGuide to 20
-            set the height of tDevDeleteGuide to 20
+            set the height of tDevDeleteGuide to 25
             set the iconPath of tDevDeleteGuide to "M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M17,7H14.5L13.5,6H10.5L9.5,7H7V9H17V7M9,18H15A1,1 0 0,0 16,17V10H8V17A1,1 0 0,0 9,18Z"
-            set the foregroundColor of tDevDeleteGuide to 255,21,21
+            #set the foregroundColor of tDevDeleteGuide to 255,21,21
+            set the cantSelect of tDevDeleteGuide to true
+            set the foregroundColor of tDevDeleteGuide to 74,74,74
         end if
         
         set the top of tDevDeleteGuide to the top of sWLabel
@@ -103,47 +109,37 @@ end mouseEnter
 on mouseLeave
     if the word 1 of the name of me is "button" then exit mouseLeave
     if there is a sWLabel then delete sWLabel
-    set the width of me to 1
-    set the foregroundColor of me to the cforegroundColor of me
-    put false into sDown
-    if there is a tDevDeleteGuide then
-        delete tDevDeleteGuide
-    end if
+    if there is a tDevDeleteGuide then delete tDevDeleteGuide
     
+    set the width of me to 1
+    put false into sDown
 end mouseLeave
 
 
 on mouseRelease pButtonNumber
     set the foregroundColor of me to the cforegroundColor of me
     put false into sDown
-    if there is a tDevDeleteGuide then
-        delete tDevDeleteGuide
-    end if
-    
+    if there is a tDevDeleteGuide then delete tDevDeleteGuide
 end mouseRelease
 
 
 on mouseUp pButtonNumber
     local tLongId
+    
     put false into sDown
     
-    set the foregroundColor of me to the cforegroundColor of me
+    if there is a  grc"dev-designs-guide-line" then delete grc"dev-designs-guide-line"
+    if there is a sWLabel then delete sWLabel
+    if there is a tDevDeleteGuide then  delete tDevDeleteGuide
     
-    if there is a  grc  "dev-designs-guide-line" then
-        delete grc  "dev-designs-guide-line"
-    end if
-    
-    if there is a sWLabel then 
-        delete sWLabel
-    end if
-    
-    if not within(this card, the loc of me) then
+    if not within( this card, the loc of me ) then
         put the long id of me into tLongId
+        
+        delete variable gDevGuideLinesArray["vertical"][ the long id of this card ]
+        subtract 1 from gDevGuideLinesArray["vertical"]["num"]
+        subtract 1 from gDevGuideLinesArray["all"]["num"]
+        
         send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
-    end if
-    
-    if there is a tDevDeleteGuide then
-        delete tDevDeleteGuide
     end if
     
 end mouseUp
