@@ -376,9 +376,9 @@ end _newGuideLine
 
 private function _newGuideLineBehavior pType
     if pType is "v" then
-        return the long id of button "bVerticalGudeLine" of me
+        return the long id of button "bVerticalGuideLine" of me
     else if pType is "h" then
-        return the long id of button "bHorizontalGudeLine" of me
+        return the long id of button "bHorizontalGuideLine" of me
     end if
 end _newGuideLineBehavior
 

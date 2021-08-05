@@ -1,71 +1,20 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
-    "18660fc8-7176-4b26-a661-88a5372e04dd": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 2721 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cDevDesigns": true,
-            "cDevDesignsTem": false,
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cType": "left"
-          }
-        },
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "287,0,288,796",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "25257ca9-1485-491b-ab01-c419f3e50d58": {
       "properties": {
-        "default": true,
+        "autoHilite": false,
+        "backColor": "255,0,128",
         "disabled": true,
         "lockLoc": true,
-        "name": "bHorizontalGudeLine",
-        "rect": "13,43,146,69",
-        "style": "standard"
+        "name": "bHorizontalGuideLine",
+        "rect": "13,128,146,154",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
       },
       "type": "button"
-    },
-    "273eb226-4de9-435e-9fd7-4738c612ccc9": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 2721 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cDevDesigns": true,
-            "cDevDesignsTem": false,
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cType": "left"
-          }
-        },
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "321,0,322,796",
-        "style": "rectangle"
-      },
-      "type": "graphic"
     },
     "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
       "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
@@ -75,7 +24,7 @@
           "cREVGeneral": {"scalefactor": 1}
         },
         "fileName": "DevGuides.livecode",
-        "height": 430,
+        "height": 508,
         "name": "DevGuides",
         "style": "toplevel",
         "width": 796
@@ -84,12 +33,18 @@
     },
     "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
       "properties": {
-        "default": true,
+        "autoHilite": false,
+        "backColor": "255,0,128",
         "disabled": true,
+        "foreColor": "255,0,128",
         "lockLoc": true,
-        "name": "bVerticalGudeLine",
-        "rect": "13,14,146,40",
-        "style": "standard"
+        "name": "bVerticalGuideLine",
+        "rect": "13,99,146,125",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
       },
       "type": "button"
     },
@@ -100,58 +55,37 @@
         "hiliteColor": "255,128,0",
         "kind": "com.livecode.widget.switchbutton",
         "name": "Switch Button",
-        "rect": "169,15,215,42"
+        "rect": "181,93,227,120"
       },
       "type": "widget"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\ne6c4cf1b-2ba7-41f8-802a-03c4b59c5bba\nfcdb8c13-dc1c-4cb7-91f4-3d67bcdd7e89\n18660fc8-7176-4b26-a661-88a5372e04dd\n273eb226-4de9-435e-9fd7-4738c612ccc9",
+      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
     },
-    "e6c4cf1b-2ba7-41f8-802a-03c4b59c5bba": {
+    "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
-        "backColor": "255,255,0",
-        "blendLevel": 50,
-        "filled": true,
-        "margins": 8,
-        "name": "Rectangle",
-        "opaque": true,
-        "rect": "469,48,593,168",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "fcdb8c13-dc1c-4cb7-91f4-3d67bcdd7e89": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 2721 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
         "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cDevDesigns": true,
-            "cDevDesignsTem": false,
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cType": "left"
-          }
-        },
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "249,0,250,796",
-        "style": "rectangle"
+        "name": "logo-Ferrus-Logic.png",
+        "rect": "15,15,215,54"
       },
-      "type": "graphic"
+      "type": "image"
+    },
+    "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
+      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58",
+      "properties": {
+        "cantDelete": true,
+        "lockLoc": true,
+        "name": "bGuideLines",
+        "rect": "7,77,152,160",
+        "showBorder": true,
+        "showName": true
+      },
+      "type": "group"
     }
   },
   "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"

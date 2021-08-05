@@ -12,6 +12,7 @@ on mouseDown
             set the height of it to 1
         end if
     end if
+    
     lock screen
     set the height of me to 1
     
@@ -81,6 +82,7 @@ on mouseMove pNewMouseH, pNewMouseV
     set the label of sWLabel to "y" && tY
     
     if tY > 0 and tY < the height of this card  then
+        set the layer of sWLabel to top
         set the visible of sWLabel to true
         
         if there is a tDevDeleteGuide then
@@ -109,6 +111,7 @@ on mouseMove pNewMouseH, pNewMouseV
             set the bottom of tDevDeleteGuide to the bottom of this card - (kMargins + 10)
         end if
         
+        set the layer of tDevDeleteGuide to top
         set the visible of tDevDeleteGuide to true
     end if
     unlock screen

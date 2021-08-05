@@ -27,6 +27,7 @@ on mouseDown
         set the loc of me to the mouseLoc
         set the top of me to 0
     end if
+    
     unlock screen
     
     grab me
