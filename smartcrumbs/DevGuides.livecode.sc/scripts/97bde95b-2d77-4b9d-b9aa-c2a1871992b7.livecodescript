@@ -77,6 +77,3 @@ end _guideLineBehavior
 
 
 
-on mouseMove pNewMouseH, pNewMouseV
-    
-end mouseMove

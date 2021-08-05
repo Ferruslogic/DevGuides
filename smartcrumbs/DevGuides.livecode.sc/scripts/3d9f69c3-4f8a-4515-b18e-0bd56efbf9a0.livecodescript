@@ -56,8 +56,11 @@ end _saveStatus
 
 private command _restoreStatus
     local tLongID, tChildControlIDs
-   lock screen; lock messages
+    lock screen; lock messages
     put the long id of this card into tLongID
+    
+    # Displaying the Grid in this card
+    _showGridSystem the cDisplayingGrid of tLongID, tLongID
     
     if there is a grc "dev-designs-guide-line" of tLongID then
         delete grc "dev-designs-guide-line" of tLongID
@@ -75,16 +78,22 @@ private command _restoreStatus
     end repeat
     
     put empty into sGuideStatus
+    
     unlock screen; unlock messages
 end _restoreStatus
     
 command deleteGuideControls pLongId
     local tChildControlIDs
     
+    if there is a grc "dev-designs-guide-line" of this card then
+        delete grc "dev-designs-guide-line" of this card
+    end if
+     
     if there is a pLongId then
         delete pLongId
         exit deleteGuideControls
     end if
+    
     
     put the childControlIDs of this card into tChildControlIDs
     
@@ -105,7 +114,15 @@ on ideMouseMove pX, pY
     put the selectedObjects into tSelectedObjects
     put the short name of this stack into tThisStack
     put the long id of this card into tThisCard
-    if there is a  grc  "dev-designs-guide-line" then exit ideMouseMove
+    if there is a  grc  "dev-designs-guide-line" then
+        if not within( grc  "dev-designs-guide-line", the mouseLoc) then
+            delete grc  "dev-designs-guide-line"
+        end if
+        exit ideMouseMove
+    end if
+    
+    
+    
     if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then exit ideMouseMove
     
     send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
@@ -124,17 +141,9 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
             case pX <= kNewGuideLine
                 _newGuideLine "left", 0, pThisCard
                 break
-                
-            case pX >= the right of pThisCard - kNewGuideLine
-                _newGuideLine "right", the right of pThisCard, pThisCard
-                break
-                
+                   
             case pY <= kNewGuideLine
                 _newGuideLine "top", 0, pThisCard
-                break
-                
-            case pY >= the bottom of pThisCard - kNewGuideLine 
-                _newGuideLine "bottom", the bottom of pThisCard, pThisCard
                 break
         end switch
     end if
@@ -272,6 +281,7 @@ private command _showGridSystem pDisplaying, pThisCard
     else
         repeat with x = 1 to 13
             if there is a grc("dev-designs-gridSystem-" & x) of pThisCard then
+                delete variable sGuideStatus["controls"][ the long id of  grc("dev-designs-gridSystem-" & x) of pThisCard]
                 delete  grc("dev-designs-gridSystem-" & x) of pThisCard
             end if
         end repeat
@@ -293,7 +303,7 @@ private command _newGuideLine pProperty, pValue, pThisCard
     end if
     
     set the lineSize of tLongId to 0
-    set the backColor of tLongId to "blue"
+    set the backColor of tLongId to "255,00,128"
     set the blendLevel of tLongId to 85
     set the bottomRight of tLongId to 0,0
     set the opaque of tLongId to true
@@ -308,25 +318,13 @@ private command _newGuideLine pProperty, pValue, pThisCard
             set the topLeft of tLongId to 0,0
             break
             
-        case "right"
-            set the width of tLongId to  kNewGuideLine
-            set the height of tLongId to tHeightCd
-            set the topRight of tLongId to tWidthCd,0
-            break
-            
         case "top"
             set the width of tLongId to tWidthCd
             set the height of tLongId to kNewGuideLine
             set the topLeft of tLongId to 0,0
             break
-            
-        case "bottom"
-            set the width of tLongId to tWidthCd
-            set the height of tLongId to kNewGuideLine
-            set the bottomLeft of tLongId to 0,tHeightCd
-            break
-            
     end switch
+    
     show tLongId
     set the cType of  tLongId to pProperty
 end _newGuideLine
