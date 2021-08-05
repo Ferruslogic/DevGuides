@@ -36,27 +36,7 @@ end resizeStack
 
 
 
-private command _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
-    local tChildControlIDs
-    
-    put the childControlIDs of this card into tChildControlIDs
-    
-    repeat for each line tId in tChildControlIDs
-        if the cGuideLine  of control id tId is true  then
-            
-            if the cGuideLineType  of control id tId is "h" and pNewWidth <> pOldWidth then
-                set the width  of control id tId to pNewWidth
-                set the top  of control id tId to 0
-                
-            else if pNewHeight <> pOldHeight then
-                set the height  of control id tId to pNewHeight
-                set the top  of control id tId to 0
-                
-            end if
-        end if
-    end repeat
-    
-end _updateSizeGuideLines
+
 
 
 on ideToolChanged
@@ -105,25 +85,31 @@ on mouseMove pX, pY
     
 end mouseMove
 
---on rawKeyUp
---    if the shiftKey is up and there is a grc "dev-designs-guide-line"  then
---        delete grc "dev-designs-guide-line" 
---    end if
---end rawKeyUp
 
-on updateGuides pSelectedObjects, pThisCard,  pX, pY    
+local sNewGuideLine
+on updateGuides pSelectedObjects, pThisCard,  pX, pY 
+    put empty into sMessageID
+    
     lock screen; lock messages
     
-    put empty into sMessageID
+    if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
+        delete sNewGuideLine
+        put empty into sNewGuideLine
+        unlock messages; unlock screen
+        exit updateGuides
+    end if
+    
     
     if the shiftKey is down then
         switch
             case pX <= kNewGuideLine
                 _newGuideLine "left", 0, pThisCard
+                put the result into sNewGuideLine
                 break
                 
             case pY <= kNewGuideLine
                 _newGuideLine "top", 0, pThisCard
+                put the result into sNewGuideLine
                 break
         end switch
     end if
@@ -257,14 +243,25 @@ private command _deleteDevGuides
     put the childControlIDs of this card into tChildControlIDs
     
     repeat for each line tId in tChildControlIDs
-        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false  then
+        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false then
             delete control id tId
         end if
     end repeat
     
 end _deleteDevGuides
 
-
+command _deleteDevTempGuides
+    local tChildControlIDs
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false then
+            delete control id tId
+        end if
+    end repeat
+end _deleteDevTempGuides
+    
+    
 private command _updateGuides pLongId, pThisCard, pMouseX, pMouseY
     local tControlCachingArray, tWidth, tHeight
     
@@ -337,42 +334,73 @@ private command _newGuideLine pProperty, pValue, pThisCard
     put the width of pThisCard into tWidthCd
     put the height of pThisCard into tHeightCd
     
-    if there is no a grc "dev-designs-guide-line" of pThisCard then
-        create  grc  "dev-designs-guide-line" in pThisCard
-        put it into tLongId
-    else
-        exit to top
-    end if
+    create  grc "guide-line" in pThisCard
+    put it into tLongId
     
     set the lineSize of tLongId to 0
-    set the backColor of tLongId to "255,00,128"
-    set the blendLevel of tLongId to 85
+    set the backColor of tLongId to "255,255,0"
+    set the blendLevel of tLongId to 50
     set the bottomRight of tLongId to 0,0
     set the opaque of tLongId to true
+    set the layerMode of tLongId to "dynamic"
     set the cDevDesigns of tLongId to true
+    set the cDevDesignsTem of tLongId to true
+    
     set the cantSelect of tLongId to true
-    set the behavior of tLongId to _newGuideLineBehavior()
     
     switch pProperty
         case "left"
             set the width of tLongId to  kNewGuideLine
             set the height of tLongId to tWidthCd
             set the topLeft of tLongId to 0,0
+            set the cGuideLineType of  tLongId to "v"
+            set the behavior of tLongId to _newGuideLineBehavior("v")
+            
             break
             
         case "top"
             set the width of tLongId to tWidthCd
             set the height of tLongId to kNewGuideLine
             set the topLeft of tLongId to 0,0
+            set the cGuideLineType of  tLongId to "h"
+            set the behavior of tLongId to _newGuideLineBehavior("h")
+            
             break
     end switch
     
     show tLongId
     set the cType of  tLongId to pProperty
+    return tLongId
 end _newGuideLine
 
 
-private function _newGuideLineBehavior
-    return the long id of button "bNewGuideLine" of me
+private function _newGuideLineBehavior pType
+    if pType is "v" then
+        return the long id of button "bVerticalGudeLine" of me
+    else if pType is "h" then
+        return the long id of button "bHorizontalGudeLine" of me
+    end if
 end _newGuideLineBehavior
 
+
+private command _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
+    local tChildControlIDs
+    
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cGuideLine  of control id tId is true  then
+            
+            if the cGuideLineType  of control id tId is "h" and pNewWidth <> pOldWidth then
+                set the width  of control id tId to pNewWidth
+                set the top  of control id tId to 0
+                
+            else if pNewHeight <> pOldHeight then
+                set the height  of control id tId to pNewHeight
+                set the top  of control id tId to 0
+                
+            end if
+        end if
+    end repeat
+    
+end _updateSizeGuideLines

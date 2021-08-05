@@ -1,15 +1,71 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+    "18660fc8-7176-4b26-a661-88a5372e04dd": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {
+          "customKeys": {
+            "cDevDesigns": true,
+            "cDevDesignsTem": false,
+            "cGuideLine": true,
+            "cGuideLineType": "v",
+            "cType": "left"
+          }
+        },
+        "filled": true,
+        "foreColor": "255,0,128",
+        "layerMode": "dynamic",
+        "lineSize": 0,
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "287,0,288,796",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
     "25257ca9-1485-491b-ab01-c419f3e50d58": {
       "properties": {
         "default": true,
         "disabled": true,
         "lockLoc": true,
-        "name": "bhGudeLine",
+        "name": "bHorizontalGudeLine",
         "rect": "13,43,146,69",
         "style": "standard"
       },
       "type": "button"
+    },
+    "273eb226-4de9-435e-9fd7-4738c612ccc9": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {
+          "customKeys": {
+            "cDevDesigns": true,
+            "cDevDesignsTem": false,
+            "cGuideLine": true,
+            "cGuideLineType": "v",
+            "cType": "left"
+          }
+        },
+        "filled": true,
+        "foreColor": "255,0,128",
+        "layerMode": "dynamic",
+        "lineSize": 0,
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "321,0,322,796",
+        "style": "rectangle"
+      },
+      "type": "graphic"
     },
     "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
       "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
@@ -19,10 +75,10 @@
           "cREVGeneral": {"scalefactor": 1}
         },
         "fileName": "DevGuides.livecode",
-        "height": 503,
+        "height": 430,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 713
+        "width": 796
       },
       "type": "stack"
     },
@@ -31,7 +87,7 @@
         "default": true,
         "disabled": true,
         "lockLoc": true,
-        "name": "bwGudeLine",
+        "name": "bVerticalGudeLine",
         "rect": "13,14,146,40",
         "style": "standard"
       },
@@ -49,22 +105,53 @@
       "type": "widget"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n97bde95b-2d77-4b9d-b9aa-c2a1871992b7",
+      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\ne6c4cf1b-2ba7-41f8-802a-03c4b59c5bba\nfcdb8c13-dc1c-4cb7-91f4-3d67bcdd7e89\n18660fc8-7176-4b26-a661-88a5372e04dd\n273eb226-4de9-435e-9fd7-4738c612ccc9",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
     },
-    "97bde95b-2d77-4b9d-b9aa-c2a1871992b7": {
+    "e6c4cf1b-2ba7-41f8-802a-03c4b59c5bba": {
       "properties": {
-        "disabled": true,
-        "lockLoc": true,
-        "name": "bNewGuideLine",
-        "rect": "13,72,146,98",
-        "style": "standard"
+        "backColor": "255,255,0",
+        "blendLevel": 50,
+        "filled": true,
+        "margins": 8,
+        "name": "Rectangle",
+        "opaque": true,
+        "rect": "469,48,593,168",
+        "style": "rectangle"
       },
-      "type": "button"
+      "type": "graphic"
+    },
+    "fcdb8c13-dc1c-4cb7-91f4-3d67bcdd7e89": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {
+          "customKeys": {
+            "cDevDesigns": true,
+            "cDevDesignsTem": false,
+            "cGuideLine": true,
+            "cGuideLineType": "v",
+            "cType": "left"
+          }
+        },
+        "filled": true,
+        "foreColor": "255,0,128",
+        "layerMode": "dynamic",
+        "lineSize": 0,
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "249,0,250,796",
+        "style": "rectangle"
+      },
+      "type": "graphic"
     }
   },
   "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"
