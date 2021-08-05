@@ -1,12 +1,66 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+    "1e10c8bc-f140-4e63-91fc-ac48533111e4": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {"customKeys": {"cGuideLine": true}},
+        "filled": true,
+        "foreColor": "255,0,128",
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "365,0,366,547",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
+    "233bc60d-978b-4541-bb4b-ad7a850ed1d3": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {"customKeys": {"cGuideLine": true}},
+        "filled": true,
+        "foreColor": "255,0,128",
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "34,0,35,547",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
+    "243ed803-7402-4426-9085-f87affee02d3": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 2721 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {"customKeys": {"cGuideLine": true}},
+        "filled": true,
+        "foreColor": "255,0,128",
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "702,0,703,547",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
     "25257ca9-1485-491b-ab01-c419f3e50d58": {
       "properties": {
         "default": true,
         "disabled": true,
         "lockLoc": true,
         "name": "bhGudeLine",
-        "rect": "570,147,670,185",
+        "rect": "570,38,703,64",
         "style": "standard"
       },
       "type": "button"
@@ -22,7 +76,7 @@
         "height": 547,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 1009
+        "width": 886
       },
       "type": "stack"
     },
@@ -32,7 +86,7 @@
         "disabled": true,
         "lockLoc": true,
         "name": "bwGudeLine",
-        "rect": "570,89,670,127",
+        "rect": "570,9,703,35",
         "style": "standard"
       },
       "type": "button"
@@ -52,13 +106,13 @@
       "properties": {
         "default": true,
         "name": "Button",
-        "rect": "35,131,120,199",
+        "rect": "34,130,119,198",
         "style": "standard"
       },
       "type": "button"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "f04ee7f5-3619-45ff-8c4d-817f4f746fcf\n8df287d4-0464-4acc-b4e3-4b34f1de4f4e\n6b329869-0666-425b-b581-72ee6d1c0deb\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n85e55660-b416-4ad1-ac7a-6c9cc42dfc5f",
+      "hierarchy": "f04ee7f5-3619-45ff-8c4d-817f4f746fcf\n8df287d4-0464-4acc-b4e3-4b34f1de4f4e\n6b329869-0666-425b-b581-72ee6d1c0deb\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n85e55660-b416-4ad1-ac7a-6c9cc42dfc5f\n97bde95b-2d77-4b9d-b9aa-c2a1871992b7\n233bc60d-978b-4541-bb4b-ad7a850ed1d3\n243ed803-7402-4426-9085-f87affee02d3\n1e10c8bc-f140-4e63-91fc-ac48533111e4",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}}
       },
@@ -68,7 +122,7 @@
       "properties": {
         "default": true,
         "name": "Button",
-        "rect": "136,130,221,198",
+        "rect": "139,128,224,196",
         "style": "standard"
       },
       "type": "button"
@@ -81,6 +135,17 @@
         "rect": "62,17,298,104"
       },
       "type": "group"
+    },
+    "97bde95b-2d77-4b9d-b9aa-c2a1871992b7": {
+      "properties": {
+        "default": true,
+        "disabled": true,
+        "lockLoc": true,
+        "name": "bNewGuideLine",
+        "rect": "570,67,703,93",
+        "style": "standard"
+      },
+      "type": "button"
     },
     "cab49072-4d98-468d-9172-0ac90be7a28f": {
       "properties": {
@@ -104,7 +169,7 @@
       "properties": {
         "default": true,
         "name": "Button",
-        "rect": "234,133,348,197",
+        "rect": "248,133,362,197",
         "style": "standard"
       },
       "type": "button"

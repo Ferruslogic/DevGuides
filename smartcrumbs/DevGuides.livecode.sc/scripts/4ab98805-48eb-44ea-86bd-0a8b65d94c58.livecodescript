@@ -2,8 +2,10 @@ local sWLabel, sDown
 
 on mouseDown
     if the word 1 of the name of me is "button" then exit mouseDown
+    grab me
     put true into sDown
     set the width of me to 1
+    set the layer of me to top
 end mouseDown
 
 
@@ -11,7 +13,6 @@ on mouseMove pNewMouseH, pNewMouseV
     if sDown is no true or  the word 1 of the name of me is "button" then exit mouseMove
     
     set the top of me to 0
-    set the left of me to pNewMouseH
     
     if there is no a graphic "wLabel" of this card then
         create invisible graphic "wLabel" in this card
@@ -76,5 +77,18 @@ end mouseRelease
 
 
 on mouseUp pButtonNumber
+    local tLongId
     put false into sDown
+    
+    if there is a  grc  "dev-designs-guide-line" then
+        delete grc  "dev-designs-guide-line"
+    end if
+    
+    if there is a sWLabel then 
+        delete sWLabel
+    end if
+    if not within(this card, the loc of me) then
+        put the long id of me into tLongId
+        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+    end if
 end mouseUp

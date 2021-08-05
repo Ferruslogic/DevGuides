@@ -78,9 +78,6 @@ end mouseRelease
 
 
 on mouseUp pButtonNumber
-    answer 3333333333333333
-    put within(this card, the mouseLoc)
-    
     put false into sDown
 end mouseUp
 

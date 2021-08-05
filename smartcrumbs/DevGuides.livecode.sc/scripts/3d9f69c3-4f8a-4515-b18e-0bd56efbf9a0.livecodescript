@@ -1,7 +1,7 @@
 local sControlCachingArray, sMessageID, sNeighbors, sPrevSelectedObjects
-local sGuideLine = 0
+local sGuideStatus
 
-constant  kColumnLineColor = "192,192,192", kGuideLineColor = "255,00,128"
+constant  kColumnLineColor = "192,192,192"
 constant kNewGuideLine = 25
 
 on preOpenStack
@@ -20,10 +20,71 @@ on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
     pass resizeStack
 end resizeStack
 
-    
 on ideToolChanged
-    if the tool is "pointer tool" then exit ideToolChanged
+    if the tool is "pointer tool" then
+        _restoreStatus 
+        exit ideToolChanged
+    end if
+    
+    _saveStatus
+end ideToolChanged
+
+private command _saveStatus
+    local tLongID, tChildControlIDs
+    lock screen; lock messages
+    
+    put the long id of this card into tLongID
+    
+    if there is a grc "dev-designs-guide-line" of tLongID then
+        delete grc "dev-designs-guide-line" of tLongID
+    end if
+    
+    put the childControlIDs of  tLongID into tChildControlIDs
+    put tLongID into sGuideStatus["card"]
+    
+    repeat for each line tId in tChildControlIDs
+        put the long id of control id tId into tLongID
+        
+        if the cDevDesigns of tLongID is true or the cGuideLine  of tLongID is true  then
+            put the properties of tLongID into sGuideStatus["controls"][ tLongID ]
+            delete control id tId
+        end if
+    end repeat 
+    unlock screen; unlock messages
+end _saveStatus
+
+
+private command _restoreStatus
+    local tLongID, tChildControlIDs
+   lock screen; lock messages
+    put the long id of this card into tLongID
+    
+    if there is a grc "dev-designs-guide-line" of tLongID then
+        delete grc "dev-designs-guide-line" of tLongID
+    end if
+    
+    put the childControlIDs of  tLongID into tChildControlIDs
+    if tLongID is no sGuideStatus["card"] then exit _restoreStatus
+    
+    repeat for each element tControl in sGuideStatus["controls"]
+        if there is a graphic id tControl["id"] of sGuideStatus["card"] then next repeat
+        create invisible graphic in sGuideStatus["card"]
+        put it into tLongID
+        set the properties of tLongID to tControl
+        set the cDevDesigns of tLongID to true
+    end repeat
+    
+    put empty into sGuideStatus
+    unlock screen; unlock messages
+end _restoreStatus
+    
+command deleteGuideControls pLongId
     local tChildControlIDs
+    
+    if there is a pLongId then
+        delete pLongId
+        exit deleteGuideControls
+    end if
     
     put the childControlIDs of this card into tChildControlIDs
     
@@ -32,23 +93,11 @@ on ideToolChanged
             delete control id tId
         end if
     end repeat  
-end ideToolChanged
+end deleteGuideControls
 
-
-
---on selectedObjectChanged
---    local tSelectedObjects
---    lock screen; lock messages
-
---    put the selectedObjects into tSelectedObjects
---    if sPrevSelectedObjects is tSelectedObjects then exit selectedObjectChanged
---    put tSelectedObjects into sPrevSelectedObjects
-
---    updateGuides the selectedObjects, the long id of this card,  the mouseH,  the mouseV
---    unlock messages; unlock screen
-
---end selectedObjectChanged
-
+on rawKeyUp
+    pass rawKeyUp
+end rawKeyUp
 
 on ideMouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard
@@ -56,10 +105,7 @@ on ideMouseMove pX, pY
     put the selectedObjects into tSelectedObjects
     put the short name of this stack into tThisStack
     put the long id of this card into tThisCard
-    
-    if there is a grc "dev-designs-guide-line" of tThisCard  and pX, pY is no within  the rect of grc "dev-designs-guide-line" of tThisCard then         delete grc "dev-designs-guide-line" of tThisCard
-    
-    
+    if there is a  grc  "dev-designs-guide-line" then exit ideMouseMove
     if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then exit ideMouseMove
     
     send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
@@ -70,8 +116,6 @@ end ideMouseMove
 
 local sGridLine
 on updateGuides pSelectedObjects, pThisCard,  pX, pY
-    
-    # if there is a pSelectedObjects and the cGuideLine  of pSelectedObjects is true then exit updateGuides
     
     lock screen; lock messages
     -- Crear gias
@@ -105,19 +149,7 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
         unlock messages; unlock screen
         exit updateGuides
     end if
-    
-    
-    if there is a grc "dev-designs-guide-line" of pThisCard then
-        if pX, pY is within  the rect of grc "dev-designs-guide-line" of pThisCard then
-            _createGuideLine pThisCard, the width this cd, the height this cd, the cType of  grc "dev-designs-guide-line", pX, pY
-            if there is a  grc  "dev-designs-guide-line" then delete  grc  "dev-designs-guide-line"
-            unlock messages; unlock screen
-            exit updateGuides
-        end if
-        
-        delete grc "dev-designs-guide-line" of pThisCard
-    end if
-    
+       
     if there is no pSelectedObjects then exit updateGuides
     
     if the cGuideLine of pSelectedObjects or there is a sGridLine and the cGuideLine of  sGridLine then
@@ -140,10 +172,10 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
 end updateGuides
 
 
-function _mouseControl
+private function _mouseControl
     local tMouseControl
     
-    put mouseControl() into tMouseControl
+    put the mouseControl into tMouseControl
     if there is not a tMouseControl then return empty
     
     put the long id of tMouseControl into tMouseControl
@@ -267,7 +299,7 @@ private command _newGuideLine pProperty, pValue, pThisCard
     set the opaque of tLongId to true
     set the cDevDesigns of tLongId to true
     set the cantSelect of tLongId to true
-    
+    set the behavior of tLongId to _newGuideLineBehavior()
     
     switch pProperty
         case "left"
@@ -295,73 +327,13 @@ private command _newGuideLine pProperty, pValue, pThisCard
             break
             
     end switch
-    
+    show tLongId
     set the cType of  tLongId to pProperty
 end _newGuideLine
 
 
-private command _createGuideLine pThisCard, pWidthCd, pHeightCd, pValue,  pX, pY
-    local tLongId, tGroup
-    
-    reset templateGraphic
-    
-    if there is a grc "dev-designs-guide-line" and there is a grc ("dev-designs-guide-line-" & sGuideLine ) and the mouseLoc is within the rect of grc "dev-designs-guide-line"  then 
-        exit _createGuideLine
-    end if
-    
-    add 1 to sGuideLine
-    create graphic("dev-designs-guide-line-" & sGuideLine) in pThisCard
-    put it into tLongId
-    
-    set the lineSize of tLongId to 1
-    set the foregroundColor of tLongId to kGuideLineColor
-    set the backColor of tLongId to kGuideLineColor
-    set the blendLevel of tLongId to 0
-    set the bottomRight of tLongId to 0,0
-    set the opaque of tLongId to true
-    set the cGuideLine of tLongId to true
-    set the style of tLongId to "rectangle"
-    set the lockloc of tLongId to false
-    set the cantSelect of tLongId to true
-    
-    switch pValue
-        case "left"
-            set the width of tLongId to  1
-            set the height of tLongId to pHeightCd
-            set the loc of tLongId to pX, trunc(pHeightCd/2)
-            set the behavior of tLongId to _guideLineBehavior("w")
-            break
-            
-        case "right"
-            set the width of tLongId to  1
-            set the height of tLongId to pHeightCd
-            set the loc of tLongId to pX, trunc(pHeightCd/2)
-            set the behavior of tLongId to _guideLineBehavior("w")
-            break
-            
-        case "top"
-            set the width of tLongId to pWidthCd
-            set the height of tLongId to 1
-            set the loc of tLongId to trunc(pWidthCd/2), pY
-            set the behavior of tLongId to _guideLineBehavior("h")
-            break
-            
-        case "bottom"
-            set the width of tLongId to pWidthCd
-            set the height of tLongId to 1
-            set the loc of tLongId to trunc(pWidthCd/2), pY
-            set the behavior of tLongId to _guideLineBehavior("h")
-            break
-            
-    end switch
-end _createGuideLine
 
+private function _newGuideLineBehavior
+    return the long id of button "bNewGuideLine" of me
+end _newGuideLineBehavior
 
-private function _guideLineBehavior pType
-    if pType is "w" then
-        return the long id of button "bwGudeLine" of me
-        
-    else if pType is "h" then
-        return the long id of button "bhGudeLine" of me
-    end if
-end _guideLineBehavior
