@@ -1,0 +1,114 @@
+{
+  "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+    "25257ca9-1485-491b-ab01-c419f3e50d58": {
+      "properties": {
+        "default": true,
+        "disabled": true,
+        "lockLoc": true,
+        "name": "bhGudeLine",
+        "rect": "570,147,670,185",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+      "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
+      "properties": {
+        "customProperties": {
+          "SmartCrumbsVCW": {"folder": "DevGuides.livecode.sc"},
+          "cREVGeneral": {"scalefactor": 1}
+        },
+        "fileName": "DevGuides.livecode",
+        "height": 547,
+        "name": "DevGuides",
+        "style": "toplevel",
+        "width": 1009
+      },
+      "type": "stack"
+    },
+    "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
+      "properties": {
+        "default": true,
+        "disabled": true,
+        "lockLoc": true,
+        "name": "bwGudeLine",
+        "rect": "570,89,670,127",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "63a3d091-b3a8-4f34-9413-9fffe21f644d": {
+      "properties": {
+        "backgroundColor": "244,244,244",
+        "borderColor": "109,109,109",
+        "hiliteColor": "10,95,244",
+        "kind": "com.livecode.widget.switchbutton",
+        "name": "Switch Button",
+        "rect": "465,6,529,54"
+      },
+      "type": "widget"
+    },
+    "6b329869-0666-425b-b581-72ee6d1c0deb": {
+      "properties": {
+        "default": true,
+        "name": "Button",
+        "rect": "35,131,120,199",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "76193acd-d033-45e9-a4d6-342aa6aba373": {
+      "hierarchy": "f04ee7f5-3619-45ff-8c4d-817f4f746fcf\n8df287d4-0464-4acc-b4e3-4b34f1de4f4e\n6b329869-0666-425b-b581-72ee6d1c0deb\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n63a3d091-b3a8-4f34-9413-9fffe21f644d\n85e55660-b416-4ad1-ac7a-6c9cc42dfc5f",
+      "properties": {
+        "customProperties": {"customKeys": {"cDisplayingGrid": false}}
+      },
+      "type": "card"
+    },
+    "85e55660-b416-4ad1-ac7a-6c9cc42dfc5f": {
+      "properties": {
+        "default": true,
+        "name": "Button",
+        "rect": "136,130,221,198",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "8df287d4-0464-4acc-b4e3-4b34f1de4f4e": {
+      "hierarchy": "e08d276c-2aa7-42bb-bc62-ada4beb77ca3\ncab49072-4d98-468d-9172-0ac90be7a28f",
+      "properties": {
+        "backColor": "128,128,128",
+        "opaque": true,
+        "rect": "62,17,298,104"
+      },
+      "type": "group"
+    },
+    "cab49072-4d98-468d-9172-0ac90be7a28f": {
+      "properties": {
+        "default": true,
+        "name": "Button",
+        "rect": "229,21,294,85",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "e08d276c-2aa7-42bb-bc62-ada4beb77ca3": {
+      "properties": {
+        "default": true,
+        "name": "Button",
+        "rect": "66,47,123,100",
+        "style": "standard"
+      },
+      "type": "button"
+    },
+    "f04ee7f5-3619-45ff-8c4d-817f4f746fcf": {
+      "properties": {
+        "default": true,
+        "name": "Button",
+        "rect": "234,133,348,197",
+        "style": "standard"
+      },
+      "type": "button"
+    }
+  },
+  "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"
+}
