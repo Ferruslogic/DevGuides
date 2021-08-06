@@ -4,8 +4,7 @@ constant kGuideLineColor = "255,00,128"
 
 on mouseDown
     if the word 1 of the name of me is "button" then exit mouseDown
-    lock screen
-    
+    //TODO: PONER LAS PROPIEDADES QUE NO VAN A CAMBIAR EN UNA VARIABLES EJE LAS DE LA CARD
     -- CloneLine
     if the controlKey is down then
         clone me
@@ -123,6 +122,10 @@ on mouseMove pNewMouseH, pNewMouseV
         exit mouseMove
     end if
     
+    local tLimits, tSize
+    put getLimits(3 , 1, 0, the width of this card) into tLimits
+    put tLimits[ 2 ] - tLimits[ 1 ] into tSize
+    
     # More
     if there is no a sLabelControl1 then
         _createTemporaryGraphic
@@ -172,7 +175,7 @@ end mouseMove
 
 
 on mouseEnter
-    if the word 1 of the name of me is "button" or  the cDevDesignsTem of me is true  then exit mouseEnter
+    if the word 1 of the name of me is "button" or  the cDevDesignsTem of me is true  then exit mouseEnter    
     set the width of me to 3
 end mouseEnter
 

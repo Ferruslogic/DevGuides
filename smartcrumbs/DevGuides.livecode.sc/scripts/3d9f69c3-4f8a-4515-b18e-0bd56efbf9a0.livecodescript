@@ -353,16 +353,13 @@ private command _newGuideLine pProperty, pValue, pThisCard
             set the width of tLongId to  kNewGuideLine
             set the height of tLongId to tWidthCd
             set the topLeft of tLongId to 0,0
-            set the cGuideLineType of  tLongId to "v"
-            set the behavior of tLongId to _newGuideLineBehavior("v")
-            
+            set the behavior of tLongId to _newGuideLineBehavior("v")            
             break
             
         case "top"
             set the width of tLongId to tWidthCd
             set the height of tLongId to kNewGuideLine
             set the topLeft of tLongId to 0,0
-            set the cGuideLineType of  tLongId to "h"
             set the behavior of tLongId to _newGuideLineBehavior("h")
             
             break

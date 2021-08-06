@@ -1,13 +1,35 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
     "25257ca9-1485-491b-ab01-c419f3e50d58": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1307 of stack \u2022DevGuides\u2022"
+      },
       "properties": {
         "autoHilite": false,
         "backColor": "255,0,128",
+        "customProperties": {"customKeys": {"cGudeLineType": "horizontal"}},
         "disabled": true,
+        "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "13,128,146,154",
+        "rect": "13,129,146,155",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
+    },
+    "2e9ed90e-a88d-4701-91a1-88d69fed7cc5": {
+      "properties": {
+        "autoHilite": false,
+        "backColor": "128,0,128",
+        "disabled": true,
+        "lockLoc": true,
+        "name": "bGuideLinesUtils\u0000",
+        "rect": "13,159,146,185",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -22,7 +44,8 @@
         "cantAbort": true,
         "customProperties": {
           "SmartCrumbsVCW": {"folder": "DevGuides.livecode.sc"},
-          "cREVGeneral": {"scalefactor": 1}
+          "cREVGeneral": {"scalefactor": 1},
+          "customKeys": {"cGudeLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
         "height": 529,
@@ -33,9 +56,14 @@
       "type": "stack"
     },
     "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1307 of stack \u2022DevGuides\u2022"
+      },
       "properties": {
         "autoHilite": false,
         "backColor": "255,0,128",
+        "customProperties": {"customKeys": {"cGudeLineType": "vertical"}},
         "disabled": true,
         "foreColor": "255,0,128",
         "lockLoc": true,
@@ -49,6 +77,33 @@
       },
       "type": "button"
     },
+    "506fc80c-aa8f-4169-8a1a-1412099e26b8": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 1006 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {
+          "customKeys": {
+            "cDevDesigns": true,
+            "cDevDesignsTem": false,
+            "cGuideLine": true,
+            "cType": "left"
+          }
+        },
+        "filled": true,
+        "foreColor": "255,0,128",
+        "layerMode": "dynamic",
+        "lineSize": 0,
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "486,0,487,921",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
     "63a3d091-b3a8-4f34-9413-9fffe21f644d": {
       "properties": {
         "backgroundColor": "244,244,244",
@@ -61,7 +116,7 @@
       "type": "widget"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
+      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nb86d15c1-e82f-4e12-b909-d78bef4f38d2\n506fc80c-aa8f-4169-8a1a-1412099e26b8",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
@@ -77,13 +132,26 @@
       },
       "type": "image"
     },
+    "b86d15c1-e82f-4e12-b909-d78bef4f38d2": {
+      "properties": {
+        "backgroundColor": "244,244,244",
+        "borderColor": "109,109,109",
+        "foregroundColor": "50,50,50",
+        "hiliteColor": "10,95,244",
+        "kind": "com.livecode.widget.treeview",
+        "name": "c",
+        "rect": "594,59,825,272",
+        "themeClass": "list"
+      },
+      "type": "widget"
+    },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
-      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58",
+      "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
         "name": "bGuideLines",
-        "rect": "7,77,152,160",
+        "rect": "7,77,152,191",
         "showBorder": true,
         "showName": true
       },

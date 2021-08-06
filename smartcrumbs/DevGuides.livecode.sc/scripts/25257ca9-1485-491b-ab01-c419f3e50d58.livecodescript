@@ -3,7 +3,7 @@ local sLabelControl, sDown, sDevDeleteGuide, sLabelControl1, sLabelControl2 , sL
 constant kGuideLineColor = "255,00,128", kMargins = 5
 
 on mouseDown
-    if the word 1 of the name of me is "button" then exit mouseDown
+    if the word 1 of the name of me is "button" then exit mouseDown    
     -- CloneLine
     if the controlKey is down then
         clone me
@@ -13,8 +13,7 @@ on mouseDown
         end if
     end if
     
-    set the height of me to 1
-    
+    set the height of me to 1    
     -- Transormar en linea
     if the cDevDesignsTem of me is true then
         set the foregroundColor of me to kGuideLineColor
@@ -41,7 +40,6 @@ on mouseMove pNewMouseH, pNewMouseV
     if sDown is no true or  the word 1 of the name of me is "button" then exit mouseMove
     lock screen
     set the left of me to 0
-    
     
     
     
