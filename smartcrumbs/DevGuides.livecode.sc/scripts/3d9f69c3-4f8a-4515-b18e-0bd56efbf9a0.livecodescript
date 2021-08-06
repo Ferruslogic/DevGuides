@@ -9,12 +9,8 @@ constant  kColumnLineColor = "192,192,192"
 constant kNewGuideLine = 25
 
 on preOpenStack
-    ---  revIDESubscribe "ideNewControl"
-    --    revIDESubscribe "ideControlDeleted"
-    --    revIDESubscribe "ideSelectedObjectChanged"
+
     revIDESubscribe "ideToolChanged"
-    --  revIDESubscribe "ideWindowsChanged"
-    --    revIDESubscribe "ideMouseMove"
     
     put empty into sMessageID
     deleteGuideControls
@@ -30,7 +26,7 @@ end closeStack
  
 on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
     _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
-    updateGuides the selectedObjects, the long id of this card,  the mouseH,  the mouseV
+    _showGridSystem false, the long id of this card
     pass resizeStack
 end resizeStack
 
@@ -361,12 +357,11 @@ private command _newGuideLine pProperty, pValue, pThisCard
             set the height of tLongId to kNewGuideLine
             set the topLeft of tLongId to 0,0
             set the behavior of tLongId to _newGuideLineBehavior("h")
-            
+            set the cGuideLineType  of tLongId to "horizontal"
             break
     end switch
     
     show tLongId
-    set the cType of  tLongId to pProperty
     return tLongId
 end _newGuideLine
 
@@ -386,18 +381,16 @@ private command _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHei
     put the childControlIDs of this card into tChildControlIDs
     
     repeat for each line tId in tChildControlIDs
-        if the cGuideLine  of control id tId is true  then
             
-            if the cGuideLineType  of control id tId is "h" and pNewWidth <> pOldWidth then
+            if the cGuideLineType  of control id tId is "horizontal"  then
                 set the width  of control id tId to pNewWidth
-                set the top  of control id tId to 0
+                set the left  of control id tId to 0
                 
-            else if pNewHeight <> pOldHeight then
+            else if  the cGuideLineType  of control id tId is "vertical"  then
                 set the height  of control id tId to pNewHeight
                 set the top  of control id tId to 0
                 
             end if
-        end if
     end repeat
     
 end _updateSizeGuideLines

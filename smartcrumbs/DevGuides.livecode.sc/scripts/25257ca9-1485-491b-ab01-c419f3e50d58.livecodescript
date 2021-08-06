@@ -11,6 +11,9 @@ on mouseDown
             set the loc of it to the loc of me
             set the height of it to 1
         end if
+        
+        # recalc
+        createCache the long id of me, the long id of this card
     end if
     
     set the height of me to 1    
@@ -210,14 +213,21 @@ on mouseUp pButtonNumber
     if there is a sLabelControl then delete sLabelControl
     if there is a sDevDeleteGuide then  delete sDevDeleteGuide
     
-    if not within( this card, the loc of me ) then
-        put the long id of me into tLongId
+    set the width of me to the width of this card
+    set the left of me to 0
+    
+    if  the top of me > the bottom of this card or the bottom of me < 0 then
         send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
     end if
     
 end mouseUp
 
 
+getProp cGuideLineType
+    return "horizontal"
+end cGuideLineType
+    
+    
 private function _clamp pNumber, pLower, pUpper    
     if pNumber >= pLower and pNumber <= pUpper then 
         return pNumber
