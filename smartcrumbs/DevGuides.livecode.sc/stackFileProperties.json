@@ -1,129 +1,5 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
-    "05323e0a-03bf-4142-ac87-4f55c6c89dcc": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-13"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-13",
-        "rect": "768,0,769,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "193c654f-f365-48b7-ab6a-4acba9dc7d0b": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-6"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-6",
-        "rect": "320,0,321,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "1b8e75a9-9bbe-4c67-a629-431f5228e412": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-11"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-11",
-        "rect": "640,0,641,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "236ead76-81e7-4cee-b362-f7f7dd9dc6fe": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-1"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-1",
-        "rect": "0,0,1,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "25257ca9-1485-491b-ab01-c419f3e50d58": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "autoHilite": false,
-        "backColor": "255,0,128",
-        "customProperties": {"customKeys": {"cGuideLineType": "horizontal"}},
-        "disabled": true,
-        "foreColor": "255,0,128",
-        "lockLoc": true,
-        "name": "bHorizontalGuideLine",
-        "rect": "13,132,146,158",
-        "sharedHilite": false,
-        "showFocusBorder": false,
-        "style": "opaque",
-        "threeD": false,
-        "traversalOn": false
-      },
-      "type": "button"
-    },
-    "25fd4696-5f95-468e-9efc-eb9e30e8ae8f": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-9"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-9",
-        "rect": "512,0,513,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "29053346-8f1c-4d1d-bc90-4b8e960af04c": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-5"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-5",
-        "rect": "256,0,257,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "2e9ed90e-a88d-4701-91a1-88d69fed7cc5": {
       "properties": {
         "autoHilite": false,
@@ -139,23 +15,6 @@
         "traversalOn": false
       },
       "type": "button"
-    },
-    "311086ff-e5f0-441a-95e2-32236c02eb15": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-10"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-10",
-        "rect": "576,0,577,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
     },
     "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
       "behavior": {
@@ -174,26 +33,31 @@
         "height": 598,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 769
+        "width": 822
       },
       "type": "stack"
     },
-    "45c1252a-f9ac-4a66-b5c9-9d3fbac70fb2": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-8"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-8",
-        "rect": "448,0,449,598",
-        "style": "rectangle"
+    "45d6c8a8-e8f8-482d-852e-3d3c4271030c": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1006 of stack \u2022DevGuides\u2022"
       },
-      "type": "graphic"
+      "properties": {
+        "autoHilite": false,
+        "backColor": "255,0,128",
+        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
+        "disabled": true,
+        "foreColor": "255,0,128",
+        "lockLoc": true,
+        "name": "bHorizontalGuideLine",
+        "rect": "13,132,146,158",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
     },
     "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
       "behavior": {
@@ -217,79 +81,13 @@
       },
       "type": "button"
     },
-    "63a3d091-b3a8-4f34-9413-9fffe21f644d": {
-      "properties": {
-        "backgroundColor": "244,244,244",
-        "borderColor": "109,109,109",
-        "highlight": true,
-        "hiliteColor": "255,128,0",
-        "kind": "com.livecode.widget.switchbutton",
-        "name": "Switch Button",
-        "rect": "181,93,227,120"
-      },
-      "type": "widget"
-    },
-    "717d0057-3a31-44a9-a6f0-071aea58124c": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-7"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-7",
-        "rect": "384,0,385,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nb430a936-c115-47c3-a288-cc6ede37a75c\n85fa994c-76a7-4466-8f43-f3f6463973a8\nff02a94f-b618-483d-b0a1-d0e554157185\n236ead76-81e7-4cee-b362-f7f7dd9dc6fe\nd1da9cd9-afd2-4b0e-92de-fafd8b11f07d\nda3df1c1-2203-4539-965b-06f317b6964e\n89aa7585-38db-4e0d-93a2-8c0b135f6b4c\n29053346-8f1c-4d1d-bc90-4b8e960af04c\n193c654f-f365-48b7-ab6a-4acba9dc7d0b\n717d0057-3a31-44a9-a6f0-071aea58124c\n45c1252a-f9ac-4a66-b5c9-9d3fbac70fb2\n25fd4696-5f95-468e-9efc-eb9e30e8ae8f\n311086ff-e5f0-441a-95e2-32236c02eb15\n1b8e75a9-9bbe-4c67-a629-431f5228e412\n7c91347f-7b88-46dc-8448-d009163af759\n05323e0a-03bf-4142-ac87-4f55c6c89dcc",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
-        "customProperties": {"customKeys": {"cDisplayingGrid": true}},
+        "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
-    },
-    "7c91347f-7b88-46dc-8448-d009163af759": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-12"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-12",
-        "rect": "704,0,705,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "85fa994c-76a7-4466-8f43-f3f6463973a8": {
-      "behavior": {
-        "guid": "25257ca9-1485-491b-ab01-c419f3e50d58",
-        "id": "button id 1008 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {"customKeys": {"cDevDesigns": true}},
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "0,348,769,349",
-        "style": "rectangle"
-      },
-      "type": "graphic"
     },
     "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
@@ -301,34 +99,8 @@
       },
       "type": "image"
     },
-    "89aa7585-38db-4e0d-93a2-8c0b135f6b4c": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-4"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-4",
-        "rect": "192,0,193,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "b430a936-c115-47c3-a288-cc6ede37a75c": {
-      "properties": {
-        "fixedLineHeight": false,
-        "name": "Field",
-        "rect": "443,50,770,293",
-        "style": "rectangle"
-      },
-      "type": "field"
-    },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
-      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58",
+      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
@@ -338,60 +110,6 @@
         "showName": true
       },
       "type": "group"
-    },
-    "d1da9cd9-afd2-4b0e-92de-fafd8b11f07d": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-2"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-2",
-        "rect": "64,0,65,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "da3df1c1-2203-4539-965b-06f317b6964e": {
-      "properties": {
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cGuideLine": true,
-            "cGuideLineType": "v",
-            "cName": "dev-designs-gridSystem-3"
-          }
-        },
-        "foreColor": "192,192,192",
-        "name": "dev-designs-gridSystem-3",
-        "rect": "128,0,129,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
-    "ff02a94f-b618-483d-b0a1-d0e554157185": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 1007 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {"customKeys": {"cDevDesigns": true}},
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "908,0,909,598",
-        "style": "rectangle"
-      },
-      "type": "graphic"
     }
   },
   "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"

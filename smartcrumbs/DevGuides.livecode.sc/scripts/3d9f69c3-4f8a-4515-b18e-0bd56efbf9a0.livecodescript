@@ -71,8 +71,9 @@ on mouseMove pX, pY
     put the short name of the topstack into tThisStack
     set the defaultStack to tThisStack
     put the long id of this card into tThisCard
-        
+    
     if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then 
+        _deleteDevTempGuides
         pass mouseMove
     end if
     
@@ -114,7 +115,7 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
     _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
     
     if mouse( 1 ) is up and the altKey is up then
-        _deleteDevGuides
+        _deleteDevTempGuides
         put empty into sGridLine
         unlock messages; unlock screen
         exit updateGuides
@@ -234,25 +235,16 @@ private function _stackNameIsIDEStack pStackName
 end _stackNameIsIDEStack
 
 
-private command _deleteDevGuides
-    local tChildControlIDs
+private command _deleteDevTempGuides
+    local tChildControlIDs, tLongId
     put the childControlIDs of this card into tChildControlIDs
     
     repeat for each line tId in tChildControlIDs
-        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false then
-            delete control id tId
-        end if
-    end repeat
-    
-end _deleteDevGuides
-
-command _deleteDevTempGuides
-    local tChildControlIDs
-    put the childControlIDs of this card into tChildControlIDs
-    
-    repeat for each line tId in tChildControlIDs
-        if the cDevDesigns of control id tId is true and the cGuideLine  of control id tId is false then
-            delete control id tId
+        put the long id of control id tId into tLongId
+        if word 1 of tLongId is "graphic" and the cDevDesigns of tLongId and the cTemporaryGraphic of tLongId then
+            try
+                delete control id tId
+            end try
         end if
     end repeat
 end _deleteDevTempGuides
@@ -334,7 +326,7 @@ private command _newGuideLine pProperty, pValue, pThisCard
     put it into tLongId
     
     set the lineSize of tLongId to 0
-    set the backColor of tLongId to "255,255,0"
+    set the backColor of tLongId to "170,170,170"
     set the blendLevel of tLongId to 50
     set the bottomRight of tLongId to 0,0
     set the opaque of tLongId to true
