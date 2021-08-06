@@ -1,4 +1,4 @@
-local sWLabel, sDown, tDevDeleteGuide
+local sLabelControl, sDown, tDevDeleteGuide
 
 constant kGuideLineColor = "255,00,128", kMargins = 5
 
@@ -43,53 +43,57 @@ on mouseMove pNewMouseH, pNewMouseV
     lock screen
     set the left of me to 0
     
-    if there is no a graphic "wLabel" of this card then
+    
+    
+    
+    # Label
+    if there is no a sLabelControl then
         reset the templateGraphic
         create invisible graphic "wLabel" in this card
-        put it into sWLabel
+        put it into sLabelControl
         
-        set the width of sWLabel to 51
-        set the height of sWLabel to 25
-        set the foregroundColor of sWLabel to 192,192,192
-        set the backColor of sWLabel to 74,74,74
-        set the loc of sWLabel to the loc of me
-        set the cDevDesigns of sWLabel to true
-        set the opaque of sWLabel to true
-        set the style of sWLabel to "roundRect"
-        set the roundRadius of sWLabel to 5
-        set the showName of sWLabel to true
-        set the textAlign of sWLabel to "left"
-        set the cantSelect of sWLabel to true
+        set the width of sLabelControl to 51
+        set the height of sLabelControl to 25
+        set the foregroundColor of sLabelControl to 192,192,192
+        set the backColor of sLabelControl to 74,74,74
+        set the loc of sLabelControl to the loc of me
+        set the cDevDesigns of sLabelControl to true
+        set the opaque of sLabelControl to true
+        set the style of sLabelControl to "roundRect"
+        set the roundRadius of sLabelControl to 5
+        set the showName of sLabelControl to true
+        set the textAlign of sLabelControl to "left"
+        set the cantSelect of sLabelControl to true
     else
-        put the long id of  graphic "wLabel" of this card into sWLabel
+        put the long id of  graphic "wLabel" of this card into sLabelControl
     end if
     
     
     if pNewMouseV - 30  > 0 then
-        set the bottom of sWLabel to pNewMouseV - 3
+        set the bottom of sLabelControl to pNewMouseV - 3
     else
-        set the top of sWLabel to pNewMouseV + 3
+        set the top of sLabelControl to pNewMouseV + 3
     end if
     
     
     put pNewMouseH +10 into tNewH
     if tNewH > 0 and tNewH < the right of this card - 51 then
-        set left of sWLabel to tNewH
+        set left of sLabelControl to tNewH
     end if
     
     
     put the item 2 of the loc of me into tY
-    set the label of sWLabel to "y" && tY
+    set the label of sLabelControl to "y" && tY
     
     if tY > 0 and tY < the height of this card  then
-        set the layer of sWLabel to top
-        set the visible of sWLabel to true
+        set the layer of sLabelControl to top
+        set the visible of sLabelControl to true
         
         if there is a tDevDeleteGuide then
             delete tDevDeleteGuide
         end if
     else
-        set the visible of sWLabel to false
+        set the visible of sLabelControl to false
         
         if there is no a tDevDeleteGuide then
             create invisible widget "delete-guide" as "com.livecode.widget.svgpath" in this card
@@ -128,7 +132,7 @@ on mouseLeave
     local tLongId
     
     if the word 1 of the name of me is "button" then exit mouseLeave
-    if there is a sWLabel then delete sWLabel
+    if there is a sLabelControl then delete sLabelControl
     if there is a tDevDeleteGuide then delete tDevDeleteGuide
     
     set the foregroundColor of me to kGuideLineColor
@@ -161,7 +165,7 @@ on mouseUp pButtonNumber
     set the foregroundColor of me to kGuideLineColor
     set the backColor of me to kGuideLineColor
     
-    if there is a sWLabel then delete sWLabel
+    if there is a sLabelControl then delete sLabelControl
     if there is a tDevDeleteGuide then  delete tDevDeleteGuide
     
     if not within( this card, the loc of me ) then
