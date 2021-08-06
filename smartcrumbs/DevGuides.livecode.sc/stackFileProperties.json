@@ -77,33 +77,6 @@
       },
       "type": "button"
     },
-    "506fc80c-aa8f-4169-8a1a-1412099e26b8": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cDevDesigns": true,
-            "cDevDesignsTem": false,
-            "cGuideLine": true,
-            "cType": "left"
-          }
-        },
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "486,0,487,921",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "63a3d091-b3a8-4f34-9413-9fffe21f644d": {
       "properties": {
         "backgroundColor": "244,244,244",
@@ -116,7 +89,7 @@
       "type": "widget"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nb86d15c1-e82f-4e12-b909-d78bef4f38d2\n506fc80c-aa8f-4169-8a1a-1412099e26b8",
+      "hierarchy": "63a3d091-b3a8-4f34-9413-9fffe21f644d\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
@@ -131,19 +104,6 @@
         "rect": "5,5,205,44"
       },
       "type": "image"
-    },
-    "b86d15c1-e82f-4e12-b909-d78bef4f38d2": {
-      "properties": {
-        "backgroundColor": "244,244,244",
-        "borderColor": "109,109,109",
-        "foregroundColor": "50,50,50",
-        "hiliteColor": "10,95,244",
-        "kind": "com.livecode.widget.treeview",
-        "name": "c",
-        "rect": "594,59,825,272",
-        "themeClass": "list"
-      },
-      "type": "widget"
     },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
       "hierarchy": "4ab98805-48eb-44ea-86bd-0a8b65d94c58\n25257ca9-1485-491b-ab01-c419f3e50d58\n2e9ed90e-a88d-4701-91a1-88d69fed7cc5",

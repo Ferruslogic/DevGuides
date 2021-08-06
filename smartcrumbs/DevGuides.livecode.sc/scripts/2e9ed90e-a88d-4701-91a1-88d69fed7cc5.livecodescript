@@ -1,6 +1,6 @@
 local sCache
-// TODO: T
--- Como el unico que se mueve soy yo. Creo una cache de donde estan las demas lineas guia que son de mi tipo
+
+# As the only one who moves is me. I create a cache of where are the other guide lines that are of my type
 command createCache pLongId, pThisCard
     local tChilds, tType, tLongId, tRect
     select empty
@@ -21,8 +21,7 @@ command createCache pLongId, pThisCard
     delete variable sCache[ pLongId ]
 end createCache
 
-// TODO: T
--- Buscar las otras lineas guias que tiene el left, top, right, bottom mas cercano al mi
+# Find the other guide lines that have the left, top, right, bottom closest to me
 function getLimits pLimitOne, pLimitTwo, pStartOne, pStartTwo
     local tRect, tLimitOne, tLimitTwo, tResultArray
     
@@ -47,6 +46,8 @@ function getLimits pLimitOne, pLimitTwo, pStartOne, pStartTwo
     return tResultArray
 end getLimits
 
+
+# I create the cache here
 before mouseDown pButtonNumber
     createCache the long id of me, the long id of this card
 end mouseDown

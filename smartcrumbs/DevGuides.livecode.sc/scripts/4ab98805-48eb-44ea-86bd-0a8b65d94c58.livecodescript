@@ -123,6 +123,7 @@ on mouseMove pNewMouseH, pNewMouseV
     end if
     
     local tLimits, tSize
+    
     put getLimits(3 , 1, 0, the width of this card) into tLimits
     put tLimits[ 2 ] - tLimits[ 1 ] into tSize
     
@@ -137,8 +138,10 @@ on mouseMove pNewMouseH, pNewMouseV
         set the visible of sLabelControl1 to true
     end if
     
-    put  (tX/2)  into tNewV
-    set the label of sLabelControl1 to tX
+    local tDis = 0
+    put tX  - tLimits[ 1 ] into tDis
+    put tX - tDis/2   into tNewV
+    set the label of sLabelControl1 to tDis
     set the left of sLabelControl1 to tNewV - 25
     
     # sLabelControl2 
@@ -152,22 +155,23 @@ on mouseMove pNewMouseH, pNewMouseV
         set the visible of sLabelControl2 to true
     end if
     
-    put the right of this card - tX into tX
-    put  the right of me  + (tX/2) - 25 into tNewV
-    set the label of sLabelControl2 to tX
-    set the left of sLabelControl2 to tNewV
+    put  tLimits[ 2 ] - tX   into tDis
+    put tX + tDis/2   into tNewV
+    set the label of sLabelControl2 to tDis
+    set the left of sLabelControl2 to tNewV  - 25
     
     if there is no a sLineControl then
         _createTemporaryGraphic
         put the result into sLineControl
-        set the width of sLineControl to the width of this card
         set the height of sLineControl to 1
         set the top of sLineControl to 30
-        set the left of sLineControl to 0
         set the roundRadius of sLineControl to 0
         set the opaque of sLineControl to true
         set the visible of sLineControl to true
     end if
+    
+    set the width of sLineControl to tSize
+    set the left of sLineControl to tLimits[ 1 ]
     
     if there is a sDevDeleteGuide then set the layer of sDevDeleteGuide to top
     set the layer of sLabelControl to top
