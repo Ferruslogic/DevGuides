@@ -19,15 +19,16 @@
     "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
       "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
       "properties": {
+        "cantAbort": true,
         "customProperties": {
           "SmartCrumbsVCW": {"folder": "DevGuides.livecode.sc"},
           "cREVGeneral": {"scalefactor": 1}
         },
         "fileName": "DevGuides.livecode",
-        "height": 508,
+        "height": 529,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 796
+        "width": 921
       },
       "type": "stack"
     },
@@ -70,8 +71,9 @@
     "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
         "cantSelect": true,
+        "lockLoc": true,
         "name": "logo-Ferrus-Logic.png",
-        "rect": "15,15,215,54"
+        "rect": "5,5,205,44"
       },
       "type": "image"
     },

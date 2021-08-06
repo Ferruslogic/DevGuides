@@ -1,6 +1,6 @@
 local sLabelControl, sDown, sDevDeleteGuide, sLabelControl1, sLabelControl2 , sLineControl
 
-constant kGuideLineColor = "57,255,255"--"255,00,128"
+constant kGuideLineColor = "255,00,128"
 
 on mouseDown
     if the word 1 of the name of me is "button" then exit mouseDown
@@ -118,8 +118,9 @@ on mouseMove pNewMouseH, pNewMouseV
         else
             set the right of sDevDeleteGuide to the right of this card - 15
         end if
-        
+        _deleteAllTemporaryGraphi
         set the visible of sDevDeleteGuide to true
+        exit mouseMove
     end if
     
     # More
@@ -128,27 +129,42 @@ on mouseMove pNewMouseH, pNewMouseV
         put the result into sLabelControl1
         set the showName of sLabelControl1 to true
         set the top of sLabelControl1 to 33
+        set the opaque of sLabelControl1 to true
+        set the backColor of sLabelControl1 to 255,255,255
+        set the visible of sLabelControl1 to true
     end if
     
-    put  (tX/2) - 10 into tNewV
+    put  (tX/2)  into tNewV
     set the label of sLabelControl1 to tX
-    set the left of sLabelControl1 to tNewV
-    set the visible of sLabelControl1 to tNewV > 0
+    set the left of sLabelControl1 to tNewV - 25
     
-    # sLabelControl2 , sLineControl
+    # sLabelControl2 
     if there is no a sLabelControl2 then
         _createTemporaryGraphic
         put the result into sLabelControl2
         set the showName of sLabelControl2 to true
         set the top of sLabelControl2 to 33
+        set the opaque of sLabelControl2 to true
+        set the backColor of sLabelControl2 to 255,255,255
+        set the visible of sLabelControl2 to true
     end if
     
     put the right of this card - tX into tX
-    --    put  (tX/2) - 10 into tNewV
-    --    set the label of sLabelControl2 to tX
-    --    set the left of sLabelControl2 to tNewV
-    --    set the visible of sLabelControl2 to tNewV > 0
+    put  the right of me  + (tX/2) - 25 into tNewV
+    set the label of sLabelControl2 to tX
+    set the left of sLabelControl2 to tNewV
     
+    if there is no a sLineControl then
+        _createTemporaryGraphic
+        put the result into sLineControl
+        set the width of sLineControl to the width of this card
+        set the height of sLineControl to 1
+        set the top of sLineControl to 30
+        set the left of sLineControl to 0
+        set the roundRadius of sLineControl to 0
+        set the opaque of sLineControl to true
+        set the visible of sLineControl to true
+    end if
     
     if there is a sDevDeleteGuide then set the layer of sDevDeleteGuide to top
     set the layer of sLabelControl to top
@@ -216,16 +232,19 @@ end _deleteAllTemporaryGraphi
     
 private command _createTemporaryGraphic
     local tGrc
-    
     create invisible graphic in this card
     put it into tGrc
     set the cDevDesigns of tGrc to true
-    set the width of tGrc to 20
-    set the height of tGrc to 30
+    set the width of tGrc to 50
+    set the height of tGrc to 20
     set the textAlign of tGrc to "center"
+    set the blendLevel of tGrc to 0
     set the lineSize of tGrc to 0
     set the cantSelect of tGrc to true
-    set the foregroundColor of tGrc to kGuideLineColor
-    set the backColor of tGrc to kGuideLineColor
+    set the backColor of tGrc to 0,0,255
+    set the foregroundColor of tGrc to 0,0,255
+    set the opaque of tGrc to false
+    set the style of tGrc to "roundRect"
+    set the roundRadius of tGrc to 5
     return tGrc
 end _createTemporaryGraphic

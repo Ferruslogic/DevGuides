@@ -1,4 +1,4 @@
-local sLabelControl, sDown, tDevDeleteGuide
+local sLabelControl, sDown, sDevDeleteGuide, sLabelControl1, sLabelControl2 , sLineControl
 
 constant kGuideLineColor = "255,00,128", kMargins = 5
 
@@ -13,7 +13,6 @@ on mouseDown
         end if
     end if
     
-    lock screen
     set the height of me to 1
     
     -- Transormar en linea
@@ -86,39 +85,84 @@ on mouseMove pNewMouseH, pNewMouseV
     set the label of sLabelControl to "y" && tY
     
     if tY > 0 and tY < the height of this card  then
-        set the layer of sLabelControl to top
         set the visible of sLabelControl to true
         
-        if there is a tDevDeleteGuide then
-            delete tDevDeleteGuide
+        if there is a sDevDeleteGuide then
+            delete sDevDeleteGuide
         end if
     else
         set the visible of sLabelControl to false
         
-        if there is no a tDevDeleteGuide then
+        if there is no a sDevDeleteGuide then
             create invisible widget "delete-guide" as "com.livecode.widget.svgpath" in this card
-            put it into tDevDeleteGuide
-            set the cDevDesigns of tDevDeleteGuide to true
-            set the width of tDevDeleteGuide to 20
-            set the height of tDevDeleteGuide to 25
-            set the iconPath of tDevDeleteGuide to "M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M17,7H14.5L13.5,6H10.5L9.5,7H7V9H17V7M9,18H15A1,1 0 0,0 16,17V10H8V17A1,1 0 0,0 9,18Z"
-            set the cantSelect of tDevDeleteGuide to true
-            set the foregroundColor of tDevDeleteGuide to 74,74,74
-            set the left of tDevDeleteGuide to pNewMouseH
+            put it into sDevDeleteGuide
+            set the cDevDesigns of sDevDeleteGuide to true
+            set the width of sDevDeleteGuide to 20
+            set the height of sDevDeleteGuide to 25
+            set the iconPath of sDevDeleteGuide to "M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M17,7H14.5L13.5,6H10.5L9.5,7H7V9H17V7M9,18H15A1,1 0 0,0 16,17V10H8V17A1,1 0 0,0 9,18Z"
+            set the cantSelect of sDevDeleteGuide to true
+            set the foregroundColor of sDevDeleteGuide to 74,74,74
+            set the left of sDevDeleteGuide to pNewMouseH
         end if
         
-        set the left of tDevDeleteGuide to  _clamp( pNewMouseH, kMargins, the width of this card - (20 + kMargins))
+        set the left of sDevDeleteGuide to  _clamp( pNewMouseH, kMargins, the width of this card - (20 + kMargins))
         
         if pNewMouseV <= 0 then
-            set the top of tDevDeleteGuide to kMargins + 10
+            set the top of sDevDeleteGuide to kMargins + 10
         else
-            set the bottom of tDevDeleteGuide to the bottom of this card - (kMargins + 10)
+            set the bottom of sDevDeleteGuide to the bottom of this card - (kMargins + 10)
         end if
         
-        set the layer of tDevDeleteGuide to top
-        set the visible of tDevDeleteGuide to true
+        _deleteAllTemporaryGraphi
+        set the visible of sDevDeleteGuide to true
+        exit mouseMove
     end if
-    unlock screen
+    
+    # More
+    if there is no a sLabelControl1 then
+        _createTemporaryGraphic
+        put the result into sLabelControl1
+        set the showName of sLabelControl1 to true
+        set the left of sLabelControl1 to 33
+        set the opaque of sLabelControl1 to true
+        set the backColor of sLabelControl1 to 255,255,255
+        set the visible of sLabelControl1 to true
+    end if
+    
+    put  (tY/2) into tNewH
+    set the label of sLabelControl1 to tY
+    set the top of sLabelControl1 to tNewH  - 10
+    
+    # sLabelControl2 
+    if there is no a sLabelControl2 then
+        _createTemporaryGraphic
+        put the result into sLabelControl2
+        set the showName of sLabelControl2 to true
+        set the left of sLabelControl2 to 33
+        set the opaque of sLabelControl2 to true
+        set the backColor of sLabelControl2 to 255,255,255
+        set the visible of sLabelControl2 to true
+    end if
+    
+    put the bottom of this card - tY into tY
+    put  the bottom of me  + (tY/2) - 10 into tNewH
+    set the label of sLabelControl2 to tY
+    set the top of sLabelControl2 to tNewH
+    
+    if there is no a sLineControl then
+        _createTemporaryGraphic
+        put the result into sLineControl
+        set the width of sLineControl to 1 
+        set the height of sLineControl to the height of this card
+        set the left of sLineControl to 30
+        set the top of sLineControl to 0
+        set the roundRadius of sLineControl to 0
+        set the opaque of sLineControl to true
+        set the visible of sLineControl to true
+    end if
+    
+    if there is a sDevDeleteGuide then set the layer of sDevDeleteGuide to top
+    set the layer of sLabelControl to top
 end mouseMove
 
 
@@ -130,10 +174,10 @@ end mouseEnter
 
 on mouseLeave
     local tLongId
-    
+    _deleteAllTemporaryGraphi
     if the word 1 of the name of me is "button" then exit mouseLeave
     if there is a sLabelControl then delete sLabelControl
-    if there is a tDevDeleteGuide then delete tDevDeleteGuide
+    if there is a sDevDeleteGuide then delete sDevDeleteGuide
     
     set the foregroundColor of me to kGuideLineColor
     set the backColor of me to kGuideLineColor
@@ -151,9 +195,9 @@ end mouseLeave
 on mouseRelease pButtonNumber
     set the foregroundColor of me to kGuideLineColor
     set the backColor of me to kGuideLineColor
-    
+    _deleteAllTemporaryGraphi
     put false into sDown
-    if there is a tDevDeleteGuide then delete tDevDeleteGuide
+    if there is a sDevDeleteGuide then delete sDevDeleteGuide
 end mouseRelease
 
 
@@ -161,12 +205,12 @@ on mouseUp pButtonNumber
     local tLongId
     
     put false into sDown
-    
+    _deleteAllTemporaryGraphi
     set the foregroundColor of me to kGuideLineColor
     set the backColor of me to kGuideLineColor
     
     if there is a sLabelControl then delete sLabelControl
-    if there is a tDevDeleteGuide then  delete tDevDeleteGuide
+    if there is a sDevDeleteGuide then  delete sDevDeleteGuide
     
     if not within( this card, the loc of me ) then
         put the long id of me into tLongId
@@ -185,3 +229,32 @@ private function _clamp pNumber, pLower, pUpper
         return pUpper
     end if
 end _clamp
+
+
+
+private command _deleteAllTemporaryGraphi
+    if there is a sLabelControl1 then delete sLabelControl1
+    if there is a sLabelControl2 then delete sLabelControl2
+    if there is a sLineControl then delete sLineControl
+end _deleteAllTemporaryGraphi
+    
+private command _createTemporaryGraphic
+    local tGrc
+    create invisible graphic in this card
+    put it into tGrc
+    set the cDevDesigns of tGrc to true
+    set the width of tGrc to 50
+    set the height of tGrc to 20
+    set the textAlign of tGrc to "center"
+    set the blendLevel of tGrc to 0
+    set the lineSize of tGrc to 0
+    set the cantSelect of tGrc to true
+    set the backColor of tGrc to 0,0,255
+    set the foregroundColor of tGrc to 0,0,255
+    set the opaque of tGrc to false
+    set the style of tGrc to "roundRect"
+    set the roundRadius of tGrc to 5
+    return tGrc
+end _createTemporaryGraphic
+
+
