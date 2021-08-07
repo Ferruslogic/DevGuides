@@ -1,5 +1,27 @@
 {
   "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+    "1e0c6d89-cd4a-4f00-b6aa-905c4813f75a": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1006 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "autoHilite": false,
+        "backColor": "255,0,128",
+        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
+        "disabled": true,
+        "foreColor": "255,0,128",
+        "lockLoc": true,
+        "name": "bHorizontalGuideLine",
+        "rect": "9,120,142,146",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
+    },
     "2e9ed90e-a88d-4701-91a1-88d69fed7cc5": {
       "properties": {
         "autoHilite": false,
@@ -32,6 +54,28 @@
         "width": 716
       },
       "type": "stack"
+    },
+    "4176371b-baa5-474d-8ad9-9f591c87ebc1": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1006 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "autoHilite": false,
+        "backColor": "255,0,128",
+        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
+        "disabled": true,
+        "foreColor": "255,0,128",
+        "lockLoc": true,
+        "name": "bHorizontalGuideLine",
+        "rect": "9,120,142,146",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
     },
     "45d6c8a8-e8f8-482d-852e-3d3c4271030c": {
       "behavior": {
@@ -77,44 +121,17 @@
       },
       "type": "button"
     },
-    "56a191a8-8003-4500-bdf8-aa9ba656b31c": {
-      "properties": {
-        "default": true,
-        "name": "Button",
-        "rect": "440,79,522,102",
-        "style": "standard"
-      },
-      "type": "button"
-    },
-    "6ec6d20d-167b-4e05-ba49-23b655136bfc": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "autoHilite": false,
-        "backColor": "255,0,128",
-        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
-        "disabled": true,
-        "foreColor": "255,0,128",
-        "lockLoc": true,
-        "name": "bHorizontalGuideLine",
-        "rect": "9,120,142,146",
-        "sharedHilite": false,
-        "showFocusBorder": false,
-        "style": "opaque",
-        "threeD": false,
-        "traversalOn": false
-      },
-      "type": "button"
-    },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "e0f92d7a-33a0-452a-897d-d73308bcaf4b\n895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nabeb074d-8eaa-4e92-bb24-b189c4301d04\nbeb65ca5-70cf-4adc-b5c3-108027da65ce\nb94a189c-78da-425f-979f-52d5adf481de",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nabeb074d-8eaa-4e92-bb24-b189c4301d04\n7680f6d3-f045-4201-a190-b912d5ac3237",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
+    },
+    "7680f6d3-f045-4201-a190-b912d5ac3237": {
+      "properties": {"rect": "428,106,436,114"},
+      "type": "group"
     },
     "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
@@ -126,35 +143,12 @@
       },
       "type": "image"
     },
-    "9e1ae0a7-8238-4802-8b78-1258321fe660": {
-      "properties": {
-        "default": true,
-        "name": "Button",
-        "rect": "209,280,291,303",
-        "style": "standard"
-      },
-      "type": "button"
-    },
     "abeb074d-8eaa-4e92-bb24-b189c4301d04": {
       "properties": {"name": "lib", "rect": "158,83,166,91"},
       "type": "group"
     },
-    "b94a189c-78da-425f-979f-52d5adf481de": {
-      "hierarchy": "56a191a8-8003-4500-bdf8-aa9ba656b31c\n9e1ae0a7-8238-4802-8b78-1258321fe660",
-      "properties": {"rect": "205,75,526,307"},
-      "type": "group"
-    },
-    "beb65ca5-70cf-4adc-b5c3-108027da65ce": {
-      "properties": {
-        "default": true,
-        "name": "Button",
-        "rect": "262,164,344,187",
-        "style": "standard"
-      },
-      "type": "button"
-    },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
-      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c\n6ec6d20d-167b-4e05-ba49-23b655136bfc\nd330792f-8460-48a8-b58b-de5d14af9002",
+      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c\n4176371b-baa5-474d-8ad9-9f591c87ebc1\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
@@ -164,40 +158,6 @@
         "showName": true
       },
       "type": "group"
-    },
-    "d330792f-8460-48a8-b58b-de5d14af9002": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "autoHilite": false,
-        "backColor": "255,0,128",
-        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
-        "disabled": true,
-        "foreColor": "255,0,128",
-        "lockLoc": true,
-        "name": "bHorizontalGuideLine",
-        "rect": "9,120,142,146",
-        "sharedHilite": false,
-        "showFocusBorder": false,
-        "style": "opaque",
-        "threeD": false,
-        "traversalOn": false
-      },
-      "type": "button"
-    },
-    "e0f92d7a-33a0-452a-897d-d73308bcaf4b": {
-      "properties": {
-        "backColor": "255,0,0",
-        "filled": true,
-        "margins": 8,
-        "name": "Rectangle33",
-        "opaque": true,
-        "rect": "400,166,474,202",
-        "style": "rectangle"
-      },
-      "type": "graphic"
     }
   },
   "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"

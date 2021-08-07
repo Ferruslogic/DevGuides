@@ -28,7 +28,6 @@ end closeStack
 
 on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
     _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
-    _showGridSystem false, the long id of this card
     pass resizeStack
 end resizeStack
 
@@ -93,10 +92,6 @@ on updateGuides  pThisCard,  pX, pY
     end if
     
     
-    # Displaying the Grid in this card
-    _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
-    
-    
     if mouse( 1 ) is up and the altKey is up then
         _deleteDevTempGuides
         put empty into sGridLine
@@ -107,25 +102,15 @@ on updateGuides  pThisCard,  pX, pY
     
     if tSelectedObjects is empty then exit updateGuides
     
-    
     local tTergetProperty
-    put _tergetProperty( tSelectedObjects ) into tTergetProperty
+    put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
     
-    _controlCaching pThisCard
-    
-    
-    
-    if the num of lines of tSelectedObjects is 1 and the word 5 of tSelectedObjects is "card" then
-        delete variable sControlCachingArray[ tSelectedObjects ]
-        _updateGuides tSelectedObjects, pThisCard,  pX, pY
-        
-    else
-        -- Calcula la recta de la union de todos los obj seleccionado
-        -- pX, pY is not within tLaRectCalculada
-    end if
+    _updateDevGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
     
     unlock messages; unlock screen
 end updateGuides
+
+
 
 command deleteGuideControls pLongId
     local tChildControlIDs
@@ -146,12 +131,50 @@ command deleteGuideControls pLongId
 end deleteGuideControls
 
 
+
+-- Tesla [T] = unidad de campo 
+constant kTeslaControl = 3, kTeslaGuideLines = 10
+
+private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, pY
+    local tChildControlIDs, tLongId, tLoc, tX, tY, tRect
+    
+    put the childControlIDs of pLongIdCd into tChildControlIDs
+    
+    -- Calc 
+    repeat for each line tId in tChildControlIDs
+        put the long id of control id tId of pLongIdCd into tLongID
+        
+        if the visible of tLongID is false then next repeat
+        
+        # the loc of this control
+        put the loc of tLongId into tLoc
+        put the item 1 of tLoc into tX
+        put the item 2 of tLoc into tY
+        
+        # the rectangle of this control
+        put the left  of tLongId into tRect["left"]
+        put the top  of tLongId into tRect["top"]
+        put the right  of tLongId into tRect["right"]
+        put the bottom  of tLongId into tRect["bottom"]
+        
+        ---> Vertical guides <---
+        # Left
+        
+        
+    end repeat
+    
+    -- Incluir el calculo con respecto a la targeta aqui
+    
+    
+    -- Show guide lines
+    
+end _updateDevGuides
+
 private command _saveStatus
     local tLongID, tChildControlIDs
     lock screen; lock messages
     
     put the long id of this card into tLongID
-    _showGridSystem false, tLongID
     
     put the childControlIDs of  tLongID into tChildControlIDs
     put tLongID into sGuideStatus["card"]
@@ -172,9 +195,6 @@ private command _restoreStatus
     local tLongID, tChildControlIDs
     lock screen; lock messages
     put the long id of this card into tLongID
-    
-    # Displaying the Grid in this card
-    _showGridSystem the cDisplayingGrid of tLongID, tLongID
     
     put the childControlIDs of  tLongID into tChildControlIDs
     if tLongID is no sGuideStatus["card"] then exit _restoreStatus
@@ -209,17 +229,14 @@ private function _mouseControl
     return tMouseControl
 end _mouseControl
 
-private function _tergetProperty pControls
-    local tLongId, tThisCard, tRect, tLeft, tTop, tRight, tBottom, tX, tY, tResult
+
+private function _tergetProperty pThisCard, pControls
+    local tLongId, tLeft, tTop, tRight, tBottom, tX, tY, tResult
     
-    put the long id of this card into tThisCard
-    put the rect of tThisCard into tRect
-    split tRect by comma
-    
-    put tRect[ 3 ] into tLeft
-    put tRect[ 4 ] into tTop
-    put tRect[ 1 ] into tRight
-    put tRect[ 2 ] into tBottom
+    put the right of pThisCard into tLeft
+    put the bottom of pThisCard into tTop
+    put the left of pThisCard into tRight
+    put the top of pThisCard into tBottom
     
     repeat for each line tControl in pControls
         
@@ -247,7 +264,14 @@ private function _tergetProperty pControls
     put trunc( tLeft + (tRight - tLeft)/ 2 ) into tX
     put trunc( tTop + (tBottom - tTop)/2 ) into tY
     
-    put tX, tY
+    put tLeft into tResult["left"]
+    put tTop into tResult["top"]
+    put tRight into tResult["right"]
+    put tBottom into tResult["bottom"]
+    put tX into tResult["x"]
+    put tY into tResult["y"]
+    
+    return tResult
 end _tergetProperty
 
 
@@ -269,27 +293,7 @@ private function _myCard pLongId
 end _myCard
 
 
-private command _controlCaching pLongIdCd
-    local tChildControlIDs, tLongID
-    
-    put the childControlIDs of pLongIdCd into tChildControlIDs
-    
-    repeat for each line tId in tChildControlIDs
-        put the long id of control id tId of pLongIdCd into tLongID
-        
-        if the visible of tLongID is false or long id of (the owner of tLongID)  is no pLongIdCd then next repeat
-        
-        put the rect of tLongId into sControlCachingArray["controls"][ tLongID ]["rect"]
-        put the loc of tLongId into sControlCachingArray["controls"][ tLongID ]["loc"]
-        
-        put sControlCachingArray["controls"][ tLongID ]["loc"] into sControlCachingArray["controls"][ tLongID ]["locArray"]
-        split  sControlCachingArray["controls"][ tLongID ]["locArray"] by comma
-        
-        put sControlCachingArray["controls"][ tLongID ]["rect"] into sControlCachingArray["controls"][ tLongID ]["rectArray"]
-        split  sControlCachingArray["controls"][ tLongID ]["rectArray"] by comma
-    end repeat
-    
-end _controlCaching
+
 
 
 private function _stackNameIsIDEStack pStackName
@@ -313,72 +317,6 @@ private command _deleteDevTempGuides
 end _deleteDevTempGuides
     
     
-private command _updateGuides pLongId, pThisCard, pMouseX, pMouseY
-    local tControlCachingArray, tWidth, tHeight
-    
-    put the width of pLongId into tWidth
-    put the height of pLongId into tHeight
-    
-    put sControlCachingArray into tControlCachingArray
-    delete variable tControlCachingArray[ pLongId ]
-    
-    
-    -- Calcular 
-    repeat for each key tLongID in tControlCachingArray
-        put sControlCachingArray[ pLongId ]["locArray"][ 1 ] - sControlCachingArray[ tLongID ]["locArray"][ 1 ] into sNeighbors[ tLongID ]["XDiff"]
-        put  sControlCachingArray[ pLongId ]["locArray"][ 2 ] -  sControlCachingArray[ tLongID ]["locArray"][ 2 ] into sNeighbors[ tLongID ]["YDiff"]
-        
-    end repeat
-    
-    
-end _updateGuides
-
-
-# Displaying the Grid
-private command _showGridSystem pDisplaying, pThisCard
-    local tWidthCd, tHeightCd, tLongId, tGrid, tLeft = 0
-
-    repeat with x = 1 to 13
-        if there is a sGridSystem[x] then
-            delete variable sGuideStatus["controls"][ sGridSystem[ x ]]
-            delete  sGridSystem[ x ]
-        end if
-        
-        if there is a  grc("dev-designs-gridSystem-" & x) of pThisCard then
-            delete variable sGuideStatus["controls"][  the long id of  grc("dev-designs-gridSystem-" & x) of pThisCard ]
-            delete  grc("dev-designs-gridSystem-" & x) of pThisCard
-        end if
-        
-    end repeat
-    
-    if pDisplaying is true then
-        put the width of pThisCard into tWidthCd
-        put the height of pThisCard into tHeightCd
-        put round(tWidthCd/12) into tGrid
-        
-        repeat with x = 1 to 13
-            create  grc("dev-designs-gridSystem-" & x) in pThisCard
-            put it into tLongId
-            
-            put tLongId into sGridSystem[ x ]
-            set the foregroundColor of tLongId to kColumnLineColor
-            set the width of tLongId to 1
-            set the height of tLongId to tHeightCd
-            set the topLeft of tLongId to tLeft,0
-            set the layer of tLongId to top
-            set the cGuideLine of tLongId to true
-            set the cantSelect of tLongId to true
-            set the cName of tLongId to the short name of tLongId
-            set the cGuideLineType of  tLongId to "v"
-            
-            add tGrid to tLeft
-        end repeat
-    end if
-    
-    unlock screen
-end _showGridSystem
-
-
 private command _newGuideLine pProperty, pValue, pThisCard
     local tWidthCd, tHeightCd, tLongId
     

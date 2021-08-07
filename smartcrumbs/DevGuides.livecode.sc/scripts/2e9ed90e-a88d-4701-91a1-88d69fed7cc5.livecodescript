@@ -126,3 +126,7 @@ function _createTemporaryGraphic
     return tGrc
 end _createTemporaryGraphic
 
+
+getProp cDevGravity
+    return 7
+end cDevGravity
