@@ -11,7 +11,7 @@ constant kNewGuideLine = 25
 constant kTolerance = 3
 
 on preOpenStack
-
+    
     revIDESubscribe "ideToolChanged"
     
     put empty into sMessageID
@@ -24,8 +24,8 @@ on closeStack
     deleteGuideControls
     pass closeStack
 end closeStack
- 
- 
+
+
 on resizeStack pNewWidth, pNewHeight, pOldWidth, pOldHeight
     _updateSizeGuideLines  pNewWidth, pNewHeight, pOldWidth, pOldHeight
     _showGridSystem false, the long id of this card
@@ -129,7 +129,7 @@ end updateGuides
 
 command deleteGuideControls pLongId
     local tChildControlIDs
-     
+    
     if there is a pLongId then
         delete pLongId
         exit deleteGuideControls
@@ -144,9 +144,9 @@ command deleteGuideControls pLongId
     end repeat
     
 end deleteGuideControls
- 
- 
- private command _saveStatus
+
+
+private command _saveStatus
     local tLongID, tChildControlIDs
     lock screen; lock messages
     
@@ -210,16 +210,48 @@ private function _mouseControl
 end _mouseControl
 
 private function _tergetProperty pControls
-    local tLongId, tThisCard, tOwner, tLeft, tTop, tRight, tBottom
+    local tLongId, tThisCard, tRect, tLeft, tTop, tRight, tBottom, tX, tY, tResult
+    
+    put the long id of this card into tThisCard
+    put the rect of tThisCard into tRect
+    split tRect by comma
+    
+    put tRect[ 3 ] into tLeft
+    put tRect[ 4 ] into tTop
+    put tRect[ 1 ] into tRight
+    put tRect[ 2 ] into tBottom
     
     repeat for each line tControl in pControls
         
+        # calc the Left of rectangle
+        if the left of tControl < tLeft then
+            put the left of tControl into tLeft
+        end if
+        
+        # calc the top of rectangle
+        if the top of tControl < tTop then
+            put the top of tControl into tTop
+        end if
+        
+        # calc the right of rectangle
+        if the right of tControl > tRight then
+            put the right of tControl into tRight
+        end if
+        
+        # calc the bottom of rectangle
+        if the bottom of tControl > tBottom then
+            put the bottom of tControl into tBottom
+        end if
     end repeat
     
+    put trunc( tLeft + (tRight - tLeft)/ 2 ) into tX
+    put trunc( tTop + (tBottom - tTop)/2 ) into tY
+    
+    put tX, tY
 end _tergetProperty
 
 
-function _biggestOwner pLongId
+private function _biggestOwner pLongId
     local tOffset, tOwner
     
     put wordOffSet("card", pLongId)   into tOffset
@@ -232,7 +264,7 @@ function _biggestOwner pLongId
 end _biggestOwner
 
 
-function _myCard pLongId
+private function _myCard pLongId
     return the word (wordOffSet("card", pLongId)) to - 1 of pLongId
 end _myCard
 
