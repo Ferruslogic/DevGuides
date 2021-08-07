@@ -7,7 +7,7 @@
         "disabled": true,
         "lockLoc": true,
         "name": "bGuideLinesUtils\u0000",
-        "rect": "13,165,146,191",
+        "rect": "9,153,142,179",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -17,10 +17,6 @@
       "type": "button"
     },
     "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
       "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
       "properties": {
         "cantAbort": true,
@@ -30,10 +26,10 @@
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
-        "height": 598,
+        "height": 287,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 822
+        "width": 716
       },
       "type": "stack"
     },
@@ -50,7 +46,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "13,132,146,158",
+        "rect": "9,120,142,146",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -72,7 +68,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bVerticalGuideLine",
-        "rect": "13,99,146,125",
+        "rect": "9,87,142,113",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -82,7 +78,7 @@
       "type": "button"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nabeb074d-8eaa-4e92-bb24-b189c4301d04",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
@@ -99,13 +95,17 @@
       },
       "type": "image"
     },
+    "abeb074d-8eaa-4e92-bb24-b189c4301d04": {
+      "properties": {"name": "lib", "rect": "158,83,166,91"},
+      "type": "group"
+    },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
       "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
         "name": "bGuideLines",
-        "rect": "7,77,152,200",
+        "rect": "3,65,148,188",
         "showBorder": true,
         "showName": true
       },

@@ -3,10 +3,12 @@ global gDevGuideLinesArray
 local sControlCachingArray, sMessageID, sNeighbors, sPrevSelectedObjects
 local sGuideStatus, sGridLine
 local sGridSystem, sThisCard
+local sNewGuideLine
 
 
-constant  kColumnLineColor = "192,192,192"
+constant kColumnLineColor = "192,192,192"
 constant kNewGuideLine = 25
+constant kTolerance = 3
 
 on preOpenStack
 
@@ -32,9 +34,6 @@ end resizeStack
 
 
 
-
-
-
 on ideToolChanged
     if the tool is "pointer tool" then
         _restoreStatus 
@@ -44,26 +43,7 @@ on ideToolChanged
 end ideToolChanged
 
 
-command deleteGuideControls pLongId
-    local tChildControlIDs
-     
-    if there is a pLongId then
-        delete pLongId
-        exit deleteGuideControls
-    end if
-    
-    put the childControlIDs of this card into tChildControlIDs
-    
-    repeat for each line tId in tChildControlIDs
-        if the cDevDesigns of control id tId is true or the cGuideLine  of control id tId is true  then
-            delete control id tId
-        end if
-    end repeat
-    
-end deleteGuideControls
- 
- 
- 
+
 on mouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard
     
@@ -72,22 +52,23 @@ on mouseMove pX, pY
     set the defaultStack to tThisStack
     put the long id of this card into tThisCard
     
-    if sMessageID is an integer  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then 
+    if sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack  then 
+        delete variable sControlCachingArray
         _deleteDevTempGuides
         pass mouseMove
     end if
     
-    send "updateGuides tSelectedObjects, tThisCard,  pX, pY" to me in 0 sec
+    if sMessageID is a number then cancel sMessageID
+    send "updateGuides  tThisCard,  pX, pY" to me in 0.1 sec
     put the result into sMessageID
-    
 end mouseMove
 
 
-local sNewGuideLine
-on updateGuides pSelectedObjects, pThisCard,  pX, pY 
-    put empty into sMessageID
-    
+on updateGuides  pThisCard,  pX, pY 
+    local tSelectedObjects
     lock screen; lock messages
+    put empty into sMessageID
+    put the SelectedObjects into tSelectedObjects
     
     if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
         delete sNewGuideLine
@@ -111,8 +92,10 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
         end switch
     end if
     
+    
     # Displaying the Grid in this card
     _showGridSystem the cDisplayingGrid of pThisCard, pThisCard
+    
     
     if mouse( 1 ) is up and the altKey is up then
         _deleteDevTempGuides
@@ -121,18 +104,20 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
         exit updateGuides
     end if
     
-    if there is no pSelectedObjects then exit updateGuides
     
-    if the cGuideLine of pSelectedObjects or there is a sGridLine and the cGuideLine of  sGridLine then
-        set the selected of pSelectedObjects to true
-        put pSelectedObjects into sGridLine
-        exit updateGuides
-    end if
+    if tSelectedObjects is empty then exit updateGuides
+    
+    
+    local tTergetProperty
+    put _tergetProperty( tSelectedObjects ) into tTergetProperty
     
     _controlCaching pThisCard
     
-    if the num of lines of pSelectedObjects is 1 and the word 5 of pSelectedObjects is "card" then
-        _updateGuides pSelectedObjects, pThisCard,  pX, pY
+    
+    
+    if the num of lines of tSelectedObjects is 1 and the word 5 of tSelectedObjects is "card" then
+        delete variable sControlCachingArray[ tSelectedObjects ]
+        _updateGuides tSelectedObjects, pThisCard,  pX, pY
         
     else
         -- Calcula la recta de la union de todos los obj seleccionado
@@ -142,9 +127,26 @@ on updateGuides pSelectedObjects, pThisCard,  pX, pY
     unlock messages; unlock screen
 end updateGuides
 
-
-
-private command _saveStatus
+command deleteGuideControls pLongId
+    local tChildControlIDs
+     
+    if there is a pLongId then
+        delete pLongId
+        exit deleteGuideControls
+    end if
+    
+    put the childControlIDs of this card into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cDevDesigns of control id tId is true or the cGuideLine  of control id tId is true  then
+            delete control id tId
+        end if
+    end repeat
+    
+end deleteGuideControls
+ 
+ 
+ private command _saveStatus
     local tLongID, tChildControlIDs
     lock screen; lock messages
     
@@ -207,6 +209,33 @@ private function _mouseControl
     return tMouseControl
 end _mouseControl
 
+private function _tergetProperty pControls
+    local tLongId, tThisCard, tOwner, tLeft, tTop, tRight, tBottom
+    
+    repeat for each line tControl in pControls
+        
+    end repeat
+    
+end _tergetProperty
+
+
+function _biggestOwner pLongId
+    local tOffset, tOwner
+    
+    put wordOffSet("card", pLongId)   into tOffset
+    
+    if tOffset is 5 then --> El duenno es la targeta
+        return the word 5 to - 1 of pLongId
+    else
+        return the word tOffset - 4 to - 1 of pLongId
+    end if
+end _biggestOwner
+
+
+function _myCard pLongId
+    return the word (wordOffSet("card", pLongId)) to - 1 of pLongId
+end _myCard
+
 
 private command _controlCaching pLongIdCd
     local tChildControlIDs, tLongID
@@ -217,13 +246,15 @@ private command _controlCaching pLongIdCd
         put the long id of control id tId of pLongIdCd into tLongID
         
         if the visible of tLongID is false or long id of (the owner of tLongID)  is no pLongIdCd then next repeat
-        put the rect of tLongId into sControlCachingArray[ tLongID ]["rect"]
-        put the loc of tLongId into sControlCachingArray[ tLongID ]["loc"]
-        put sControlCachingArray[ tLongID ]["loc"] into sControlCachingArray[ tLongID ]["locArray"]
-        split  sControlCachingArray[ tLongID ]["locArray"] by comma
         
-        put sControlCachingArray[ tLongID ]["rect"] into sControlCachingArray[ tLongID ]["rectArray"]
-        split  sControlCachingArray[ tLongID ]["rectArray"] by comma
+        put the rect of tLongId into sControlCachingArray["controls"][ tLongID ]["rect"]
+        put the loc of tLongId into sControlCachingArray["controls"][ tLongID ]["loc"]
+        
+        put sControlCachingArray["controls"][ tLongID ]["loc"] into sControlCachingArray["controls"][ tLongID ]["locArray"]
+        split  sControlCachingArray["controls"][ tLongID ]["locArray"] by comma
+        
+        put sControlCachingArray["controls"][ tLongID ]["rect"] into sControlCachingArray["controls"][ tLongID ]["rectArray"]
+        split  sControlCachingArray["controls"][ tLongID ]["rectArray"] by comma
     end repeat
     
 end _controlCaching
@@ -274,7 +305,7 @@ end _updateGuides
 # Displaying the Grid
 private command _showGridSystem pDisplaying, pThisCard
     local tWidthCd, tHeightCd, tLongId, tGrid, tLeft = 0
-    lock screen
+
     repeat with x = 1 to 13
         if there is a sGridSystem[x] then
             delete variable sGuideStatus["controls"][ sGridSystem[ x ]]

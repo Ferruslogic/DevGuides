@@ -5,9 +5,6 @@ local sTemporaryGraphic
 command _createCache pLongId, pThisCard
     local tChilds, tType, tLongId, tRect
     
-    select empty
-    focus on nothing
-    
     put the cGuideLineType of pLongId into tType
     put the childControlIDs of pThisCard into tChilds
     
@@ -93,9 +90,6 @@ function _trashIconPath
 end _trashIconPath
     
     
-    function _myCard pLongId
-    return the word (wordOffSet("card", pLongId)) to - 1 of pLongId
-end _myCard
 
 
 
@@ -120,8 +114,8 @@ function _createTemporaryGraphic
     set the blendLevel of tGrc to 0
     set the lineSize of tGrc to 0
     set the cantSelect of tGrc to true
-    set the backColor of tGrc to 0,0,200
-    set the foregroundColor of tGrc to 0,0,200
+    set the backColor of tGrc to 56,56,255
+    set the foregroundColor of tGrc to 56,56,255
     set the layerMode of tGrc to "dynamic"
     set the opaque of tGrc to false
     set the style of tGrc to "roundRect"
