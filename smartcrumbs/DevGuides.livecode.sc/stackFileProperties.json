@@ -48,10 +48,10 @@
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
-        "height": 413,
+        "height": 400,
         "name": "DevGuides",
         "style": "toplevel",
-        "width": 716
+        "width": 783
       },
       "type": "stack"
     },
@@ -122,16 +122,12 @@
       "type": "button"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nabeb074d-8eaa-4e92-bb24-b189c4301d04\n7680f6d3-f045-4201-a190-b912d5ac3237",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
-    },
-    "7680f6d3-f045-4201-a190-b912d5ac3237": {
-      "properties": {"rect": "428,106,436,114"},
-      "type": "group"
     },
     "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
@@ -142,10 +138,6 @@
         "repeatCount": -1
       },
       "type": "image"
-    },
-    "abeb074d-8eaa-4e92-bb24-b189c4301d04": {
-      "properties": {"name": "lib", "rect": "158,83,166,91"},
-      "type": "group"
     },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
       "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c\n4176371b-baa5-474d-8ad9-9f591c87ebc1\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a",

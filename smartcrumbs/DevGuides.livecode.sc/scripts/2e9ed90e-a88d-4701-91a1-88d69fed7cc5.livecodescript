@@ -128,5 +128,6 @@ end _createTemporaryGraphic
 
 
 getProp cDevGravity
+    answer 333
     return 7
 end cDevGravity
