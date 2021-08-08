@@ -63,14 +63,12 @@ end mouseMove
 
 on updateGuides  pThisCard,  pX, pY 
     local tSelectedObjects
-    # lock screen; lock messages
     put empty into sMessageID
     put the SelectedObjects into tSelectedObjects
     
     if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
         delete sNewGuideLine
         put empty into sNewGuideLine
-        #unlock messages; unlock screen
         exit updateGuides
     end if
     
@@ -91,20 +89,19 @@ on updateGuides  pThisCard,  pX, pY
     
     
     if mouse( 1 ) is up and the altKey is up then
+        lock screen; lock messages
         _deleteDevTempGuides
         put empty into sGridLine
-        #unlock messages; unlock screen
+        unlock messages; unlock screen
         exit updateGuides
     end if
     
     
     if tSelectedObjects is empty then exit updateGuides
-    
     local tTergetProperty
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
     
     _updateDevGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
-#unlock screen
 end updateGuides
 
 
@@ -242,7 +239,7 @@ private command _drawVerticalGuide @pVerticalPoint, pTergetProperty
     if  pVerticalPoint[ "drawLimitUp" ] is true then
         # Back of label 1
         put pTergetProperty["top"] - pVerticalPoint[ "LimitUp" ] into pVerticalPoint[ "sizeLimitUp" ]
-        put (pTergetProperty[ "top" ] - pVerticalPoint["min"])  into pVerticalPoint[ "label-1" ]
+        put pTergetProperty[ "top" ] - pVerticalPoint["min"] into pVerticalPoint[ "label-1" ]
         put _createTemporaryGraphic() into tLongId
         set the height of tLongId to pVerticalPoint["sizeLimitUp"]
         set the top of tLongId to pVerticalPoint["LimitUp"]
@@ -272,7 +269,41 @@ private command _drawVerticalGuide @pVerticalPoint, pTergetProperty
         
         set the loc of tLongId to tLoc
         set the visible of tLongId to true
+    end if
+    
+    if  pVerticalPoint[ "drawLimitDown" ] is true then
+        # Back of label 2
+        put pVerticalPoint[ "LimitDown" ] - pTergetProperty["bottom"]  into pVerticalPoint[ "sizeLimitDown" ]
+        put  pVerticalPoint["max"] - pTergetProperty[ "bottom" ] into pVerticalPoint[ "label-2" ]
+        put _createTemporaryGraphic() into tLongId
+        set the height of tLongId to pVerticalPoint["sizeLimitDown"]
+        set the bottom of tLongId to pVerticalPoint["LimitDown"]
+        set the left of tLongId to pVerticalPoint["hook-left"]
+        set the backColor of tLongId to  56,56,255
+        set the foregroundColor of tLongId to  56,56,255
+        set the visible of tLongId to true
+        put the loc of tLongId into tLoc
         
+        # Label 2
+        put _createTemporaryGraphic() into tLongId
+        set the height of tLongId to 20
+        set the width of tLongId to 50
+        set the backColor of tLongId to 56,56,255
+        set the foregroundColor of tLongId to 56,56,255
+        set the opaque of tLongId to false
+        set the showName of tLongId to true
+        set the label of tLongId to pVerticalPoint[ "label-2" ]
+        
+        if pVerticalPoint["hook-left"] < 50 then
+            set the textAlign of tLongId to "left"
+            add 28 to the item 1 of tLoc
+        else
+            subtract 28 from the item 1 of tLoc
+            set the textAlign of tLongId to "right"
+        end if
+        
+        set the loc of tLongId to tLoc
+        set the visible of tLongId to true
     end if
 end _drawVerticalGuide
     
