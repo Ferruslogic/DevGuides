@@ -64,21 +64,17 @@ function _backColor
     return 255,00,128
 end _backColor
 
-
 function _hilitedColor
     return 0,128,24
 end _hilitedColor
-
 
 function _labelBackColor
     return  74,74,74
 end _labelBackColor
 
-
 function _labelTextColor
     return  192,192,192
 end _labelTextColor
-
 
 function _trashIconColor
     return  74,74,74

@@ -6,9 +6,7 @@ local sGridSystem, sThisCard
 local sNewGuideLine
 
 
-constant kColumnLineColor = "192,192,192"
-constant kNewGuideLine = 25
-constant kTolerance = 3
+constant kColumnLineColor = "192,192,192", kNewGuideLine = 25 , kTolerance = 3
 
 on preOpenStack
     
@@ -65,14 +63,14 @@ end mouseMove
 
 on updateGuides  pThisCard,  pX, pY 
     local tSelectedObjects
-    lock screen; lock messages
+    # lock screen; lock messages
     put empty into sMessageID
     put the SelectedObjects into tSelectedObjects
     
     if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
         delete sNewGuideLine
         put empty into sNewGuideLine
-        unlock messages; unlock screen
+        #unlock messages; unlock screen
         exit updateGuides
     end if
     
@@ -95,7 +93,7 @@ on updateGuides  pThisCard,  pX, pY
     if mouse( 1 ) is up and the altKey is up then
         _deleteDevTempGuides
         put empty into sGridLine
-        unlock messages; unlock screen
+        #unlock messages; unlock screen
         exit updateGuides
     end if
     
@@ -106,8 +104,7 @@ on updateGuides  pThisCard,  pX, pY
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
     
     _updateDevGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
-    
-    unlock messages; unlock screen
+#unlock screen
 end updateGuides
 
 
@@ -133,10 +130,12 @@ end deleteGuideControls
 
 
 private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, pY
-    local tChildControlIDs, tLongId, tLoc, tX, tY,  tValue, tDevGravity -- tRect,
-    local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tVerticalPointCard
-    local tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tHorizontalCard
+    local tChildControlIDs, tLongId, tLoc, tX, tY,  tValue, tDevGravity
+    local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3
+    local tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
     local tWidthCard, tHeightCard
+    local tGuideLine
+    
     
     put the childControlIDs of pLongIdCd into tChildControlIDs
     put the width of pLongIdCd into tWidthCard
@@ -158,7 +157,6 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     put false into tVerticalPoint1[ "drawLimitDown" ]
     
     --------------------------------------------------------------
-    local tGuideLine
     -- Calc 
     repeat for each line tId in tChildControlIDs
         put the long id of control id tId of pLongIdCd into tLongID
@@ -210,15 +208,7 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     
     
     if tVerticalPoint1[ "create" ] is true then
-        put tVerticalPoint1["max"] - tVerticalPoint1["min"] into tVerticalPoint1["size"]
-        
-        
-        if  tVerticalPoint1[ "drawLimitUp" ] is true then
-            put tTergetProperty["top"] - tVerticalPoint1[ "LimitUp" ] into tVerticalPoint1[ "sizeLimitUp" ] 
-        end if
-        
-        -- Guia de todoos los controles
-        _guideLineVertical tVerticalPoint1, "255,0,255"
+        _drawVerticalGuide tVerticalPoint1, tTergetProperty    --> Guia de todoos los controles
         
         put JSONStringify(tVerticalPoint1, , true)
     else
@@ -236,19 +226,55 @@ end _updateDevGuides
 
 
 
-private command _guideLineVertical pVerticalPoint1, pColor
-    local tLongId
+private command _drawVerticalGuide @pVerticalPoint, pTergetProperty
+    local tLongId, tLoc
     
+    put pVerticalPoint["max"] - pVerticalPoint["min"] into pVerticalPoint["size"]
     put _createTemporaryGraphic() into tLongId
-    
-    set the height of tLongId to pVerticalPoint1["size"]
-    set the top of tLongId to pVerticalPoint1["min"]
-    set the left of tLongId to pVerticalPoint1["hook-left"]
-    set the backColor of tLongId to pColor
-    set the foregroundColor of tLongId to pColor    
+    set the height of tLongId to pVerticalPoint["size"]
+    set the top of tLongId to pVerticalPoint["min"]
+    set the left of tLongId to pVerticalPoint["hook-left"]
+    set the backColor of tLongId to "255,0,255"    
+    set the foregroundColor of tLongId to "255,0,255"    
     set the visible of tLongId to true
     
-end _guideLineVertical
+    
+    if  pVerticalPoint[ "drawLimitUp" ] is true then
+        # Back of label 1
+        put pTergetProperty["top"] - pVerticalPoint[ "LimitUp" ] into pVerticalPoint[ "sizeLimitUp" ]
+        put (pTergetProperty[ "top" ] - pVerticalPoint["min"])  into pVerticalPoint[ "label-1" ]
+        put _createTemporaryGraphic() into tLongId
+        set the height of tLongId to pVerticalPoint["sizeLimitUp"]
+        set the top of tLongId to pVerticalPoint["LimitUp"]
+        set the left of tLongId to pVerticalPoint["hook-left"]
+        set the backColor of tLongId to  56,56,255
+        set the foregroundColor of tLongId to  56,56,255
+        set the visible of tLongId to true
+        put the loc of tLongId into tLoc
+        
+        # Label 1
+        put _createTemporaryGraphic() into tLongId
+        set the height of tLongId to 20
+        set the width of tLongId to 50
+        set the backColor of tLongId to 56,56,255
+        set the foregroundColor of tLongId to 56,56,255
+        set the opaque of tLongId to false
+        set the showName of tLongId to true
+        set the label of tLongId to pVerticalPoint[ "label-1" ]
+        
+        if pVerticalPoint["hook-left"] < 50 then
+            set the textAlign of tLongId to "left"
+            add 28 to the item 1 of tLoc
+        else
+            subtract 28 from the item 1 of tLoc
+            set the textAlign of tLongId to "right"
+        end if
+        
+        set the loc of tLongId to tLoc
+        set the visible of tLongId to true
+        
+    end if
+end _drawVerticalGuide
     
     
 private command _calcGuideLineProp pMainStart, pMainEnd, pCrossStart, pCrossEnd, pMainV, pMainV2, pItem , @pTergetProperty,  pLongId, pLoc, @pVerticalPoint1, @pGuideLine
@@ -616,10 +642,8 @@ private function _createTemporaryGraphic
     set the blendLevel of tGrc to 0
     set the lineSize of tGrc to 0
     set the cantSelect of tGrc to true
-    set the backColor of tGrc to 56,56,255
-    set the foregroundColor of tGrc to 56,56,255
     set the opaque of tGrc to true
-    
+    set the margins of tGrc to 0
     unlock messages
     return tGrc
 end _createTemporaryGraphic

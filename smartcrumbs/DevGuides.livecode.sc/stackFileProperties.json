@@ -180,7 +180,7 @@
         "backColor": "58,30,175",
         "default": true,
         "name": "Button",
-        "rect": "374,257,456,280",
+        "rect": "375,180,457,204",
         "showName": false,
         "style": "opaque"
       },
