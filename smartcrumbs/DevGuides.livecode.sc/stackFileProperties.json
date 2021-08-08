@@ -13,7 +13,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "9,120,142,146",
+        "rect": "11,120,144,146",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -29,7 +29,7 @@
         "disabled": true,
         "lockLoc": true,
         "name": "bGuideLinesUtils\u0000",
-        "rect": "9,153,142,179",
+        "rect": "11,153,144,179",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -48,7 +48,7 @@
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
-        "height": 400,
+        "height": 524,
         "name": "DevGuides",
         "style": "toplevel",
         "width": 783
@@ -68,7 +68,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "9,120,142,146",
+        "rect": "11,120,144,146",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -90,7 +90,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "9,120,142,146",
+        "rect": "11,120,144,146",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -112,7 +112,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bVerticalGuideLine",
-        "rect": "9,87,142,113",
+        "rect": "11,87,144,113",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -122,7 +122,7 @@
       "type": "button"
     },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\n97f9b1be-ba4d-4f13-b6c2-76c7f24723e1\nd6f91a69-e784-4ca6-bbe3-390143623bc6\naad5269c-2022-449b-baad-c900e773e9a8\nc4fd9d06-696a-463b-a7a8-3963bcd3aa4b",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
@@ -139,17 +139,65 @@
       },
       "type": "image"
     },
+    "97f9b1be-ba4d-4f13-b6c2-76c7f24723e1": {
+      "properties": {
+        "backColor": "230,172,60",
+        "default": true,
+        "foreColor": "230,172,60",
+        "name": "Button",
+        "rect": "293,161,375,184",
+        "style": "opaque"
+      },
+      "type": "button"
+    },
+    "aad5269c-2022-449b-baad-c900e773e9a8": {
+      "properties": {
+        "backColor": "Salmon",
+        "default": true,
+        "foreColor": "255,255,255",
+        "label": 231,
+        "lockLoc": true,
+        "name": "Button",
+        "rect": "293,208,375,231",
+        "style": "opaque"
+      },
+      "type": "button"
+    },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
       "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c\n4176371b-baa5-474d-8ad9-9f591c87ebc1\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
         "name": "bGuideLines",
-        "rect": "3,65,148,188",
+        "rect": "5,65,150,188",
         "showBorder": true,
         "showName": true
       },
       "type": "group"
+    },
+    "c4fd9d06-696a-463b-a7a8-3963bcd3aa4b": {
+      "properties": {
+        "backColor": "58,30,175",
+        "default": true,
+        "name": "Button",
+        "rect": "374,257,456,280",
+        "showName": false,
+        "style": "opaque"
+      },
+      "type": "button"
+    },
+    "d6f91a69-e784-4ca6-bbe3-390143623bc6": {
+      "properties": {
+        "backColor": "227,14,89",
+        "default": true,
+        "foreColor": "255,255,255",
+        "label": 311,
+        "lockLoc": true,
+        "name": "Button",
+        "rect": "293,311,375,333",
+        "style": "opaque"
+      },
+      "type": "button"
     }
   },
   "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"

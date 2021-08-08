@@ -136,8 +136,11 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     local tChildControlIDs, tLongId, tLoc, tX, tY,  tValue, tDevGravity -- tRect,
     local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tVerticalPointCard
     local tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tHorizontalCard
+    local tWidthCard, tHeightCard
     
     put the childControlIDs of pLongIdCd into tChildControlIDs
+    put the width of pLongIdCd into tWidthCard
+    put the height of pLongIdCd into tHeightCard
     
     put empty into tVerticalPoint1
     put empty into tVerticalPoint2
@@ -149,6 +152,10 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     
     put tTergetProperty[ "top" ]  into tVerticalPoint1[ "min" ]
     put tTergetProperty[ "bottom" ]  into tVerticalPoint1[ "max" ]
+    put 0 into tVerticalPoint1[ "limitUp" ]
+    put tHeightCard into tVerticalPoint1[ "limitDown" ]
+    put false into tVerticalPoint1[ "drawLimitUp" ]
+    put false into tVerticalPoint1[ "drawLimitDown" ]
     
     --------------------------------------------------------------
     local tGuideLine
@@ -195,7 +202,7 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     
     
     -- Incluir el calculo con respecto a la targeta aqui
-    --    tVerticalPointCard
+    --    tVerticalPoint3, tVerticalPoint3,tVerticalPoint3,...
     
     -- Show guide lines
     -- Busco la distancia dentro de los tres PV. Luego si y solo si el valor minimo es el de la distancia del PV y esta en true lo de dibujar
@@ -205,12 +212,22 @@ private command _updateDevGuides pLongIdCd, tSelectedObjects , tTergetProperty, 
     if tVerticalPoint1[ "create" ] is true then
         put tVerticalPoint1["max"] - tVerticalPoint1["min"] into tVerticalPoint1["size"]
         
+        
+        if  tVerticalPoint1[ "drawLimitUp" ] is true then
+            put tTergetProperty["top"] - tVerticalPoint1[ "LimitUp" ] into tVerticalPoint1[ "sizeLimitUp" ] 
+        end if
+        
+        -- Guia de todoos los controles
         _guideLineVertical tVerticalPoint1, "255,0,255"
+        
         put JSONStringify(tVerticalPoint1, , true)
     else
         put empty
     end if
     
+    
+    if the num of lines of tSelectedObjects is no 1 then exit _updateDevGuides ---> Borrar
+    -- TODO: HACER PARA multiples objetos
     if tVerticalPoint1["hook-left"] is an integer then set the left of tSelectedObjects to tVerticalPoint1["hook-left"]
     
     -- Fijar a el o los objs selccionados. Con la diferencia recorer y sumarcelo a cada lado que tenga guia
@@ -235,8 +252,11 @@ end _guideLineVertical
     
     
 private command _calcGuideLineProp pMainStart, pMainEnd, pCrossStart, pCrossEnd, pMainV, pMainV2, pItem , @pTergetProperty,  pLongId, pLoc, @pVerticalPoint1, @pGuideLine
-    local tValue, tTem
+    local tValue, tTem1, tTem2, tLimitMax, tLimitMin
     
+    if the cGuideLineType of pLongId is "horizontal" and pMainStart is in "left right" then
+        exit _calcGuideLineProp
+    end if
     
     put _hook( pTergetProperty[ pMainStart ], the pMainStart of pLongId, the item pItem of pLoc, the pMainEnd  of pLongId, pMainV) into tValue
     
@@ -248,18 +268,47 @@ private command _calcGuideLineProp pMainStart, pMainEnd, pCrossStart, pCrossEnd,
         put tValue["distance"] into pVerticalPoint1["distance"] 
         
         if  pVerticalPoint1[ "create" ] is false then exit _calcGuideLineProp
+        -----------------------------------------------
+        put the pCrossStart of pLongId into tTem1
+        if pVerticalPoint1[ "min" ] > tTem1 then
+            put tTem1 into pVerticalPoint1[ "min" ]
+        end if
+        ---
+        put the pCrossEnd of pLongId into tTem2
+        if pVerticalPoint1[ "max" ] < tTem2 then
+            put tTem2 into pVerticalPoint1[ "max" ] 
+        end if
+        ---------------------------------------------
         
-        put the pCrossStart of pLongId into tTem
-        if pVerticalPoint1[ "min" ] > tTem then
-            put tTem into pVerticalPoint1[ "min" ]
+        put max( tTem1, tTem2) into tLimitMax
+        put min( tTem1, tTem2) into tLimitMin
+        
+        # Limit Up
+        if tLimitMax > pVerticalPoint1[ "limitUp" ] and tLimitMax < pTergetProperty[pCrossStart] then
+            put tLimitMax into pVerticalPoint1[ "limitUp" ]
+            put true into pVerticalPoint1[ "drawLimitUp" ]
+            
+        else  if tLimitMin > pVerticalPoint1[ "limitUp" ] and tLimitMin < pTergetProperty[pCrossStart] then
+            put tLimitMin into pVerticalPoint1[ "limitUp" ]
+            put true into pVerticalPoint1[ "drawLimitUp" ]
             
         end if
         
-        put the pCrossEnd of pLongId into tTem
-        if pVerticalPoint1[ "max" ] < tTem then
-            put tTem into pVerticalPoint1[ "max" ] 
+        
+        # Limit Down
+        if tLimitMin < pVerticalPoint1[ "limitDown" ] and tLimitMin > pTergetProperty[pCrossEnd] then
+            put tLimitMin into pVerticalPoint1[ "limitDown" ]
+            put true into pVerticalPoint1[ "drawLimitDown" ]
+            
+        else  if tLimitMax < pVerticalPoint1[ "limitDown" ] and tLimitMax > pTergetProperty[pCrossEnd] then
+            put tLimitMax into pVerticalPoint1[ "limitDown" ]
+            put true into pVerticalPoint1[ "drawLimitDown" ]
+            
         end if
+        
+        
     end if
+    
 end _calcGuideLineProp
 
 
@@ -276,7 +325,7 @@ private command _toHook pControls, pProp, pDiff
 end _toHook
 
 
-function _hook pCurrentValue, pPoint1, pPoint2, pPoint3, pMinOrMax
+private function _hook pCurrentValue, pPoint1, pPoint2, pPoint3, pMinOrMax
     local tDis1, tDis2, tDis3 , tDifference1, tDifference2, tDifference3, tValue
     
     put pCurrentValue - pPoint1 into tDifference1
