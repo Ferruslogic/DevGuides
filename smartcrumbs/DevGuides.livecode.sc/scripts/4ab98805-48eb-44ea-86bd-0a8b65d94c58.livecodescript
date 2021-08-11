@@ -172,7 +172,7 @@ end mouseMove
 
 
 on mouseEnter
-    if the word 1 of the name of me is "button" or  the cDevDesignsTem of me is true  then exit mouseEnter
+    if the word 1 of the name of me is "button" or the cDevDesignsTem of me is true  then exit mouseEnter
     set the width of me to 3
 end mouseEnter
 
