@@ -71,27 +71,21 @@ end mouseMove
 
 
 command setDevGuideConfig pConfigArray
-   
-   -- Margen de la targeta
-   if pConfigArray["card-margins"] is no an integer then 
-      put 1 into gDevGuideConfig["card-margins"]
-   else
-      put pConfigArray["card-margins"] into gDevGuideConfig["card-margins"]
-   end if
- 
-   -- Gravity de las lineas guias
-   if pConfigArray["line-gravity"] is no an integer then 
-      put 3 into gDevGuideConfig["line-gravity"]
-   else
-      put pConfigArray["line-gravity"] into gDevGuideConfig["line-gravity"]
-   end if
-   
-   -- Gravity de los objetos
-   if pConfigArray["gravity"] is no an integer then 
-      put 5 into gDevGuideConfig["gravity"]
-   else
-      put pConfigArray["gravity"] into gDevGuideConfig["gravity"]
-   end if
+    
+    -- Margen de la targeta
+    if pConfigArray["card-margins"] is no an integer then 
+        put 1 into gDevGuideConfig["card-margins"]
+    else
+        put pConfigArray["card-margins"] into gDevGuideConfig["card-margins"]
+    end if
+    
+      
+    -- Gravity de los objetos
+    if pConfigArray["gravity"] is no an integer then 
+        put 3 into gDevGuideConfig["gravity"]
+    else
+        put pConfigArray["gravity"] into gDevGuideConfig["gravity"]
+    end if
 end setDevGuideConfig
 
 
@@ -185,11 +179,12 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     local tChildControlIDs, tLongId, tLoc, tX, tY,tValue, tDevGravity, tRect
     local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
     local tWidthCard, tHeightCard, tGuideLine, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH, tMargins, tGravity
+    local tOffV, tOffH
     
     
     put getDevGuideConfig("card-margins") into tMargins
-    #put getDevGuideConfig("gravity") into tGravity
-    put  3 into tGravity
+    put getDevGuideConfig("gravity") into tGravity
+    
     put tGravity into tDisMinV
     put tGravity into tDisMinH
     
@@ -285,7 +280,9 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     -- Vertical
     if tVerticalPoint1[ "create" ] is true and tVerticalPoint1["distance"] is tDisMinV then
         _drawingGuideLine tVerticalPoint1, tTergetProperty, "height", "top", "left", 0
+        
         put tVerticalPoint1["hook"] into tNewLeft
+        
     else
         put false into tVerticalPoint1[ "create" ]
     end if
@@ -319,6 +316,7 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     -- Horizontal
     if tHorizontalPoint1[ "create" ] is true and tHorizontalPoint1["distance"] is tDisMinH then
         _drawingGuideLine tHorizontalPoint1, tTergetProperty, "width", "left", "top", 10
+        
         put tHorizontalPoint1["hook"] into tNewTop
     else 
         put false into tHorizontalPoint1[ "create" ] 
@@ -463,7 +461,7 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         
         # Back of label 2
         put pVerticalPoint[ "LimitDown" ] - pTergetProperty[ tCrossEnd ]into pVerticalPoint[ "sizeLimitDown" ]
-        put pVerticalPoint["max"] - pTergetProperty[ "bottom" ] into pVerticalPoint[ "label-2" ]
+        put pVerticalPoint["max"] - pTergetProperty[ tCrossEnd ] into pVerticalPoint[ "label-2" ]
         put _createTemporaryGraphic() into tLongId
         
         set the pMainSize of tLongId to pVerticalPoint["sizeLimitDown"]
@@ -544,9 +542,7 @@ private command _resetLimit  @pTergetProperty,  @pValue,  @pDistance, @pGuideLin
     put pValue["distance"] into pPointArray[ "distance" ]
     put pValue["difference"] into pPointArray[ "difference" ]
     
-    put pGuideLine is no true into pPointArray[ "create" ]
-    --    put pTergetProperty[ "top" ]into pPointArray[ "min" ]
-    --    put pTergetProperty[ "bottom" ]into pPointArray[ "max" ]
+    put  true into pPointArray[ "create" ]
     put pTergetProperty[ pCrossStart ]into pPointArray[ "min" ]
     put pTergetProperty[ pCrossEnd ]into pPointArray[ "max" ]
     
@@ -908,7 +904,11 @@ end _updateSizeGuideLines
 
 
 private function _createTemporaryGraphic
-    local tGrc
+    local tGrc, tTopStack
+    
+    put the topStack into tTopStack
+    if _stackNameIsIDEStack(tTopStack) then exit to top
+    set the defaultStack to tTopStack
     
     lock messages
     

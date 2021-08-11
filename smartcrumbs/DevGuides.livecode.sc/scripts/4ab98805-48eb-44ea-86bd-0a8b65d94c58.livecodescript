@@ -181,7 +181,7 @@ on mouseLeave
     local tLongId
     
     _deleteAllTemporaryGraphic
-    if the word 1 of the name of me is "button" then exit mouseLeave
+    if the word 1 of the name of me is "button"  or the cDevDesignsTem of me is true then exit mouseLeave
     if there is a sLabelControl then delete sLabelControl
     if there is a sDevDeleteGuide then delete sDevDeleteGuide
     
