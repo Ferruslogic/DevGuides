@@ -122,31 +122,13 @@
       },
       "type": "button"
     },
-    "619a9c74-1270-45b2-a26f-a34bc70a615b": {
-      "properties": {
-        "default": true,
-        "name": "Button",
-        "rect": "339,376,421,404",
-        "style": "standard"
-      },
-      "type": "button"
-    },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\n83f2e0ce-8ae6-4a9a-83a4-135c26c8b7ba\n619a9c74-1270-45b2-a26f-a34bc70a615b",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
       },
       "type": "card"
-    },
-    "83f2e0ce-8ae6-4a9a-83a4-135c26c8b7ba": {
-      "properties": {
-        "default": true,
-        "name": "Button",
-        "rect": "332,275,414,298",
-        "style": "standard"
-      },
-      "type": "button"
     },
     "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
       "properties": {
