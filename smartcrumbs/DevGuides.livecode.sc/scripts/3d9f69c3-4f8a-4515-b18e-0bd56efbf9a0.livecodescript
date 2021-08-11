@@ -282,7 +282,6 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
         _drawingGuideLine tVerticalPoint1, tTergetProperty, "height", "top", "left", 0
         
         put tVerticalPoint1["hook"] into tNewLeft
-        
     else
         put false into tVerticalPoint1[ "create" ]
     end if
@@ -293,8 +292,8 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
         end if
         
         add (tTergetProperty["x"] - tTergetProperty["left"]) to tVerticalPoint2["hook"]
-        
         _drawingGuideLine tVerticalPoint2, tTergetProperty, "height", "top", "left", 0
+        
     else
         put false into tVerticalPoint2[ "create" ]
     end if
@@ -323,7 +322,7 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     end if
     
     if tHorizontalPoint2[ "create" ] is true and tHorizontalPoint2["distance"] is tDisMinH then
-        if tNewLeft then
+        if tNewTop then
             put tHorizontalPoint2["hook"] into tNewTop
         end if
         
@@ -336,7 +335,7 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     end if
     
     if tHorizontalPoint3[ "create" ] is true and tHorizontalPoint3["distance"] is tDisMinH then
-        if tNewLeft then
+        if tNewTop then
             put tHorizontalPoint3["hook"] into tNewTop
         end if
         
