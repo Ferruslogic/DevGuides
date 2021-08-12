@@ -1,40 +1,46 @@
+/*
+* DevGuides
+* © FerrusLogic Team
+* August 2021
+* version 1.0.0
+*
+* This code is part of DevGuides extension created by FerrusLogic team to provide design guides to
+* help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
+*/
+
 global gDevGuideConfig
 
 local sControlCachingArray, sMessageID, sNeighbors, sPrevSelectedObjects
 local sGuideStatus, sGridLine, sGridSystem, sThisCard, sNewGuideLine
-
-constant kColumnLineColor= "192,192,192", kNewGuideLine = 25 , kTolerance = 3
+local sThisStack
+constant kNewGuideLine = 25 
 
 
 on extensionInitialize
-    if the target is not me then
-        pass extensionInitialize
-    end if
-    
+    if the target is not me then  pass extensionInitialize
+    #set the _ideoverride of me to true
     insert the script of me into back
-    _InitialiseDevGuideLibrary
-end extensionInitialize
-
-on extensionFinalize
-    if the target is not me then
-        pass extensionFinalize
-    end if
-    
-    remove the script of me from back
-    _finaliseDevGuideLibrary
-end extensionFinalize
-
-on preOpenStack
     
     revIDESubscribe "ideToolChanged"
     revIDESubscribe "ideMouseMove"
+    revIDESubscribe "ideResumeStack"
+    revIDESubscribe "ideWindowsChanged"
+    revIDESubscribe "ideMsgChanged"
+    revIDESubscribe "ideToggleChanged:suppressMessages"
     
     put empty into sMessageID
+end extensionInitialize
+
+
+on extensionFinalize
+    if the target is not me then  pass extensionFinalize
+    revIDEUnsubscribeAll the long id of me
+    remove the script of me from back
+end extensionFinalize
+
+
     
-    pass preOpenStack
-end preOpenStack
-
-
+    
 on closeCard
     deleteDevGuides
     pass closeCard
@@ -63,8 +69,26 @@ on ideToolChanged
     else _saveStatus
 end ideToolChanged
 
+on ideToggleChanged pToggle
+    if pToggle is "suppressMessages" then
+        set  the defaultStack to sThisStack
+        deleteDevGuides
+    end if
+    
+    pass ideToggleChanged
+end ideToggleChanged
 
-on rawKeyDown
+on ideResumeStack
+    _restoreStatus
+    pass ideResumeStack
+end ideResumeStack
+    
+on revSaveStackRequest
+    _saveStatus
+    pass revSaveStackRequest
+end revSaveStackRequest
+    
+on rawKeyDown pKey
     _deleteDevTempGuides
     pass rawKeyDown
 end rawKeyDown
@@ -76,6 +100,7 @@ on rawKeyUp pKey
             delete sNewGuideLine
             delete variable sNewGuideLine
         end try
+        
     else if controlKey() is down then
         local tSelectedObjects, tThisStack, tThisCard
         
@@ -94,7 +119,7 @@ on rawKeyUp pKey
         send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
         put the result into sMessageID
         
-    else if controlKey() is up then
+    else if altKey() is up then
         delete variable sControlCachingArray
         _deleteDevTempGuides
         pass rawKeyUp
@@ -104,7 +129,7 @@ on rawKeyUp pKey
 end rawKeyUp
 
 
-on MouseMove pX, pY
+on ideMouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard
     
     put the selectedObjects into tSelectedObjects
@@ -115,14 +140,13 @@ on MouseMove pX, pY
     if  the tool <> "pointer tool" or sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or  tThisStack <> the short name of the topStack then 
         delete variable sControlCachingArray
         _deleteDevTempGuides
-        pass MouseMove
+        pass ideMouseMove
     end if
     
     if sMessageID is a number then cancel sMessageID
     send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
     put the result into sMessageID
-    
-end MouseMove
+end ideMouseMove
 
 
 
@@ -156,6 +180,10 @@ on updateDevGuides pThisCard, pX, pY
     
     put empty into sMessageID
     put the selectedObjects into tSelectedObjects
+    if not(_myStack( line 1 of the focusedObject) is _myStack(line 1 of tSelectedObjects)) then
+        deleteDevGuides
+        exit updateDevGuides
+    end if
     
     lock screen; lock messages
     
@@ -197,8 +225,11 @@ on updateDevGuides pThisCard, pX, pY
     
     if tSelectedObjects is empty then exit updateDevGuides
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
+    put _myStack(pThisCard) into sThisStack
     
-    _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
+    try
+        _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
+    end try
     
     unlock messages; unlock screen
 end updateDevGuides
@@ -842,6 +873,9 @@ private function _myCard pLongId
    return the word (wordOffSet("card", pLongId)) to - 1 of pLongId
 end _myCard
 
+private function _myStack pLongId
+    return the word (wordOffSet("stack", pLongId)) to - 1 of pLongId
+end _myStack
 
 private function _stackNameIsIDEStack pStackName
    if there is no a stack pStackName then return false
@@ -965,3 +999,4 @@ private function _createTemporaryGraphic
     unlock messages
     return tGrc
 end _createTemporaryGraphic
+

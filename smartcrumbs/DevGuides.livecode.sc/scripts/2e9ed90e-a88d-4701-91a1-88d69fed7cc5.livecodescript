@@ -1,5 +1,14 @@
-local sCache
-local sTemporaryGraphic
+/*
+* DevGuides
+* © FerrusLogic Team
+* August 2021
+* version 1.0.0
+*
+* This code is part of DevGuides extension created by FerrusLogic team to provide design guides to
+* help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
+*/
+
+local sCache, sTemporaryGraphic
 
 # As the only one who moves is me. I create a cache of where are the other guide lines that are of my type
 command _createCache pLongId, pThisCard

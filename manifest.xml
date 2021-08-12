@@ -1,0 +1,8 @@
+<package version="0.0">
+  <name>community.ferruslogic.library.devguides</name>
+  <title>DevGuides</title>
+  <author>FerrusLogic</author>
+  <version>1.0.0</version>
+  <type>library</type>
+  <license>community</license>
+ </package>
