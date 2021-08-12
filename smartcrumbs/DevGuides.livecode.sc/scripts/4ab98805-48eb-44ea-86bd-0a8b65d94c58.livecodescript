@@ -50,7 +50,6 @@ local tNewV, tX, tDis = 0
 on mouseMove pNewMouseH, pNewMouseV
     
     if sDown is no true or  the word 1 of the name of me is "button" then exit mouseMove
-    lock screen
     set the top of me to 0
     
     # Label

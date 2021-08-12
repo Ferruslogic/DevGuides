@@ -50,7 +50,6 @@ local tNewH, tY, tDis = 0
 
 on mouseMove pNewMouseH, pNewMouseV
     if sDown is no true or  the word 1 of the name of me is "button" then exit mouseMove
-    lock screen
     set the left of me to 0
     
     # Label
@@ -178,22 +177,25 @@ end mouseEnter
 
 
 on mouseLeave
-    local tLongId
-    _deleteAllTemporaryGraphic
-    if the word 1 of the name of me is "button" then exit mouseLeave
-    if there is a sLabelControl then delete sLabelControl
-    if there is a sDevDeleteGuide then delete sDevDeleteGuide
-    
-    set the foregroundColor of me to _backColor()
-    set the backColor of me to _backColor()
-    
-    set the height of me to 1
-    put false into sDown
-    
-    if the cDevDesignsTem of me then
-        put the long id of me into tLongId
-        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
-    end if
+   local tLongId
+   _deleteAllTemporaryGraphic
+   
+   if the word 1 of the name of me is "button" or the cDevDesignsTem of me is true then exit mouseLeave
+   if there is a sLabelControl then delete sLabelControl
+   if there is a sDevDeleteGuide then delete sDevDeleteGuide
+   
+   
+   put false into sDown
+   
+   if the cDevDesignsTem of me then
+      put the long id of me into tLongId
+      send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+   else
+      set the foregroundColor of me to _backColor()
+      set the backColor of me to _backColor()
+      
+      set the height of me to 1
+   end if
 end mouseLeave
 
 

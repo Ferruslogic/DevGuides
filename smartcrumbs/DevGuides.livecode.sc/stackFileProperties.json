@@ -48,11 +48,11 @@
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
-        "height": 524,
+        "height": 250,
         "name": "DevGuides",
         "resizable": false,
         "style": "toplevel",
-        "width": 1000
+        "width": 500
       },
       "type": "stack"
     },
@@ -122,8 +122,34 @@
       },
       "type": "button"
     },
+    "6645356b-19f4-4b67-bfc9-a81c6c71b4a6": {
+      "behavior": {
+        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
+        "id": "button id 1007 of stack \u2022DevGuides\u2022"
+      },
+      "properties": {
+        "backColor": "255,0,128",
+        "cantSelect": true,
+        "customProperties": {
+          "customKeys": {
+            "cDevDesigns": true,
+            "cDevDesignsTem": false,
+            "cGuideLine": true
+          }
+        },
+        "filled": true,
+        "foreColor": "255,0,128",
+        "layerMode": "dynamic",
+        "lineSize": 0,
+        "name": "guide-line",
+        "opaque": true,
+        "rect": "507,0,508,250",
+        "style": "rectangle"
+      },
+      "type": "graphic"
+    },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\n6645356b-19f4-4b67-bfc9-a81c6c71b4a6",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"

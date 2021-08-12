@@ -1,16 +1,15 @@
 global gDevGuideConfig
 
 local sControlCachingArray, sMessageID, sNeighbors, sPrevSelectedObjects
-local sGuideStatus, sGridLine
-local sGridSystem, sThisCard
-local sNewGuideLine
+local sGuideStatus, sGridLine, sGridSystem, sThisCard, sNewGuideLine
 
 constant kColumnLineColor= "192,192,192", kNewGuideLine = 25 , kTolerance = 3
 
 on preOpenStack
+   
    revIDESubscribe "ideToolChanged"
    put empty into sMessageID
-   -- Load config
+
    pass preOpenStack
 end preOpenStack
 
@@ -46,111 +45,113 @@ on rawKeyUp
          delete variable sNewGuideLine
       end try
    end if
+   
    pass rawKeyUp
 end rawKeyUp
 
+
 on mouseMove pX, pY
-   local tSelectedObjects, tThisStack, tThisCard
-   
-   put the selectedObjects into tSelectedObjects
-   put the short name of the topstack into tThisStack
-   set the defaultStack to tThisStack
-   put the long id of this card into tThisCard
-   
-   if sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or the tool <> "pointer tool" or tThisStack <> the short name of the topStack then 
-      delete variable sControlCachingArray
-      _deleteDevTempGuides
-      pass mouseMove
-   end if
-   
-   if sMessageID is a number then cancel sMessageID
-   send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
-   put the result into sMessageID
-   
+    local tSelectedObjects, tThisStack, tThisCard
+    
+    put the selectedObjects into tSelectedObjects
+    put the short name of the topstack into tThisStack
+    set the defaultStack to tThisStack
+    put the long id of this card into tThisCard
+    
+    if  the tool <> "pointer tool" or sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or  tThisStack <> the short name of the topStack then 
+        delete variable sControlCachingArray
+        _deleteDevTempGuides
+        pass mouseMove
+    end if
+    
+    if sMessageID is a number then cancel sMessageID
+    send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
+    put the result into sMessageID
+    
 end mouseMove
 
 
 command setDevGuideConfig pConfigArray
     
-    -- Margen de la targeta
     if pConfigArray["card-margins"] is no an integer then 
         put 1 into gDevGuideConfig["card-margins"]
     else
         put pConfigArray["card-margins"] into gDevGuideConfig["card-margins"]
     end if
     
-      
-    -- Gravity de los objetos
     if pConfigArray["gravity"] is no an integer then 
-        put 3 into gDevGuideConfig["gravity"]
+        put 0 into gDevGuideConfig["gravity"]
+    else
+        put pConfigArray["gravity"] into gDevGuideConfig["gravity"]
+    end if
+    
+    if pConfigArray["gravity"] is no an integer then 
+        put 0 into gDevGuideConfig["gravity"]
     else
         put pConfigArray["gravity"] into gDevGuideConfig["gravity"]
     end if
 end setDevGuideConfig
 
 
+
 function getDevGuideConfig pKey
-   if gDevGuideConfig is no an array then
-      setDevGuideConfig
-   end if
-   
-   if pKey is no empty then  return gDevGuideConfig[ pKey ]
+   if gDevGuideConfig is no an array then setDevGuideConfig   
+   if pKey is no empty then return gDevGuideConfig[ pKey ]
    return gDevGuideConfig
 end getDevGuideConfig
-   
-   
-   
+
+
+
 on updateDevGuides pThisCard, pX, pY 
-   local tSelectedObjects, tTergetProperty
-   
-   put empty into sMessageID
-   put the SelectedObjects into tSelectedObjects
-   
-   lock screen; lock messages
-   
-   if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
-      if pX > kNewGuideLine and pY > kNewGuideLine then
-         try
-            delete sNewGuideLine
-            delete variable sNewGuideLine
-         end try
-      end if
-      
-      unlock messages; unlock screen
-      exit updateDevGuides
-   end if
-   
-   
-   if the shiftKey is down then
-      switch
-         case pX <= kNewGuideLine
+    local tSelectedObjects, tTergetProperty
+    
+    put empty into sMessageID
+    put the selectedObjects into tSelectedObjects
+    
+    lock screen; lock messages
+    
+    if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
+        if pX > kNewGuideLine and pY > kNewGuideLine then
+            try
+                delete sNewGuideLine
+                delete variable sNewGuideLine
+            end try
+        end if
+        
+        unlock messages; unlock screen
+        exit updateDevGuides
+    end if
+    
+    
+    if the shiftKey is down then
+        if  pX <= kNewGuideLine then
             _newGuideLine "left", 0, pThisCard
             put the result into sNewGuideLine
-            break
+            exit updateDevGuides
             
-         case pY <= kNewGuideLine
+        else if pY <= kNewGuideLine then
             _newGuideLine "top", 0, pThisCard
             put the result into sNewGuideLine
-            break
-      end switch
-   end if
-   
-   
-   if mouse( 1 ) is up  then
-      _deleteDevTempGuides
-      put empty into sGridLine
-      unlock messages; unlock screen
-      
-      exit updateDevGuides
-   end if
-   
-   
-   if tSelectedObjects is empty then exit updateDevGuides
-   put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-   
-   _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
-   
-   unlock messages; unlock screen
+            exit updateDevGuides
+            
+        end if
+    end if
+    
+    
+    if mouse( 1 ) is up  then
+        _deleteDevTempGuides
+        put empty into sGridLine
+        unlock messages; unlock screen
+        exit updateDevGuides
+    end if
+    
+    
+    if tSelectedObjects is empty then exit updateDevGuides
+    put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
+    
+    _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
+    
+    unlock messages; unlock screen
 end updateDevGuides
 
 
@@ -178,9 +179,7 @@ end deleteDevGuides
 private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, pY
     local tChildControlIDs, tLongId, tLoc, tX, tY,tValue, tDevGravity, tRect
     local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
-    local tWidthCard, tHeightCard, tGuideLine, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH, tMargins, tGravity
-    local tOffV, tOffH
-    
+    local tWidthCard, tHeightCard, tGuideLine, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH, tMargins, tGravity    
     
     put getDevGuideConfig("card-margins") into tMargins
     put getDevGuideConfig("gravity") into tGravity
@@ -435,13 +434,15 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         # Label 1
         put _createTemporaryGraphic() into tLongId
         
-        set the height of tLongId to 20
-        set the width of tLongId to 50
-        set the backColor of tLongId to 56,56,255
-        set the foregroundColor of tLongId to 56,56,255
-        set the opaque of tLongId to false
-        set the showName of tLongId to true
-        set the label of tLongId to pVerticalPoint[ "label-1" ]
+        try
+            set the height of tLongId to 20
+            set the width of tLongId to 50
+            set the backColor of tLongId to 56,56,255
+            set the foregroundColor of tLongId to 56,56,255
+            set the opaque of tLongId to false
+            set the showName of tLongId to true
+            set the label of tLongId to pVerticalPoint[ "label-1" ]
+        end try
         
         if pVerticalPoint["hook"] < 50 then
             set the textAlign of tLongId to "left"
@@ -470,6 +471,7 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         set the foregroundColor of tLongId to 56,56,255
         set the visible of tLongId to true
         put the loc of tLongId into tLoc
+        
         if item 2 of tLoc > 25 then
             subtract pSpace from item 2 of tLoc
         else 
@@ -507,30 +509,21 @@ private command _calcGuideLineProp pLongId, pMain, pMainStart, pMainEnd, pCrossS
     
     put _hook( pTergetProperty[ pMain ], pRect[pMainStart], pRect[pItem], pRect[pMainEnd ], pMainV) into tValue
     
-    -- Esta a menor distancia que el punto anterior
     if tValue["distance"] < pDistance then
         
-        -- Se reinicia todo
         _resetLimit pTergetProperty, tValue, pDistance, pGuideLine, pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
         
-        -- Se actualiza los limites
         _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
         
-        put tValue["difference"] into pDifference
-    else if tValue["distance"] = pDistance then --> igual
+    else if tValue["distance"] = pDistance then
         
         if pPointArray[ "create" ] is not true then
-            -- Se reinicia todo
             _resetLimit pTergetProperty, tValue, pDistance, pGuideLine, pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
-            
         end if
         
-        -- Se actualiza los limites
         _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
         
     end if
-    
-    
 end _calcGuideLineProp
 
 
@@ -564,17 +557,15 @@ private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossSta
     local tCrossStartValue, tCrossEndValue, tLimitMax, tLimitMin
     
     put the pCrossStart of pLongId into tCrossStartValue
+    
     if pPointArray[ "min" ] >= tCrossStartValue then
         put tCrossStartValue into pPointArray[ "min" ]
-        
     end if
-    
     ---
     put the pCrossEnd of pLongId into tCrossEndValue
     
     if pPointArray[ "max" ] <= tCrossEndValue then
         put tCrossEndValue into pPointArray[ "max" ]
-        
     end if
     ---------------------------------------------
     
@@ -610,15 +601,13 @@ end _updateLimit
 private command _toHook @pSelectedObjects , @pTergetProperty, pPropName, pNewValue
     local tOff
     
-    -- Left actual - left del objeto = dfO
     put pNewValue - pTergetProperty[ pPropName ] into tOff
+    
     if tOff is 0 then exit _toHook
-    -- new left + dfO
     
     repeat for each line tControl in pSelectedObjects
         set the pPropName of tControl to (the pPropName of tControl + tOff)
     end repeat
-    
 end _toHook
 
 
@@ -759,13 +748,9 @@ private function _tergetProperty pThisCard, pControls
          put the bottom of tControl into tBottom
       end if
       
-      -- Para ignorar los objetos seleccionados a la hora de calcular.
-      -- Ojo si tengo un objeto que este dentro de un grupo se ignora el grupo entero
       put _biggestOwner(tControl) into tOwner
       
       if word 1 of tOwner is not "card" then
-         //TODO: Poner una bandera que muestre un cartelito que diga que seleciono un objeto que esta dento de un grupo...
-         --- DevGuides usar al grupo como referencia y no a sus hijos....
          put true into tResult["ignore"][tOwner]
       else
          put true into tResult["ignore"][tControl]
@@ -794,7 +779,7 @@ private function _biggestOwner pLongId
    
    put wordOffSet("card", pLongId) into tOffset
    
-   if tOffset is 5 then --> El duenno es la targeta
+   if tOffset is 5 then
       return the word 5 to - 1 of pLongId
    else
       return the word tOffset - 4 to - 1 of pLongId
