@@ -3,7 +3,7 @@
     "1e0c6d89-cd4a-4f00-b6aa-905c4813f75a": {
       "behavior": {
         "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
+        "id": "button id 1006 of stack \u2022DevGuide\u2022"
       },
       "properties": {
         "autoHilite": false,
@@ -13,7 +13,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bHorizontalGuideLine",
-        "rect": "11,120,144,146",
+        "rect": "11,122,144,148",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -29,7 +29,7 @@
         "disabled": true,
         "lockLoc": true,
         "name": "bGuideLinesUtils\u0000",
-        "rect": "11,153,144,179",
+        "rect": "11,152,144,178",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -49,61 +49,17 @@
         },
         "fileName": "DevGuides.livecode",
         "height": 250,
-        "name": "DevGuides",
+        "name": "DevGuide",
         "resizable": false,
         "style": "toplevel",
         "width": 500
       },
       "type": "stack"
     },
-    "4176371b-baa5-474d-8ad9-9f591c87ebc1": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "autoHilite": false,
-        "backColor": "255,0,128",
-        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
-        "disabled": true,
-        "foreColor": "255,0,128",
-        "lockLoc": true,
-        "name": "bHorizontalGuideLine",
-        "rect": "11,120,144,146",
-        "sharedHilite": false,
-        "showFocusBorder": false,
-        "style": "opaque",
-        "threeD": false,
-        "traversalOn": false
-      },
-      "type": "button"
-    },
-    "45d6c8a8-e8f8-482d-852e-3d3c4271030c": {
-      "behavior": {
-        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "autoHilite": false,
-        "backColor": "255,0,128",
-        "customProperties": {"customKeys": {"cGuideLineType": "vertical"}},
-        "disabled": true,
-        "foreColor": "255,0,128",
-        "lockLoc": true,
-        "name": "bHorizontalGuideLine",
-        "rect": "11,120,144,146",
-        "sharedHilite": false,
-        "showFocusBorder": false,
-        "style": "opaque",
-        "threeD": false,
-        "traversalOn": false
-      },
-      "type": "button"
-    },
     "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
       "behavior": {
         "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
-        "id": "button id 1006 of stack \u2022DevGuides\u2022"
+        "id": "button id 1006 of stack \u2022DevGuide\u2022"
       },
       "properties": {
         "autoHilite": false,
@@ -113,7 +69,7 @@
         "foreColor": "255,0,128",
         "lockLoc": true,
         "name": "bVerticalGuideLine",
-        "rect": "11,87,144,113",
+        "rect": "11,86,144,112",
         "sharedHilite": false,
         "showFocusBorder": false,
         "style": "opaque",
@@ -122,34 +78,8 @@
       },
       "type": "button"
     },
-    "6645356b-19f4-4b67-bfc9-a81c6c71b4a6": {
-      "behavior": {
-        "guid": "4ab98805-48eb-44ea-86bd-0a8b65d94c58",
-        "id": "button id 1007 of stack \u2022DevGuides\u2022"
-      },
-      "properties": {
-        "backColor": "255,0,128",
-        "cantSelect": true,
-        "customProperties": {
-          "customKeys": {
-            "cDevDesigns": true,
-            "cDevDesignsTem": false,
-            "cGuideLine": true
-          }
-        },
-        "filled": true,
-        "foreColor": "255,0,128",
-        "layerMode": "dynamic",
-        "lineSize": 0,
-        "name": "guide-line",
-        "opaque": true,
-        "rect": "507,0,508,250",
-        "style": "rectangle"
-      },
-      "type": "graphic"
-    },
     "76193acd-d033-45e9-a4d6-342aa6aba373": {
-      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\n6645356b-19f4-4b67-bfc9-a81c6c71b4a6",
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08",
       "properties": {
         "customProperties": {"customKeys": {"cDisplayingGrid": false}},
         "name": "main"
@@ -167,12 +97,12 @@
       "type": "image"
     },
     "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
-      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n45d6c8a8-e8f8-482d-852e-3d3c4271030c\n4176371b-baa5-474d-8ad9-9f591c87ebc1\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a\nc4fd9d06-696a-463b-a7a8-3963bcd3aa4b",
+      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a\nc4fd9d06-696a-463b-a7a8-3963bcd3aa4b",
       "properties": {
         "cantDelete": true,
         "lockLoc": true,
         "name": "bGuideLines",
-        "rect": "5,65,150,188",
+        "rect": "5,64,150,187",
         "showBorder": true,
         "showName": true
       },
@@ -183,7 +113,7 @@
         "backColor": "58,30,175",
         "default": true,
         "name": "Button",
-        "rect": "466,226,548,255",
+        "rect": "466,225,548,254",
         "showName": false,
         "style": "opaque"
       },

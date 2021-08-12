@@ -189,7 +189,7 @@ on mouseLeave
    
    if the cDevDesignsTem of me then
       put the long id of me into tLongId
-      send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+      send "deleteGuideControls tLongId" to stack "DevGuide" in 0 sec
    else
       set the foregroundColor of me to _backColor()
       set the backColor of me to _backColor()
@@ -228,7 +228,7 @@ on mouseUp pButtonNumber
     set the left of me to 0
     
     if  the bottom of me < 0 or the top of me > sHeightCard then
-        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+        send "deleteGuideControls tLongId" to stack "DevGuide" in 0 sec
     end if
 end mouseUp
 

@@ -192,7 +192,7 @@ on mouseLeave
     
     if the cDevDesignsTem of me then
         put the long id of me into tLongId
-        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+        send "deleteGuideControls tLongId" to stack "DevGuide" in 0 sec
     end if
 end mouseLeave
 
@@ -226,7 +226,7 @@ on mouseUp pButtonNumber
     set the top of me to 0
     
     if  the left of me > sWidthCard or the right of me < 0 then
-        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+        send "deleteGuideControls tLongId" to stack "DevGuide" in 0 sec
     end if
     
 end mouseUp
