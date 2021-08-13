@@ -11,8 +11,8 @@
         "customProperties": {
           "cREVGeneral": {
             "revUniqueID": 1628303170790,
-            "scripteditorselection": 270,
-            "scripteditorvscroll": 0
+            "scripteditorselection": 7537,
+            "scripteditorvscroll": 3747
           },
           "customKeys": {"cGuideLineType": "vertical"}
         },
@@ -36,8 +36,8 @@
         "customProperties": {
           "cREVGeneral": {
             "revUniqueID": 1628274275631,
-            "scripteditorselection": 270,
-            "scripteditorvscroll": 0
+            "scripteditorselection": 3781,
+            "scripteditorvscroll": 1910
           }
         },
         "disabled": true,
@@ -64,10 +64,10 @@
             "breakpoints": "",
             "breakpointstates": "",
             "scalefactor": 1,
-            "scripteditorselection": 4765,
-            "scripteditorvscroll": 2768
+            "scripteditorselection": 266,
+            "scripteditorvscroll": 0
           },
-          "cREVGeometryCache": {"stackID": 81330},
+          "cREVGeometryCache": {"stackID": 81339},
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
@@ -90,8 +90,8 @@
         "customProperties": {
           "cREVGeneral": {
             "revUniqueID": 1628274275632,
-            "scripteditorselection": 270,
-            "scripteditorvscroll": 0
+            "scripteditorselection": 7282,
+            "scripteditorvscroll": 1057
           },
           "customKeys": {"cGuideLineType": "vertical"}
         },

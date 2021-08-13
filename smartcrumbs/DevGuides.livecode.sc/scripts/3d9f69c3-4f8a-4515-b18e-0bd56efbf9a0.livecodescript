@@ -18,7 +18,7 @@ constant kNewGuideLine = 25
 
 on extensionInitialize
     if the target is not me then  pass extensionInitialize
-    #set the _ideoverride of me to true
+    set the _ideoverride of me to true
     insert the script of me into back
     
     revIDESubscribe "ideToolChanged"
@@ -27,7 +27,6 @@ on extensionInitialize
     revIDESubscribe "ideWindowsChanged"
     revIDESubscribe "ideMsgChanged"
     revIDESubscribe "ideToggleChanged:suppressMessages"
-    
     put empty into sMessageID
 end extensionInitialize
 
@@ -51,6 +50,10 @@ on preOpenCard
     pass preOpenCard
 end preOpenCard
 
+on suspendStack
+    deleteDevGuides
+    pass suspendStack
+end suspendStack
 
 on closeCard
     deleteDevGuides
@@ -179,26 +182,25 @@ on updateDevGuides pThisCard, pX, pY
     local tSelectedObjects, tTergetProperty
     
     put empty into sMessageID
-    put the selectedObjects into tSelectedObjects
-    if not(_myStack( line 1 of the focusedObject) is _myStack(line 1 of tSelectedObjects)) then
-        deleteDevGuides
-        exit updateDevGuides
-    end if
     
-    lock screen; lock messages
+    
     
     if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
         if pX > kNewGuideLine and pY > kNewGuideLine then
+            lock screen; lock messages
+            
             try
                 delete sNewGuideLine
                 delete variable sNewGuideLine
             end try
+            unlock messages; unlock screen
+            
         end if
         
-        unlock messages; unlock screen
         exit updateDevGuides
     end if
     
+    lock screen; lock messages
     
     if the shiftKey is down then
         if  pX <= kNewGuideLine then
@@ -215,10 +217,16 @@ on updateDevGuides pThisCard, pX, pY
     end if
     
     
-    if mouse( 1 ) is up and controlKey() is up then
+    if mouse( 1 ) is up and controlKey() is up  then
         _deleteDevTempGuides
         put empty into sGridLine
         unlock messages; unlock screen
+        exit updateDevGuides
+    end if
+    
+    put the selectedObjects into tSelectedObjects
+    if not(_myStack( line 1 of the focusedObject) is _myStack(line 1 of tSelectedObjects)) then
+        deleteDevGuides
         exit updateDevGuides
     end if
     
@@ -900,44 +908,44 @@ end _deleteDevTempGuides
 
 
 private command _newGuideLine pProperty, pValue, pThisCard
-   local tWidthCd, tHeightCd, tLongId
-   
-   put the width of pThisCard into tWidthCd
-   put the height of pThisCard into tHeightCd
-   
-   create grc "guide-line" in pThisCard
-   put it into tLongId
-   
-   set the lineSize of tLongId to 0
-   set the backColor of tLongId to "170,170,170"
-   set the blendLevel of tLongId to 50
-   set the bottomRight of tLongId to 0,0
-   set the opaque of tLongId to true
-   set the layerMode of tLongId to "dynamic"
-   set the cDevDesigns of tLongId to true
-   set the cDevDesignsTem of tLongId to true
-   
-   set the cantSelect of tLongId to true
-   
-   switch pProperty
-      case "left"
-         set the width of tLongId to kNewGuideLine
-         set the height of tLongId to tWidthCd
-         set the topLeft of tLongId to 0,0
-         set the behavior of tLongId to _newGuideLineBehavior("v")
-         break
-         
-      case "top"
-         set the width of tLongId to tWidthCd
-         set the height of tLongId to kNewGuideLine
-         set the topLeft of tLongId to 0,0
-         set the behavior of tLongId to _newGuideLineBehavior("h")
-         set the cGuideLineType of tLongId to "horizontal"
-         break
-   end switch
-   
-   show tLongId
-   return tLongId
+    local tWidthCd, tHeightCd, tLongId
+    
+    put the width of pThisCard into tWidthCd
+    put the height of pThisCard into tHeightCd
+    
+    create grc "guide-line" in pThisCard
+    put it into tLongId
+    
+    set the lineSize of tLongId to 0
+    set the backColor of tLongId to "170,170,170"
+    set the blendLevel of tLongId to 50
+    set the bottomRight of tLongId to 0,0
+    set the opaque of tLongId to true
+    set the layerMode of tLongId to "dynamic"
+    set the cDevDesigns of tLongId to true
+    set the cDevDesignsTem of tLongId to true
+    
+    set the cantSelect of tLongId to true
+    
+    switch pProperty
+        case "left"
+            set the width of tLongId to kNewGuideLine
+            set the height of tLongId to tHeightCd
+            set the topLeft of tLongId to 0,0
+            set the behavior of tLongId to _newGuideLineBehavior("v")
+            break
+            
+        case "top"
+            set the width of tLongId to tWidthCd
+            set the height of tLongId to kNewGuideLine
+            set the topLeft of tLongId to 0,0
+            set the behavior of tLongId to _newGuideLineBehavior("h")
+            set the cGuideLineType of tLongId to "horizontal"
+            break
+    end switch
+    
+    show tLongId
+    return tLongId
 end _newGuideLine
 
 
@@ -999,4 +1007,3 @@ private function _createTemporaryGraphic
     unlock messages
     return tGrc
 end _createTemporaryGraphic
-

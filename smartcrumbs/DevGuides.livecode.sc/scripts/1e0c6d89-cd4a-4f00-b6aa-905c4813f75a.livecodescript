@@ -15,6 +15,7 @@ local sThisCard, sWidthCard, sHeightCard --> Propiedades de la targeta que se us
 on mouseDown pButtonNumber
     
     if the word 1 of the name of me is "button" or pButtonNumber <> 1 then exit mouseDown
+    select empty
     
     if the cDevDesignsTem of me is true then
         set the foregroundColor of me to _backColor()
@@ -238,7 +239,7 @@ on mouseUp pButtonNumber
     set the left of me to 0
     
     if  the bottom of me < 0 or the top of me > sHeightCard then
-        send "deleteGuideControls tLongId" to stack "DevGuides" in 0 sec
+        send "deleteGuideControls tLongId" to stack "community.ferruslogic.library.devguides" in 0 sec
     end if
 end mouseUp
 

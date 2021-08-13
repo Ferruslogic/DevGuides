@@ -112,7 +112,6 @@ function _createTemporaryGraphic
     put it into tGrc
     
     set the cDevDesigns of tGrc to true
-    set the cTemporaryGraphic of tGrc to true
     set the width of tGrc to 50
     set the height of tGrc to 20
     set the textAlign of tGrc to "center"
@@ -136,3 +135,8 @@ getProp cDevGravity
     answer 333
     return 7
 end cDevGravity
+
+
+function _myStack pLongId
+    return the word (wordOffSet("stack", pLongId)) to - 1 of pLongId
+end _myStack
