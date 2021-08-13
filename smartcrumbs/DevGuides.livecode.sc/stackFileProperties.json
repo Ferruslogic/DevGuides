@@ -64,10 +64,10 @@
             "breakpoints": "",
             "breakpointstates": "",
             "scalefactor": 1,
-            "scripteditorselection": 266,
-            "scripteditorvscroll": 0
+            "scripteditorselection": 2106,
+            "scripteditorvscroll": 1331
           },
-          "cREVGeometryCache": {"stackID": 81339},
+          "cREVGeometryCache": {"stackID": 81348},
           "customKeys": {"cGuideLineType": "vertical"}
         },
         "fileName": "DevGuides.livecode",
