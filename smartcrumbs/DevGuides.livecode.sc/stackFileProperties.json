@@ -1,0 +1,194 @@
+{
+  "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+    "1e0c6d89-cd4a-4f00-b6aa-905c4813f75a": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1006 of stack \u2022community.ferruslogic.library.devguides\u2022"
+      },
+      "properties": {
+        "autoHilite": false,
+        "backColor": "255,0,128",
+        "customProperties": {
+          "cREVGeneral": {
+            "revUniqueID": 1628303170790,
+            "scripteditorselection": 7536,
+            "scripteditorvscroll": 3723
+          },
+          "customKeys": {"cGuideLineType": "vertical"}
+        },
+        "disabled": true,
+        "foreColor": "255,0,128",
+        "lockLoc": true,
+        "name": "bHorizontalGuideLine",
+        "rect": "11,122,144,148",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
+    },
+    "2e9ed90e-a88d-4701-91a1-88d69fed7cc5": {
+      "properties": {
+        "autoHilite": false,
+        "backColor": "128,0,128",
+        "customProperties": {
+          "cREVGeneral": {
+            "revUniqueID": 1628274275631,
+            "scripteditorselection": 3137,
+            "scripteditorvscroll": 1653
+          }
+        },
+        "disabled": true,
+        "lockLoc": true,
+        "name": "bGuideLinesUtils\u0000",
+        "rect": "11,152,144,178",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
+    },
+    "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0": {
+      "hierarchy": "76193acd-d033-45e9-a4d6-342aa6aba373",
+      "properties": {
+        "cantAbort": true,
+        "customProperties": {
+          "SmartCrumbsVCW": {"folder": "DevGuides.livecode.sc"},
+          "cREVGeneral": {
+            "AlreadyHidden": false,
+            "breakpointconditions": "",
+            "breakpoints": "",
+            "breakpointstates": "",
+            "scalefactor": 1,
+            "scripteditorselection": 571,
+            "scripteditorvscroll": 147
+          },
+          "cREVGeometryCache": {"stackID": 81430},
+          "customKeys": {"cGuideLineType": "vertical"}
+        },
+        "fileName": "DevGuides.livecode",
+        "height": 250,
+        "name": "community.ferruslogic.library.devguides",
+        "resizable": false,
+        "style": "toplevel",
+        "width": 500
+      },
+      "type": "stack"
+    },
+    "4ab98805-48eb-44ea-86bd-0a8b65d94c58": {
+      "behavior": {
+        "guid": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5",
+        "id": "button id 1006 of stack \u2022community.ferruslogic.library.devguides\u2022"
+      },
+      "properties": {
+        "autoHilite": false,
+        "backColor": "255,0,128",
+        "customProperties": {
+          "cREVGeneral": {
+            "revUniqueID": 1628274275632,
+            "scripteditorselection": 7469,
+            "scripteditorvscroll": 3739
+          },
+          "customKeys": {"cGuideLineType": "vertical"}
+        },
+        "disabled": true,
+        "foreColor": "255,0,128",
+        "lockLoc": true,
+        "name": "bVerticalGuideLine",
+        "rect": "11,86,144,112",
+        "sharedHilite": false,
+        "showFocusBorder": false,
+        "style": "opaque",
+        "threeD": false,
+        "traversalOn": false
+      },
+      "type": "button"
+    },
+    "76193acd-d033-45e9-a4d6-342aa6aba373": {
+      "hierarchy": "895c9bf4-55c5-4467-af53-87d150e8e6f4\nc4bff3f2-0603-4e4c-b311-54563c9c8b08\nc5e4e9ce-5252-44f3-ba17-f4b5a2bde798",
+      "properties": {
+        "customProperties": {
+          "cREVGeneral": {
+            "scripteditorselection": 0,
+            "scripteditorvscroll": 0
+          },
+          "cREVGeometryCacheIDs": [1004, 1005, 1006, 1007, 21202, 22635, 80730],
+          "cREVGeometrycache": {"order": "", "total": 7},
+          "customKeys": {"cDisplayingGrid": false}
+        },
+        "name": "main"
+      },
+      "type": "card"
+    },
+    "895c9bf4-55c5-4467-af53-87d150e8e6f4": {
+      "properties": {
+        "cantSelect": true,
+        "customProperties": {"cREVGeneral": {"revUniqueID": 1628274275629}},
+        "lockLoc": true,
+        "name": "logo-Ferrus-Logic.png",
+        "rect": "10,5,210,44",
+        "repeatCount": -1
+      },
+      "type": "image"
+    },
+    "c4bff3f2-0603-4e4c-b311-54563c9c8b08": {
+      "hierarchy": "2e9ed90e-a88d-4701-91a1-88d69fed7cc5\n4ab98805-48eb-44ea-86bd-0a8b65d94c58\n1e0c6d89-cd4a-4f00-b6aa-905c4813f75a\nc4fd9d06-696a-463b-a7a8-3963bcd3aa4b",
+      "properties": {
+        "cantDelete": true,
+        "customProperties": {"cREVGeneral": {"revUniqueID": 1628274275630}},
+        "lockLoc": true,
+        "name": "bGuideLines",
+        "rect": "5,64,150,187",
+        "showBorder": true,
+        "showName": true,
+        "visible": false
+      },
+      "type": "group"
+    },
+    "c4fd9d06-696a-463b-a7a8-3963bcd3aa4b": {
+      "properties": {
+        "backColor": "58,30,175",
+        "customProperties": {"cREVGeneral": {"revUniqueID": 1628386802748}},
+        "default": true,
+        "name": "Button",
+        "rect": "466,225,548,254",
+        "showName": false,
+        "style": "opaque"
+      },
+      "type": "button"
+    },
+    "c5e4e9ce-5252-44f3-ba17-f4b5a2bde798": {
+      "properties": {
+        "autoHilite": false,
+        "customProperties": {
+          "cREVGeneral": {
+            "revUniqueID": 1628798074752,
+            "scripteditorselection": 0,
+            "scripteditorvscroll": 0,
+            "table": false
+          },
+          "cRevTable": {
+            "cellEdit": false,
+            "cellFormat": false,
+            "maxColumnCount": ""
+          }
+        },
+        "fixedLineHeight": false,
+        "lockLoc": true,
+        "lockText": true,
+        "name": "Label Field",
+        "rect": "1,51,495,249",
+        "sharedText": true,
+        "style": "transparent",
+        "textSize": 15,
+        "traversalOn": false
+      },
+      "type": "field"
+    }
+  },
+  "mainstack": "3d9f69c3-4f8a-4515-b18e-0bd56efbf9a0"
+}
