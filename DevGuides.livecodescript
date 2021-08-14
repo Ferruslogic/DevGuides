@@ -1,6 +1,7 @@
+script "community.ferruslogic.library.devguides"
 /*
 * DevGuides
-* © FerrusLogic Team
+* � FerrusLogic Team
 * August 2021
 * version 1.0.0
 *
