@@ -186,38 +186,7 @@ on updateDevGuides pThisCard, pX, pY
     put empty into sMessageID
     
     
-    
-    if there is a sNewGuideLine and the cDevDesignsTem of sNewGuideLine then
-        if pX > kNewGuideLine and pY > kNewGuideLine then
-            lock screen; lock messages
-            
-            try
-                delete sNewGuideLine
-                delete variable sNewGuideLine
-            end try
-            unlock messages; unlock screen
-            
-        end if
-        
-        exit updateDevGuides
-    end if
-    
     lock screen; lock messages
-    
-    if the shiftKey is down and "revnomessageslibrary" is no in the frontScripts then
-        if  pX <= kNewGuideLine then
-            _newGuideLine "left", 0, pThisCard
-            put the result into sNewGuideLine
-            exit updateDevGuides
-            
-        else if pY <= kNewGuideLine then
-            _newGuideLine "top", 0, pThisCard
-            put the result into sNewGuideLine
-            exit updateDevGuides
-            
-        end if
-    end if
-    
     
     if mouse( 1 ) is up and controlKey() is up  then
         _deleteDevTempGuides
@@ -366,10 +335,7 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     _drawLimit tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tDisMinV
     _drawLimit tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tDisMinH
     
-    local tNewLeft ,  tNewTop, tDrawLimitUp = true, tDrawLimitDown = true
-    
-    --    put _newValue(tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tDisMinV) into tNewLeft
-    --    put _newValue(tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tDisMinH) into tNewTop
+    local tNewLeft = true ,  tNewTop = true, tDrawLimitUp = true, tDrawLimitDown = true
     
     -- Vertical
     if tVerticalPoint1[ "create" ] is true and tVerticalPoint1["distance"] is tDisMinV then
@@ -911,57 +877,6 @@ private command _deleteDevTempGuides
       end if
    end repeat
 end _deleteDevTempGuides
-
-
-private command _newGuideLine pProperty, pValue, pThisCard
-    local tWidthCd, tHeightCd, tLongId
-    
-    put the width of pThisCard into tWidthCd
-    put the height of pThisCard into tHeightCd
-    
-    create grc "guide-line" in pThisCard
-    put it into tLongId
-    
-    set the lineSize of tLongId to 0
-    set the backColor of tLongId to "170,170,170"
-    set the blendLevel of tLongId to 50
-    set the bottomRight of tLongId to 0,0
-    set the opaque of tLongId to true
-    set the layerMode of tLongId to "dynamic"
-    set the cDevDesigns of tLongId to true
-    set the cDevDesignsTem of tLongId to true
-    
-    set the cantSelect of tLongId to true
-    
-    switch pProperty
-        case "left"
-            set the width of tLongId to kNewGuideLine
-            set the height of tLongId to tHeightCd
-            set the topLeft of tLongId to 0,0
-            set the behavior of tLongId to _newGuideLineBehavior("v")
-            break
-            
-        case "top"
-            set the width of tLongId to tWidthCd
-            set the height of tLongId to kNewGuideLine
-            set the topLeft of tLongId to 0,0
-            set the behavior of tLongId to _newGuideLineBehavior("h")
-            set the cGuideLineType of tLongId to "horizontal"
-            break
-    end switch
-    
-    show tLongId
-    return tLongId
-end _newGuideLine
-
-
-private function _newGuideLineBehavior pType
-   if pType is "v" then
-      return the long id of button "bVerticalGuideLine" of card 1 of me
-   else if pType is "h" then
-      return the long id of button "bHorizontalGuideLine" of  card 1 of me
-   end if
-end _newGuideLineBehavior
 
 
 private command _updateSizeGuideLines pNewWidth, pNewHeight, pOldWidth, pOldHeight
