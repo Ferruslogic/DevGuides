@@ -1,7 +1,7 @@
 ﻿script "community.ferruslogic.plugin.devguides"
 /*
 * DevGuides
-* © FerrusLogic Team
+* ï¿½ FerrusLogic Team
 * August 2021
 * version 1.0.0
 *
@@ -11,14 +11,14 @@
 
 global gDevGuideConfig
 
-local sControlCachingArray, sMessageID, sGuideStatus,  sGridSystem, sThisCard
+local  sMessageID, sGuideStatus,  sGridSystem, sThisCard
 
 on extensionInitialize
    if the target is not me then  pass extensionInitialize
 
    insert the script of me into back
    
-   set the _ideoverride of me to true
+   set the _ideoverride of me to false
 
    revIDESubscribe "ideToolChanged"
    revIDESubscribe "ideMouseMove"
@@ -58,103 +58,114 @@ end ideToolChanged
 
 
 on rawKeyDown
-   _deleteDevTempGuides
-   pass rawKeyDown
+    deleteDevGuides
+    pass rawKeyDown to metaCard
 end rawKeyDown
 
 
 on rawKeyUp pKey
-   if controlKey() is down then
-      local tSelectedObjects, tThisStack, tThisCard
-
-      put the selectedObjects into tSelectedObjects
-      put the short name of the topstack into tThisStack
-      set the defaultStack to tThisStack
-      put the long id of this card into tThisCard
-
-      if  the tool <> "pointer tool" or sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or  tThisStack <> the short name of the topStack then
-         delete variable sControlCachingArray
-         _deleteDevTempGuides
-         pass rawKeyUp
-      end if
-
-      if sMessageID is a number then cancel sMessageID
-      send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
-      put the result into sMessageID
-
-   else if controlKey() is up then
-      delete variable sControlCachingArray
-      _deleteDevTempGuides
-      pass rawKeyUp
-   end if
-
-   pass rawKeyUp
+    if controlKey() is down then
+        local tSelectedObjects, tThisStack, tThisCard
+        
+        put the selectedObjects into tSelectedObjects
+        put the short name of the topstack into tThisStack
+        set the defaultStack to tThisStack
+        put the long id of this card into tThisCard
+        
+        if  the tool <> "pointer tool" or sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or  tThisStack <> the short name of the topStack then
+            deleteDevGuides
+            pass rawKeyUp  to metaCard
+        end if
+        
+        if sMessageID is a number then cancel sMessageID
+        send "updateDevGuides tThisCard, pX, pY" to me in 0.1 sec
+        put the result into sMessageID
+        
+    else if controlKey() is up then
+        deleteDevGuides
+        pass rawKeyUp  to metaCard
+    end if
+    
+    pass rawKeyUp to metaCard
 end rawKeyUp
 
 
 on ideMouseMove pX, pY
-   local tSelectedObjects, tThisStack, tThisCard
-
-   put the selectedObjects into tSelectedObjects
-   put the short name of the topstack into tThisStack
-   set the defaultStack to tThisStack
-   put the long id of this card into tThisCard
-
-   if  the tool <> "pointer tool" or sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) or  tThisStack <> the short name of the topStack then
-      delete variable sControlCachingArray
-      _deleteDevTempGuides
-      pass ideMouseMove
-   end if
-
-   if sMessageID is a number then cancel sMessageID
-   send "updateDevGuides tThisCard, pX, pY" to me in 10 millisec
-   put the result into sMessageID
+    local tSelectedObjects, tThisStack, tThisCard
+    
+    put the selectedObjects into tSelectedObjects
+    
+    if the tool <> "pointer tool" or tSelectedObjects is empty  then pass ideMouseMove
+    
+    put the short name of the topstack into tThisStack
+    if sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) then
+        deleteDevGuides empty, sThisCard
+        exit ideMouseMove
+    end if
+    
+    /*
+    local tDefaultStack
+    put the defaultStack into tDefaultStack
+    set the defaultStack to tThisStack
+    put the long id of this card into tThisCard
+    set the defaultStack to tDefaultStack
+    
+    if sMessageID is a number then cancel sMessageID
+    send "updateDevGuides tThisCard, pX, pY" to me in 10 millisec
+    put the result into sMessageID
+    */
 end ideMouseMove
 
 
 on updateDevGuides pThisCard, pX, pY
-   local tSelectedObjects, tTergetProperty
-
-   put empty into sMessageID
-   put the selectedObjects into tSelectedObjects
-
-   lock screen; lock messages
-
-   if mouse( 1 ) is up and controlKey() is up then
-      _deleteDevTempGuides
-      unlock messages; unlock screen
-      exit updateDevGuides
-   end if
-
-
-   if tSelectedObjects is empty then exit updateDevGuides
-   put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-
-   try
-      _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
-   end try
-
-   unlock messages; unlock screen
+    local tSelectedObjects, tTergetProperty
+    
+    put pThisCard into sThisCard
+    put empty into sMessageID
+    put the selectedObjects into tSelectedObjects
+    
+    lock screen; lock messages
+    
+    if mouse( 1 ) is up and controlKey() is up then
+        deleteDevGuides
+        unlock messages; unlock screen
+        exit updateDevGuides
+    end if
+    
+    
+    if tSelectedObjects is empty then exit updateDevGuides
+    put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
+    
+    try
+        _drawGuides pThisCard, tSelectedObjects , tTergetProperty, pX, pY
+    end try
+    
+    unlock messages; unlock screen
 end updateDevGuides
 
 
 
 command deleteDevGuides pLongId
-   local tChildControlIDs
-
-   if there is a pLongId then
-     delete pLongId
-     exit deleteDevGuides
-   end if
-
-   put the childControlIDs of this card into tChildControlIDs
-
-   repeat for each line tId in tChildControlIDs
-     if the cDevDesigns of control id tId is true then
-       delete control id tId
-     end if
-   end repeat
-
+    local tChildControlIDs, tThisCard
+    
+    if there is a pLongId then
+        delete pLongId
+        exit deleteDevGuides
+    end if
+    
+    if sThisCard is no empty and there is no sThisCard then exit deleteDevGuides
+    if sThisCard is empty then put the long id of this card into tThisCard
+    else put sThisCard into tThisCard
+    
+    put the childControlIDs of tThisCard into tChildControlIDs
+    
+    repeat for each line tId in tChildControlIDs
+        if the cDevDesigns of control id tId of tThisCard is true then
+            delete control id tId
+        end if
+    end repeat
+    
+    put empty into sThisCard
 end deleteDevGuides
 
 
@@ -769,28 +780,15 @@ private function _myCard pLongId
    return the word (wordOffSet("card", pLongId)) to - 1 of pLongId
 end _myCard
 
+private function _myStack pLongId
+    return the word (wordOffSet("stack", pLongId)) to - 1 of pLongId
+end _myStack
+
 
 private function _stackNameIsIDEStack pStackName
    if there is no a stack pStackName then return false
    return the _ideoverride of stack pStackName or pStackName begins with "rev"or pStackName is among the items of "message box,answer dialog,ask dialog,home" or pStackName begins with "com.livecode."
 end _stackNameIsIDEStack
-
-
-private command _deleteDevTempGuides
-   local tChildControlIDs, tLongId
-
-   put the childControlIDs of this card into tChildControlIDs
-
-   repeat for each line tId in tChildControlIDs
-     put the long id of control id tId into tLongId
-     if word 1 of tLongId is "graphic" and the cDevDesigns of tLongId and the cTemporaryGraphic of tLongId then
-       try
-         delete control id tId
-       end try
-     end if
-   end repeat
-end _deleteDevTempGuides
-
 
 
 
