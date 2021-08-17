@@ -25,4 +25,5 @@ DevGuides extension created by FerrusLogic team to provide design guides to help
 
 ### Description
 Now when moving an object by a stack noticed that guide lines will appear when the position of the object matches that of another object or with the card.
+
 Also, if you select one or more objects and then press the Ctrl key, the guide lines for the selected objects will be displayed.
