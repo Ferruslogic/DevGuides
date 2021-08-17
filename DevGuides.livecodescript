@@ -1,9 +1,9 @@
 ﻿script "community.ferruslogic.plugin.devguides"
 /*
 * DevGuides
-* FerrusLogic Team
+* (c) FerrusLogic Team
 * August 2021
-* version 1.0.0
+* version 1.0.1
 *
 * This code is part of DevGuides extension created by FerrusLogic team to provide design guides to
 * help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
@@ -14,16 +14,15 @@ constant kGuideLineColor = "255,0,255" ,  kGuideLabelColor = "56,56,255"
 
 on extensionInitialize
     if the target is not me then  pass extensionInitialize
-
+    
     insert the script of me into back
-
     set the _ideoverride of me to true
-
+    
     revIDESubscribe "ideToolChanged"
     revIDESubscribe "ideMouseMove"
     revIDESubscribe "ideSelectedObjectChanged"
     revIDESubscribe "ideOpenStack"
-
+    get _enableDevGuides()
     put empty into sMessageID
 end extensionInitialize
 
@@ -63,6 +62,9 @@ end ideSelectedObjectChanged
 
 on rawKeyDown
     deleteDevGuides
+    if the controlKey is down and the shiftKey is down then
+        _enableDevGuides
+    end if
     pass rawKeyDown
 end rawKeyDown
 
@@ -99,16 +101,15 @@ end ideMouseMove
 local sPendingMessages
 on updateDevGuides pThisCard
     local tSelectedObjects, tTergetProperty
-
-    if sPendingMessages is true then exit updateDevGuides
+    if sPendingMessages is true  or  not _enableDevGuides() then exit updateDevGuides
     put true into sPendingMessages
-
+    
     put pThisCard into sThisCard
     put empty into sMessageID
     put the selectedObjects into tSelectedObjects
-
+    
     lock screen; lock messages
-
+    
     if the tool <> "pointer tool" then
         deleteDevGuides
         put false into sPendingMessages
@@ -120,18 +121,18 @@ on updateDevGuides pThisCard
         unlock messages; unlock screen
         exit updateDevGuides
     end if
-
+    
     if tSelectedObjects is empty then
         put false into sPendingMessages
         exit updateDevGuides
     end if
-
+    
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-
+    
     try
         _drawGuides pThisCard, tSelectedObjects , tTergetProperty
     end try
-
+    
     put false into sPendingMessages
     unlock messages; unlock screen
 end updateDevGuides
@@ -180,6 +181,8 @@ command deleteDevGuides pLongId
 
     put empty into sThisCard
 end deleteDevGuides
+
+
 
 
 private command _childControlIDs @pThisCard, @pChildControlIDs
@@ -796,3 +799,27 @@ private function _createTemporaryGraphic
 end _createTemporaryGraphic
 
 
+private command _enableDevGuides
+    lock screen; lock messages
+    
+    if _enableDevGuides() then
+        put false into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
+        
+    else
+        put true into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
+        
+    end if
+    
+    unlock messages; unlock screen
+end _enableDevGuides
+
+private function _enableDevGuides
+    if there is no a file(revEnvironmentUserCachePath() & "/devguide") then
+        put true into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
+    end if
+    
+    put false into sPendingMessages
+    put empty into sMessageID
+    return url ("file:" & revEnvironmentUserCachePath() & "/devguide")
+end _enableDevGuides
+    
