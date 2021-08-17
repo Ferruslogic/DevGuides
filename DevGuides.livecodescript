@@ -10,7 +10,7 @@
 */
 
 local  sMessageID,  sGridSystem, sThisCard, sControls
-constant kGuideLineColor = "0,254,255" ,  kGuideLabelColor = "255,17,255"
+constant kGuideLineColor = "255,0,255" ,  kGuideLabelColor = "56,56,255"
 
 on extensionInitialize
     if the target is not me then  pass extensionInitialize
