@@ -3,7 +3,7 @@
 
 ###  August 2021
 
-### Version 1.0.1
+### Version 1.0.2
 
 DevGuides extension created by FerrusLogic team to provide design guides to help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
 
