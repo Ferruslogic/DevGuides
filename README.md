@@ -29,3 +29,8 @@ Now when moving an object by a stack noticed that guide lines will appear when t
 Also, if you select one or more objects and then press the Ctrl key, the guide lines for the selected objects will be displayed.
 
 To activate and deactivate the guidelines press the Shift + Ctrl keys.
+
+
+
+## Contributing
+If you do make any corrections or enhancements to the DevGuides script, we ask you to please share your code back with the LiveCode community, by sending a pull request here on GitHub!
