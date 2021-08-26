@@ -9,22 +9,21 @@
 * help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
 */
 
-local  sGridSystem, sThisCard, sControls, sLabels
+local  sMessageID,  sGridSystem, sThisCard, sControls, sLabels, sPendingMessages
 constant kGuideLineColor = "255,0,255" ,  kGuideLabelColor = "56,56,255"
-constant kCardMargins = 10
 
 on extensionInitialize
     if the target is not me then  pass extensionInitialize
-    
+
     insert the script of me into back
     set the _ideoverride of me to true
-    
+
     revIDESubscribe "ideToolChanged"
     revIDESubscribe "ideMouseMove"
     revIDESubscribe "ideSelectedObjectChanged"
     revIDESubscribe "ideOpenStack"
-    revIDESubscribe "ideResumeStack"
     get _enableDevGuides()
+    put empty into sMessageID
 end extensionInitialize
 
 
@@ -36,50 +35,36 @@ end extensionFinalize
 
 
 on closeCard
-    _deleteDevGuides
+    deleteDevGuides
     pass closeCard
 end closeCard
 
 on preOpenCard
-    _deleteDevGuides
+    deleteDevGuides
     pass preOpenCard
 end preOpenCard
 
 
 on closeCard
-    _deleteDevGuides
+    deleteDevGuides
     pass closeCard
 end closeCard
 
 
 on ideToolChanged
-    _deleteDevGuidess
+    deleteDevGuides
 end ideToolChanged
 
 
 on ideSelectedObjectChanged
-    _deleteDevGuides
+    deleteDevGuides
 end ideSelectedObjectChanged
 
-on ideResumeStack
-    _deleteDevGuides
-end ideResumeStack
-    
-    
 on rawKeyDown
-    if the mouse is up then
-        _deleteDevGuides
-    end if
-    
+    deleteDevGuides
     if the controlKey is down and the shiftKey is down then
         _enableDevGuides
-        ideMouseMove
-    
-    else if the controlKey is down then
-        ideMouseMove
-        
     end if
-    
     pass rawKeyDown
 end rawKeyDown
 
@@ -89,74 +74,78 @@ on rawKeyUp
 end rawKeyUp
 
 
-on ideMouseMove pX, pY, pTarget  
-    if the tool <> "pointer tool"  then exit ideMouseMove
+on ideMouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard, tDefaultStack
-    
+
     put the selectedObjects into tSelectedObjects
+
+    if the tool <> "pointer tool" or tSelectedObjects is empty  then exit ideMouseMove
+
     put the short name of the topstack into tThisStack
-    
-    if "updateDevGuides" is in the pendingMessages or pTarget is no among the lines of tSelectedObjects or tSelectedObjects is empty  or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) then
-        if sControls is an array and the controlKey is up then
-            _deleteDevGuides
-        end if
+    if sMessageID is an integer or word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) then
+        deleteDevGuides empty, sThisCard
         exit ideMouseMove
     end if
-    
+
     put the defaultStack into tDefaultStack
     set the defaultStack to tThisStack
     put the long id of this card into tThisCard
     set the defaultStack to tDefaultStack
-    
-    send "updateDevGuides tThisCard" to me in 0 millisec
-    
+
+    if sMessageID is a number then cancel sMessageID
+    send "updateDevGuides tThisCard" to me in 10 millisec
+    put the result into sMessageID
+
 end ideMouseMove
 
-local sPendingMessages
+
 on updateDevGuides pThisCard
     local tSelectedObjects, tTergetProperty
     if sPendingMessages is true  or  not _enableDevGuides() then exit updateDevGuides
     put true into sPendingMessages
-    
+
     put pThisCard into sThisCard
+    put empty into sMessageID
     put the selectedObjects into tSelectedObjects
-    
+
     lock screen; lock messages
-    
-    
-    if the tool <> "pointer tool" or _myStack(the focusedObject) is no _myStack(line 1 of tSelectedObjects)then
-        _deleteDevGuides
+
+    if the tool <> "pointer tool" then
+        deleteDevGuides
         put false into sPendingMessages
         unlock messages; unlock screen
         exit updateDevGuides
-        
     else  if  mouse( 1 ) is up and controlKey() is up then
-        _deleteDevGuides
+        deleteDevGuides
         put false into sPendingMessages
         unlock messages; unlock screen
         exit updateDevGuides
-        
-    else if tSelectedObjects is empty then
+    end if
+
+    if tSelectedObjects is empty then
         put false into sPendingMessages
         exit updateDevGuides
-        
     end if
-    
+
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-    
+
     try
         _drawGuides pThisCard, tSelectedObjects , tTergetProperty
     end try
-    
+
     put false into sPendingMessages
     unlock messages; unlock screen
 end updateDevGuides
 
 
 
-command _deleteDevGuides pLongId
+command deleteDevGuides pLongId
     local tChildControlIDs, tThisCard
 
+    if there is a pLongId then
+        delete pLongId
+        exit deleteDevGuides
+    end if
 
 
     if the tool <> "pointer tool" then
@@ -166,10 +155,10 @@ command _deleteDevGuides pLongId
             end if
         end repeat
         delete variable sControls
-        exit _deleteDevGuides
+        exit deleteDevGuides
     end if
 
-    if  sControls is an array then
+    if sControls is an array then
         repeat for each element e in sControls
             if there is a e then
                 delete e
@@ -178,41 +167,69 @@ command _deleteDevGuides pLongId
         delete variable sControls
     end if
 
-    put empty into sThisCard
-end _deleteDevGuides
+    if sThisCard is no empty and there is no sThisCard then exit deleteDevGuides
+    if sThisCard is empty then put the long id of this card into tThisCard
+    else put sThisCard into tThisCard
 
+    _childControlIDs tThisCard, tChildControlIDs
 
-
-
-private command _childControlIDs @pThisCard, @pChildControlIDs
-    local tNumControl, tLongId
-    put the number of controls of pThisCard into tNumControl
-
-    repeat with x = 1 to tNumControl
-        put the long id of control x of pThisCard into tLongId
-        if _biggestOwner(tLongId) is pThisCard then
-            put tLongId & cr after pChildControlIDs
+    repeat for each line tControl in tChildControlIDs
+        if the cDevDesigns of tControl is true then
+            delete tControl
         end if
     end repeat
+
+    put empty into sThisCard
+end deleteDevGuides
+
+
+
+
+private command _childControlIDs @pThisCard, @pChildControlIDs, pSelectedObjects
+    local tNumControl, tLongId, tOwner, tOwners
+    
+    if pSelectedObjects is no empty then
+        put the selectedObjects into pSelectedObjects
+        
+        repeat for each line tLine in pSelectedObjects
+            put  _biggestOwner( tLine ) into tOwner
+            
+            if tOwner is not empty and tOwner is no pThisCard then
+                put tOwner & cr after tOwners
+                
+            end if
+        end repeat
+    end if
+    
+    put empty into tOwner
+    
+    put the number of controls of pThisCard into tNumControl
+    
+    repeat with x = 1 to tNumControl
+        
+        put the long id of control x of pThisCard into tLongId
+        put  _biggestOwner( tLongId ) into tOwner
+        
+        if tLongId is among the lines of pSelectedObjects or  tOwner is among the lines of pSelectedObjects then next repeat
+        if tOwner is pThisCard  or (tOwners is no empty and tOwner is among the lines of tOwners) then
+            put tLongId & cr after pChildControlIDs
+        end if
+        
+    end repeat
+    
 end _childControlIDs
 
 
 private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, pY
     local tChildControlIDs, tLongId, tLoc, tX, tY,tValue, tRect
     local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
-    local tWidthCard, tHeightCard, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH,  tGravity
+    local tWidthCard, tHeightCard, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH, tMargins
     
-    if the controlKey is down then
-        put 0 into tGravity
-        
-    else
-        put 1 into tGravity
-        
-    end if
-    put tGravity into tDisMinV
-    put tGravity into tDisMinH
+    put 0 into tMargins
+    put 1 into tDisMinV
+    put 1 into tDisMinH
     
-    _childControlIDs pLongIdCd, tChildControlIDs
+    _childControlIDs pLongIdCd, tChildControlIDs, tSelectedObjects
     
     put the width of pLongIdCd into tWidthCard
     put the height of pLongIdCd into tHeightCard
@@ -222,10 +239,11 @@ private command _drawGuides pLongIdCd, tSelectedObjects , tTergetProperty, pX, p
     put the loc of pLongIdCd into tLoc
     
     # the rect of this card
-    put the left of pLongIdCd + kCardMargins into tRect["left"]
-    put the top of pLongIdCd + kCardMargins into tRect["top"]
-    put the right of pLongIdCd - kCardMargins into tRect["right"]
-    put the bottom of pLongIdCd - kCardMargins into tRect["bottom"]
+    put the left of pLongIdCd + tMargins into tRect["left"]
+    put the top of pLongIdCd + tMargins into tRect["top"]
+    put the right of pLongIdCd - tMargins into tRect["right"]
+    put the bottom of pLongIdCd - tMargins into tRect["bottom"]
+    
     put the item 1 of tLoc into tRect["x"]
     put the item 2 of tLoc into tRect["y"]
     
@@ -609,36 +627,35 @@ private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossSta
     # Limit Down
     if tLimitMin <= pPointArray[ "limitDown" ] and tLimitMin >= pTergetProperty[pCrossEnd] then
         put tLimitMin into pPointArray[ "limitDown" ]
-      put true into pPointArray[ "drawLimitDown" ]
+        put true into pPointArray[ "drawLimitDown" ]
 
-   else if tLimitMax <= pPointArray[ "limitDown" ] and tLimitMax >= pTergetProperty[pCrossEnd] then
-      put tLimitMax into pPointArray[ "limitDown" ]
-      put true into pPointArray[ "drawLimitDown" ]
+    else if tLimitMax <= pPointArray[ "limitDown" ] and tLimitMax >= pTergetProperty[pCrossEnd] then
+        put tLimitMax into pPointArray[ "limitDown" ]
+        put true into pPointArray[ "drawLimitDown" ]
 
-   end if
+    end if
 end _updateLimit
 
 
 
 private command _toHook @pSelectedObjects , @pTergetProperty, pPropName, pNewValue
     local tOff
-    
+
     put pNewValue - pTergetProperty[ pPropName ] into tOff
-    
-    if there is a sLabels[ 1 ][pPropName] then
-        set the label of  sLabels[ 1 ][pPropName] to  the label of sLabels[ 1 ][pPropName] + tOff
-    end if
-    
-    if there is a sLabels[ 2 ][pPropName] then
-        set the label of  sLabels[ 2 ][pPropName] to  the label of sLabels[ 2 ][pPropName] + tOff
-    end if
-    
+
     if tOff is 0 then exit _toHook
-    
+
     repeat for each line tControl in pSelectedObjects
         set the pPropName of tControl to (the pPropName of tControl + tOff)
     end repeat
-    
+
+    if there is a sLabels[ 1 ][pPropName] then
+        set the label of  sLabels[ 1 ][pPropName] to  the label of sLabels[ 1 ][pPropName] + tOff
+    end if
+
+    if there is a sLabels[ 2 ][pPropName] then
+        set the label of  sLabels[ 2 ][pPropName] to  the label of sLabels[ 1 ][pPropName] + tOff
+    end if
 end _toHook
 
 
@@ -798,6 +815,7 @@ private function _createTemporaryGraphic
 
     set the cDevDesigns of tGrc to true
     set the cTemporaryGraphic of tGrc to true
+    
     set the width of tGrc to 1
     set the height of tGrc to 1
     set the textAlign of tGrc to "center"
@@ -806,6 +824,7 @@ private function _createTemporaryGraphic
     set the cantSelect of tGrc to true
     set the opaque of tGrc to true
     set the margins of tGrc to 0
+    
     put tGrc into sControls[ tGrc]
 
     unlock messages
@@ -814,29 +833,27 @@ end _createTemporaryGraphic
 
 
 private command _enableDevGuides
+    lock screen; lock messages
 
     if _enableDevGuides() then
         put false into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
-        revIDEUnsubscribeAll the long id of me
+
     else
         put true into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
 
-        revIDESubscribe "ideToolChanged"
-        revIDESubscribe "ideMouseMove"
-        revIDESubscribe "ideSelectedObjectChanged"
-        revIDESubscribe "ideOpenStack"
     end if
 
+    unlock messages; unlock screen
 end _enableDevGuides
-
 
 
 private function _enableDevGuides
     if there is no a file(revEnvironmentUserCachePath() & "/devguide") then
         put true into url ("file:" & revEnvironmentUserCachePath() & "/devguide")
     end if
-    
+
     put false into sPendingMessages
+    put empty into sMessageID
     return url ("file:" & revEnvironmentUserCachePath() & "/devguide")
 end _enableDevGuides
 
