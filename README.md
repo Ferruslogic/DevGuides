@@ -3,7 +3,7 @@
 
 ###  August 2021
 
-### Version 1.0.3
+### Version 1.0.4
 
 DevGuides extension created by FerrusLogic team to provide design guides to help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
 
@@ -27,10 +27,6 @@ DevGuides extension created by FerrusLogic team to provide design guides to help
 Now when moving an object by a stack noticed that guide lines will appear when the position of the object matches that of another object or with the card.
 
 Also, if you select one or more objects and then press the Ctrl key, the guide lines for the selected objects will be displayed.
-
-To activate and deactivate the guidelines press the Shift + Ctrl keys.
-
-
 
 ## Contributing
 If you do make any corrections or enhancements to the DevGuides script, we ask you to please share your code back with the LiveCode community, by sending a pull request here on GitHub!
