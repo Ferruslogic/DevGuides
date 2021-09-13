@@ -3,26 +3,26 @@
 * DevGuides
 * ( c ) FerrusLogic Team
 * August 2021
-* version 1.0.4
+* version 1.0.5
 *
 * This code is part of DevGuides extension created by FerrusLogic team to provide design guides to
 * help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
 */
 
 local  sMessageID,  sGridSystem, sThisCard, sControls, sLabels
-constant kGuideLineColor = "255,0,255" ,kGuideLabelColor = "56,56,255"
+constant kGuideLineColor = "255,0,255", kGuideLabelColor = "56,56,255"
 
 on extensionInitialize
     if the target is not me or the long id  of me is among the lines of the backscripts then  pass extensionInitialize
-    
+
     insert the script of me into back
     set the _ideoverride of me to true
-    
+
     revIDESubscribe "ideToolChanged"
     revIDESubscribe "ideMouseMove"
     revIDESubscribe "ideSelectedObjectChanged"
     revIDESubscribe "ideOpenStack"
-    
+
     put empty into sMessageID
 end extensionInitialize
 
@@ -61,7 +61,7 @@ on ideSelectedObjectChanged
 end ideSelectedObjectChanged
 
 on rawKeyDown pKeyCode
-    if pKeyCode >= 65361  and  pKeyCode <= 65364 then
+    if pKeyCode >= 65361 and pKeyCode <= 65364 then
         _arrowKeyUp
     end if
 
@@ -70,34 +70,34 @@ end rawKeyDown
 
 
 on rawKeyUp pKeyCode
-    if not(pKeyCode >= 65361  and  pKeyCode <= 65364) then
+    if not(pKeyCode >= 65361 and pKeyCode <= 65364) then
         _deleteDevGuides
         if sMessageID is a number then
             cancel sMessageID
         end if
-        
-    else  if the controlKey is "up" then
+
+    else if the controlKey is "up" then
         _deleteDevGuides
+
         repeat for each line tMessage in the pendingMessages
             if item 3 of tMessage is "updateDevGuides" then
                 cancel item 1 of tMessage
             end if
         end repeat
     end if
-    
+
     pass rawKeyUp
 end rawKeyUp
 
 
-
 on ideMouseMove pX, pY
     local tSelectedObjects, tThisStack, tThisCard, tDefaultStack
-    
+
     put the selectedObjects into tSelectedObjects
-    
-    if the tool <> "pointer tool" or tSelectedObjects is empty  then exit ideMouseMove
+
+    if the tool <> "pointer tool" or tSelectedObjects is empty then exit ideMouseMove
     put the short name of the topstack into tThisStack
-    
+
     if word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) then
         _deleteDevGuides empty, sThisCard
         exit ideMouseMove
@@ -107,8 +107,9 @@ on ideMouseMove pX, pY
     set the defaultStack to tThisStack
     put the long id of this card into tThisCard
     set the defaultStack to tDefaultStack
-    
+
     if sMessageID is a number then cancel sMessageID
+
     lock screen
     send "updateDevGuides tThisCard" to me in 10 millisec
     put the result into sMessageID
@@ -118,7 +119,6 @@ end ideMouseMove
 
 on updateDevGuides pThisCard
     local tSelectedObjects, tTergetProperty
-
 
     put pThisCard into sThisCard
     put empty into sMessageID
@@ -142,11 +142,9 @@ on updateDevGuides pThisCard
     end if
 
     put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-
     try
         _drawGuides pThisCard, tSelectedObjects , tTergetProperty
     end try
-
     unlock messages; unlock screen
 end updateDevGuides
 
@@ -160,14 +158,11 @@ end _arrowKeyUp
 
 private command _deleteDevGuides
     if sControls is an array then
-
         repeat for each element tControl in sControls
             if there is a tControl then delete tControl
         end repeat
-
         delete variable sControls
     end if
-
     put empty into sThisCard
 end _deleteDevGuides
 
@@ -179,23 +174,18 @@ private command _childControlIDs @pThisCard, @pChildControlIDs, pSelectedObjects
 
     if pSelectedObjects is no empty then
         put the selectedObjects into pSelectedObjects
-
         repeat for each line tLine in pSelectedObjects
             put  _biggestOwner( tLine ) into tOwner
-
             if tOwner is not empty and tOwner is no pThisCard then
                 put tOwner & cr after tOwners
-
             end if
         end repeat
     end if
 
     put empty into tOwner
-
     put the number of controls of pThisCard into tNumControl
 
     repeat with x = 1 to tNumControl
-
         put the long id of control x of pThisCard into tLongId
         put  _biggestOwner( tLongId ) into tOwner
 
@@ -203,7 +193,6 @@ private command _childControlIDs @pThisCard, @pChildControlIDs, pSelectedObjects
         if tOwner is pThisCard  or (tOwners is no empty and tOwner is among the lines of tOwners) then
             put tLongId & cr after pChildControlIDs
         end if
-
     end repeat
 
 end _childControlIDs
@@ -252,10 +241,8 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
 
     # Calc
     repeat for each line tLongID in tChildControlIDs
-
         -- Ignora a los objetos seleccionados.
         if the visible of tLongID is false or tTergetProperty["ignore"][tLongID] is true then next repeat
-
         -- Elimina los posibles residuos de DevGuides
         if the cTemporaryGraphic of tLongId is true then
             try
@@ -263,7 +250,6 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
             end try
             next repeat
         end if
-
 
         # the loc of this control
         put the loc of tLongId into tLoc
@@ -291,14 +277,11 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
         _calcGuideLineProp tLongId, "y", "top", "bottom", "left", "right", "min", "max","y", tTergetProperty, tRect, tHorizontalPoint2,   tWidthCard, tDisMinH, tDifferenceH
         # bottom
         _calcGuideLineProp tLongId, "bottom", "top", "bottom", "left", "right", "min", "max","y", tTergetProperty, tRect, tHorizontalPoint3,  tWidthCard, tDisMinH, tDifferenceH
-
     end repeat
-
 
     -- draw limit
     _drawLimit tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tDisMinV
     _drawLimit tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tDisMinH
-
 
     -- Vertical
     if tVerticalPoint1[ "create" ] is true and tVerticalPoint1["distance"] is tDisMinV then
@@ -320,7 +303,6 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
     else
         put false into tVerticalPoint2[ "create" ]
     end if
-
 
     if tVerticalPoint3[ "create" ] is true and tVerticalPoint3["distance"] is tDisMinV then
         if tNewLeft then
@@ -367,7 +349,6 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
         put false into tHorizontalPoint3[ "create" ]
     end if
 
-
     if tNewLeft is an integer then
         _toHook tSelectedObjects , tTergetProperty, "left", tNewLeft
     end if
@@ -375,13 +356,10 @@ private command _drawGuides pLongIdCd, tSelectedObjects ,tTergetProperty, pX, pY
     if tNewTop is an integer then
         _toHook tSelectedObjects , tTergetProperty, "top", tNewTop
     end if
-
-
 end _drawGuides
 
 
 private command _drawLimit @pPoint1, @pPoint2, @pPoint3, @pDis
-
     # Draw limit up
     if pPoint1["distance"] is pDis and pPoint1["drawLimitUp"] is true and  pPoint2["drawLimitUp"] is true then
         put false into pPoint2["drawLimitUp"]
@@ -391,7 +369,7 @@ private command _drawLimit @pPoint1, @pPoint2, @pPoint3, @pDis
         pPoint2["distance"] is pDis and  pPoint2["drawLimitUp"] is true and pPoint3["drawLimitUp"] is true  then
         put false into pPoint3["drawLimitUp"]
     end if
-
+    
     # Draw limit down
     if pPoint1["distance"] is pDis and  pPoint1["drawLimitDown"] is true and pPoint2["drawLimitDown"] is true then
         put false into pPoint2["drawLimitDown"]
@@ -408,32 +386,30 @@ end _drawLimit
 
 private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, pCrossStart, pMainStart, pSpace
     local tLongId, tLoc, tCrossEnd, tY
-
+    
     put pVerticalPoint["max"] - pVerticalPoint["min"] into pVerticalPoint["size"]
     put _createTemporaryGraphic() into tLongId
-
+    
     if pCrossStart is "top" then
         put "bottom" into tCrossEnd
-
+        
     else  if pCrossStart is "left" then
         put "right" into tCrossEnd
-
+        
     end if
-
+    
     set the pMainSize of tLongId to pVerticalPoint["size"]
     set the pCrossStart of tLongId to pVerticalPoint["min"]
     set the pMainStart of tLongId to pVerticalPoint["hook"]
     set the backColor of tLongId to kGuideLineColor
     set the foregroundColor of tLongId to kGuideLineColor
     set the visible of tLongId to true
-
-
+    
+    
     if pVerticalPoint[ "drawLimitUp" ] is true then
         # Back of label 1
-
         put pTergetProperty[ pCrossStart ] - pVerticalPoint[ "LimitUp" ] into pVerticalPoint[ "sizeLimitUp" ]
         put pVerticalPoint[ "sizeLimitUp" ] into pVerticalPoint[ "label-1" ]
-
         put _createTemporaryGraphic() into tLongId
         try
             set the pMainSize of tLongId to pVerticalPoint["sizeLimitUp"]
@@ -444,18 +420,20 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             set the visible of tLongId to true
             put the loc of tLongId into tLoc
         end try
-
+        
         if there is no a tLongId then exit _drawingGuideLine
-
+        
         if item 2 of tLoc > 25 then
             subtract pSpace from item 2 of tLoc
-        else
+            
+        else if pCrossStart is not "left" then
             add pSpace to item 2 of tLoc
+            
         end if
-
+        
         # Label 1
         put _createTemporaryGraphic() into tLongId
-
+        
         try
             set the height of tLongId to 20
             set the width of tLongId to 50
@@ -466,27 +444,28 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             set the label of tLongId to abs(pVerticalPoint[ "label-1" ])
             put tLongId into sLabels[1][pCrossStart]
         end try
-
-        if pVerticalPoint["hook"] < 50 then
+        
+        if pCrossStart is "left" then
+            set the textAlign of tLongId to "center"
+        else if pVerticalPoint["hook"] < 50 then
             set the textAlign of tLongId to "left"
             add 28 to the item 1 of tLoc
         else
             subtract 28 from the item 1 of tLoc
             set the textAlign of tLongId to "right"
         end if
-
+        
         set the loc of tLongId to tLoc
         set the visible of tLongId to true
     end if
-
-
+    
+    
     if pVerticalPoint[ "drawLimitDown" ] is true then
-
         # Back of label 2
         put pVerticalPoint[ "LimitDown" ] - pTergetProperty[ tCrossEnd ] into pVerticalPoint[ "sizeLimitDown" ]
         put pVerticalPoint[ "sizeLimitDown" ] into pVerticalPoint[ "label-2" ]
         put _createTemporaryGraphic() into tLongId
-
+        
         set the pMainSize of tLongId to pVerticalPoint["sizeLimitDown"]
         set the tCrossEnd of tLongId to pVerticalPoint["LimitDown"]
         set the pMainStart of tLongId to pVerticalPoint["hook"]
@@ -494,16 +473,16 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         set the foregroundColor of tLongId to kGuideLabelColor
         set the visible of tLongId to true
         put the loc of tLongId into tLoc
-
+        
         if item 2 of tLoc > 25 then
             subtract pSpace from item 2 of tLoc
-        else
+        else  if pCrossStart is not "left" then
             add pSpace to item 2 of tLoc
         end if
-
+        
         # Label 2
         put _createTemporaryGraphic() into tLongId
-
+        
         set the height of tLongId to 20
         set the width of tLongId to 50
         set the backColor of tLongId to kGuideLabelColor
@@ -512,15 +491,17 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         set the showName of tLongId to true
         set the label of tLongId to abs( pVerticalPoint[ "label-2" ])
         put tLongId into sLabels[2][pCrossStart]
-
-        if pVerticalPoint["hook"] < 50 then
+        
+        if pCrossStart is "left" then
+            set the textAlign of tLongId to "center"
+        else if pVerticalPoint["hook"] < 50 then
             set the textAlign of tLongId to "left"
             add 28 to the item 1 of tLoc
         else
             subtract 28 from the item 1 of tLoc
             set the textAlign of tLongId to "right"
         end if
-
+        
         set the loc of tLongId to tLoc
         set the visible of tLongId to true
     end if
@@ -554,14 +535,11 @@ end _calcGuideLineProp
 
 private command _resetLimit  @pTergetProperty,  @pValue,  @pDistance,  @pPointArray, @pMaxLimit, @pMainStart, @pCrossStart, @pCrossEnd
     put pValue["distance"] into pDistance
-
     put pValue["distance"] into pPointArray[ "distance" ]
     put pValue["difference"] into pPointArray[ "difference" ]
-
     put  true into pPointArray[ "create" ]
     put pTergetProperty[ pCrossStart ]into pPointArray[ "min" ]
     put pTergetProperty[ pCrossEnd ]into pPointArray[ "max" ]
-
     put 0 into pPointArray[ "limitUp" ]
     put pMaxLimit into pPointArray[ "limitDown" ]
     put false into pPointArray[ "drawLimitUp" ]
@@ -571,27 +549,23 @@ end _resetLimit
 
 
 private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossStart, @pCrossEnd, @pValue, @pPointArray
+    local tCrossStartValue, tCrossEndValue, tLimitMax, tLimitMin
 
     put pTergetProperty[ pMainStart ] + pValue["difference"] into pPointArray[ "hook" ]
     put pValue["distance"] into pPointArray["distance"]
 
     if pPointArray[ "create" ] is false then exit _updateLimit
-
     -----------------------------------------------
-    local tCrossStartValue, tCrossEndValue, tLimitMax, tLimitMin
-
     put the pCrossStart of pLongId into tCrossStartValue
-
     if pPointArray[ "min" ] >= tCrossStartValue then
         put tCrossStartValue into pPointArray[ "min" ]
     end if
     ---
     put the pCrossEnd of pLongId into tCrossEndValue
-
     if pPointArray[ "max" ] <= tCrossEndValue then
         put tCrossEndValue into pPointArray[ "max" ]
     end if
-    ---------------------------------------------
+    -----------------------------------------------
 
     put max( tCrossStartValue, tCrossEndValue) into tLimitMax
     put min( tCrossStartValue, tCrossEndValue) into tLimitMin
@@ -600,13 +574,10 @@ private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossSta
     if tLimitMax >= pPointArray[ "limitUp" ] and tLimitMax <= pTergetProperty[pCrossStart] then
         put tLimitMax into pPointArray[ "limitUp" ]
         put true into pPointArray[ "drawLimitUp" ]
-
     else if tLimitMin >= pPointArray[ "limitUp" ] and tLimitMin <= pTergetProperty[pCrossStart] then
         put tLimitMin into pPointArray[ "limitUp" ]
         put true into pPointArray[ "drawLimitUp" ]
-
     end if
-
 
     # Limit Down
     if tLimitMin <= pPointArray[ "limitDown" ] and tLimitMin >= pTergetProperty[pCrossEnd] then
@@ -619,7 +590,6 @@ private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossSta
 
     end if
 end _updateLimit
-
 
 
 private command _toHook @pSelectedObjects , @pTergetProperty, pPropName, pNewValue
@@ -639,7 +609,6 @@ private command _toHook @pSelectedObjects , @pTergetProperty, pPropName, pNewVal
         set the label of  sLabels[ 2 ][pPropName] to abs( the label of sLabels[ 2 ][pPropName] - tOff )
     end if
 end _toHook
-
 
 
 private function _hook pCurrentValue, pPoint1, pPoint2, pPoint3, pMinOrMax
@@ -782,8 +751,6 @@ private function _stackNameIsIDEStack pStackName
 end _stackNameIsIDEStack
 
 
-
-
 private function _createTemporaryGraphic
     local tGrc, tTopStack
 
@@ -799,7 +766,6 @@ private function _createTemporaryGraphic
 
     set the cDevDesigns of tGrc to true
     set the cTemporaryGraphic of tGrc to true
-
     set the width of tGrc to 1
     set the height of tGrc to 1
     set the textAlign of tGrc to "center"
