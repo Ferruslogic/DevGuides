@@ -135,6 +135,10 @@ on updateDevGuides pThisCard
     else  if  mouse(1) is "up" and controlKey() is "up" then
         unlock messages; unlock screen
         exit updateDevGuides
+
+    else if not( _myStack(line 1 of tSelectedObjects) is _myStack(_mouseControl()) and the mouse is down)  and controlKey() is "up" then
+        unlock messages; unlock screen
+        exit updateDevGuides
     end if
 
     if tSelectedObjects is empty then
@@ -369,7 +373,7 @@ private command _drawLimit @pPoint1, @pPoint2, @pPoint3, @pDis
         pPoint2["distance"] is pDis and  pPoint2["drawLimitUp"] is true and pPoint3["drawLimitUp"] is true  then
         put false into pPoint3["drawLimitUp"]
     end if
-    
+
     # Draw limit down
     if pPoint1["distance"] is pDis and  pPoint1["drawLimitDown"] is true and pPoint2["drawLimitDown"] is true then
         put false into pPoint2["drawLimitDown"]
@@ -386,26 +390,26 @@ end _drawLimit
 
 private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, pCrossStart, pMainStart, pSpace
     local tLongId, tLoc, tCrossEnd, tY
-    
+
     put pVerticalPoint["max"] - pVerticalPoint["min"] into pVerticalPoint["size"]
     put _createTemporaryGraphic() into tLongId
-    
+
     if pCrossStart is "top" then
         put "bottom" into tCrossEnd
-        
+
     else  if pCrossStart is "left" then
         put "right" into tCrossEnd
-        
+
     end if
-    
+
     set the pMainSize of tLongId to pVerticalPoint["size"]
     set the pCrossStart of tLongId to pVerticalPoint["min"]
     set the pMainStart of tLongId to pVerticalPoint["hook"]
     set the backColor of tLongId to kGuideLineColor
     set the foregroundColor of tLongId to kGuideLineColor
     set the visible of tLongId to true
-    
-    
+
+
     if pVerticalPoint[ "drawLimitUp" ] is true then
         # Back of label 1
         put pTergetProperty[ pCrossStart ] - pVerticalPoint[ "LimitUp" ] into pVerticalPoint[ "sizeLimitUp" ]
@@ -420,20 +424,20 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             set the visible of tLongId to true
             put the loc of tLongId into tLoc
         end try
-        
+
         if there is no a tLongId then exit _drawingGuideLine
-        
+
         if item 2 of tLoc > 25 then
             subtract pSpace from item 2 of tLoc
-            
+
         else if pCrossStart is not "left" then
             add pSpace to item 2 of tLoc
-            
+
         end if
-        
+
         # Label 1
         put _createTemporaryGraphic() into tLongId
-        
+
         try
             set the height of tLongId to 20
             set the width of tLongId to 50
@@ -444,7 +448,7 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             set the label of tLongId to abs(pVerticalPoint[ "label-1" ])
             put tLongId into sLabels[1][pCrossStart]
         end try
-        
+
         if pCrossStart is "left" then
             set the textAlign of tLongId to "center"
         else if pVerticalPoint["hook"] < 50 then
@@ -454,18 +458,18 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             subtract 28 from the item 1 of tLoc
             set the textAlign of tLongId to "right"
         end if
-        
+
         set the loc of tLongId to tLoc
         set the visible of tLongId to true
     end if
-    
-    
+
+
     if pVerticalPoint[ "drawLimitDown" ] is true then
         # Back of label 2
         put pVerticalPoint[ "LimitDown" ] - pTergetProperty[ tCrossEnd ] into pVerticalPoint[ "sizeLimitDown" ]
         put pVerticalPoint[ "sizeLimitDown" ] into pVerticalPoint[ "label-2" ]
         put _createTemporaryGraphic() into tLongId
-        
+
         set the pMainSize of tLongId to pVerticalPoint["sizeLimitDown"]
         set the tCrossEnd of tLongId to pVerticalPoint["LimitDown"]
         set the pMainStart of tLongId to pVerticalPoint["hook"]
@@ -473,16 +477,16 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         set the foregroundColor of tLongId to kGuideLabelColor
         set the visible of tLongId to true
         put the loc of tLongId into tLoc
-        
+
         if item 2 of tLoc > 25 then
             subtract pSpace from item 2 of tLoc
         else  if pCrossStart is not "left" then
             add pSpace to item 2 of tLoc
         end if
-        
+
         # Label 2
         put _createTemporaryGraphic() into tLongId
-        
+
         set the height of tLongId to 20
         set the width of tLongId to 50
         set the backColor of tLongId to kGuideLabelColor
@@ -491,7 +495,7 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
         set the showName of tLongId to true
         set the label of tLongId to abs( pVerticalPoint[ "label-2" ])
         put tLongId into sLabels[2][pCrossStart]
-        
+
         if pCrossStart is "left" then
             set the textAlign of tLongId to "center"
         else if pVerticalPoint["hook"] < 50 then
@@ -501,7 +505,7 @@ private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, 
             subtract 28 from the item 1 of tLoc
             set the textAlign of tLongId to "right"
         end if
-        
+
         set the loc of tLongId to tLoc
         set the visible of tLongId to true
     end if
