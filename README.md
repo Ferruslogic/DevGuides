@@ -1,3 +1,6 @@
+[![Donate](https://img.shields.io/badge/Donate-QvaPay-green.svg)](https://qvapay.com/payme/ferruslogic/3.00?r_id=DevGuides&msg=Donate)
+
+
 # DevGuides
 ### © [FerrusLogic Team](https://ferruslogic.com)
 
