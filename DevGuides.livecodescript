@@ -118,38 +118,39 @@ end ideMouseMove
 
 
 on updateDevGuides pThisCard
-    local tSelectedObjects, tTergetProperty
-
-    put pThisCard into sThisCard
-    put empty into sMessageID
-    put the selectedObjects into tSelectedObjects
-
-    lock screen; lock messages
-
-    _deleteDevGuides
-
-    if the tool <> "pointer tool" then
-        unlock messages; unlock screen
-        exit updateDevGuides
-
-    else  if  mouse(1) is "up" and controlKey() is "up" then
-        unlock messages; unlock screen
-        exit updateDevGuides
-
-    else if not( _myStack(line 1 of tSelectedObjects) is _myStack(_mouseControl()) and the mouse is down)  and controlKey() is "up" then
-        unlock messages; unlock screen
-        exit updateDevGuides
-    end if
-
-    if tSelectedObjects is empty then
-        exit updateDevGuides
-    end if
-
-    put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
-    try
-        _drawGuides pThisCard, tSelectedObjects , tTergetProperty
-    end try
-    unlock messages; unlock screen
+   local tSelectedObjects, tTergetProperty
+   
+   put pThisCard into sThisCard
+   put empty into sMessageID
+   put the selectedObjects into tSelectedObjects
+   
+   lock screen; lock messages
+   
+   _deleteDevGuides
+   
+   if the tool <> "pointer tool" then
+      unlock messages; unlock screen
+      exit updateDevGuides
+      
+   else  if  mouse() is up and controlKey() is up then
+      unlock messages; unlock screen
+      exit updateDevGuides
+      
+   else if _myStack(line 1 of tSelectedObjects) is not _myStack(_mouseControl()) then
+      unlock messages; unlock screen
+      exit updateDevGuides
+   end if
+   
+   if tSelectedObjects is empty then
+      exit updateDevGuides
+   end if
+   
+   try
+      put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
+      _drawGuides pThisCard, tSelectedObjects , tTergetProperty
+   end try
+   
+   unlock messages; unlock screen
 end updateDevGuides
 
 
