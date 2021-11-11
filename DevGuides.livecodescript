@@ -3,14 +3,14 @@
 * DevGuides
 * ( c ) FerrusLogic Team
 * August 2021
-* version 1.0.5
+* version 1.0.6
 *
 * This code is part of DevGuides extension created by FerrusLogic team to provide design guides to
 * help LiveCode developers in the process of designing graphic interfaces in an easy and modern way
 */
 
 local  sMessageID,  sGridSystem, sThisCard, sControls, sLabels
-constant kGuideLineColor = "255,0,255", kGuideLabelColor = "56,56,255"
+constant kGuideLineColor = "255,0,255", kGuideLabelColor = "56,56,255", kGuideLineCardColor = "255,128,0", kGuideLabelCardColor = "0,128,0"
 
 on extensionInitialize
     if the target is not me or the long id  of me is among the lines of the backscripts then  pass extensionInitialize
@@ -60,6 +60,7 @@ on ideSelectedObjectChanged
     _deleteDevGuides
 end ideSelectedObjectChanged
 
+
 on rawKeyDown pKeyCode
     if pKeyCode >= 65361 and pKeyCode <= 65364 then
         _arrowKeyUp
@@ -92,24 +93,24 @@ end rawKeyUp
 
 on ideMouseMove pX, pY
    local tSelectedObjects, tThisStack, tThisCard, tDefaultStack
-   
+
    put the selectedObjects into tSelectedObjects
-   
+
    if the tool <> "pointer tool" or tSelectedObjects is empty then exit ideMouseMove
    put _myStack(line 1 of tSelectedObjects) into tThisStack
-   
+
    if word 1 of tSelectedObjects is in "stack card" or _stackNameIsIDEStack( tThisStack ) then
       _deleteDevGuides empty, sThisCard
       exit ideMouseMove
    end if
-   
+
    put the defaultStack into tDefaultStack
    set the defaultStack to tThisStack
    put the long id of this card into tThisCard
    set the defaultStack to tDefaultStack
-   
+
    if sMessageID is a number then cancel sMessageID
-   
+
    lock screen
    send "updateDevGuides tThisCard" to me in 0 millisec
    put the result into sMessageID
@@ -119,37 +120,37 @@ end ideMouseMove
 
 on updateDevGuides pThisCard
    local tSelectedObjects, tTergetProperty
-   
+
    put pThisCard into sThisCard
    put empty into sMessageID
    put the selectedObjects into tSelectedObjects
-   
+
    lock screen; lock messages
-   
+
    _deleteDevGuides
-   
+
    if the tool <> "pointer tool" then
       unlock messages; unlock screen
       exit updateDevGuides
-      
+
    else  if  mouse() is up and controlKey() is up then
       unlock messages; unlock screen
       exit updateDevGuides
-      
+
    else if _myStack(line 1 of tSelectedObjects) is not _myStack(_mouseControl()) then
       unlock messages; unlock screen
       exit updateDevGuides
    end if
-   
+
    if tSelectedObjects is empty then
       exit updateDevGuides
    end if
-   
+
    try
       put _tergetProperty( pThisCard, tSelectedObjects ) into tTergetProperty
       _drawGuides pThisCard, tSelectedObjects , tTergetProperty
    end try
-   
+
    unlock messages; unlock screen
 end updateDevGuides
 
@@ -172,13 +173,12 @@ private command _deleteDevGuides
 end _deleteDevGuides
 
 
-
-
 private command _childControlIDs @pThisCard, @pChildControlIDs, pSelectedObjects
     local tNumControl, tLongId, tOwner, tOwners
 
     if pSelectedObjects is no empty then
         put the selectedObjects into pSelectedObjects
+
         repeat for each line tLine in pSelectedObjects
             put  _biggestOwner( tLine ) into tOwner
             if tOwner is not empty and tOwner is no pThisCard then
@@ -204,172 +204,128 @@ end _childControlIDs
 
 
 private command _drawGuides pLongIdCd, pSelectedObjects ,pTergetProperty, pX, pY
-    local tChildControlIDs, tLongId, tLoc, tX, tY,tValue, tRect
-    local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
-    local tWidthCard, tHeightCard, tDisMinV, tDisMinH, tDifferenceV, tDifferenceH
-    local tNewLeft = true,  tNewTop = true, tDrawLimitUp = true, tDrawLimitDown = true
+   local tChildControlIDs, tLongId, tLoc, tX, tY,tValue, tRect
+   local tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3
+   local tWidthCard, tHeightCard, tDisMinV = 0, tDisMinH = 0, tDifferenceV, tDifferenceH, tDrawLimitUp = true, tDrawLimitDown = true
+
+   _childControlIDs pLongIdCd, tChildControlIDs, pSelectedObjects
+
+   put the width of pLongIdCd into tWidthCard
+   put the height of pLongIdCd into tHeightCard
+
+   # the loc of this card
+   put the loc of pLongIdCd into tLoc
+
+   # the rect of this card
+   put the left of pLongIdCd into tRect["left"]
+   put the top of pLongIdCd into tRect["top"]
+   put the right of pLongIdCd into tRect["right"]
+   put the bottom of pLongIdCd into tRect["bottom"]
+
+   put the item 1 of tLoc into tRect["x"]
+   put the item 2 of tLoc into tRect["y"]
+
+   # Left
+   _calcGuideLineProp pLongIdCd, "left", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint1,  tHeightCard, tDisMinV, tDifferenceV
+   # X
+   _calcGuideLineProp pLongIdCd, "x", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint2,  tHeightCard, tDisMinV, tDifferenceV
+   # Right
+   _calcGuideLineProp pLongIdCd, "right", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint3,  tHeightCard, tDisMinV, tDifferenceV
+   # Top
+   _calcGuideLineProp pLongIdCd, "top", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint1,  tWidthCard, tDisMinH, tDifferenceH
+   # y
+   _calcGuideLineProp pLongIdCd, "y", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint2,  tWidthCard, tDisMinH, tDifferenceH
+   # bottom
+   _calcGuideLineProp pLongIdCd, "bottom", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint3,  tWidthCard, tDisMinH, tDifferenceH
 
 
-    if pTergetProperty["lockloc"] is true then
-        put 0 into tDisMinV
-        put 0 into tDisMinH
-    else
-        put 1 into tDisMinV
-        put 1 into tDisMinH
-    end if
+   # Calc
+   repeat for each line tLongID in tChildControlIDs
+      # Ignore selected objects
+      if the visible of tLongID is false or pTergetProperty["ignore"][tLongID] is true then next repeat
 
+      # Eliminate potential DevGuides waste
+      if the cTemporaryGraphic of tLongId is true then
+         try
+            delete tLongId
+         end try
+         next repeat
+      end if
 
-    _childControlIDs pLongIdCd, tChildControlIDs, pSelectedObjects
+      # the loc of this control
+      put the loc of tLongId into tLoc
 
-    put the width of pLongIdCd into tWidthCard
-    put the height of pLongIdCd into tHeightCard
+      # the rect of this control
+      put the left of tLongId into tRect["left"]
+      put the top of tLongId into tRect["top"]
+      put the right of tLongId into tRect["right"]
+      put the bottom of tLongId into tRect["bottom"]
+      put the item 1 of tLoc into tRect["x"]
+      put the item 2 of tLoc into tRect["y"]
 
-    # the loc of this card
-    put the loc of pLongIdCd into tLoc
+      ---> Vertical guides <---
+      # Left
+      _calcGuideLineProp tLongId, "left", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint1, tHeightCard, tDisMinV, tDifferenceV
+      # Right
+      _calcGuideLineProp tLongId, "right", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint3, tHeightCard, tDisMinV, tDifferenceV
+      # X
+      _calcGuideLineProp tLongId, "x", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint2,   tHeightCard, tDisMinV, tDifferenceV
 
-    # the rect of this card
-    put the left of pLongIdCd into tRect["left"]
-    put the top of pLongIdCd into tRect["top"]
-    put the right of pLongIdCd into tRect["right"]
-    put the bottom of pLongIdCd into tRect["bottom"]
+      --> Horizontal guides <---
+      # Top
+      _calcGuideLineProp tLongId, "top", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint1,   tWidthCard, tDisMinH, tDifferenceH
+      # y
+      _calcGuideLineProp tLongId, "y", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint2,   tWidthCard, tDisMinH, tDifferenceH
+      # bottom
+      _calcGuideLineProp tLongId, "bottom", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint3,  tWidthCard, tDisMinH, tDifferenceH
+   end repeat
 
-    put the item 1 of tLoc into tRect["x"]
-    put the item 2 of tLoc into tRect["y"]
+   -- draw limit
+   _drawLimit tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tDisMinV
+   _drawLimit tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tDisMinH
 
-    # Left
-    _calcGuideLineProp pLongIdCd, "left", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint1,  tHeightCard, tDisMinV, tDifferenceV
-    # X
-    _calcGuideLineProp pLongIdCd, "x", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint2,  tHeightCard, tDisMinV, tDifferenceV
-    # Right
-    _calcGuideLineProp pLongIdCd, "right", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint3,  tHeightCard, tDisMinV, tDifferenceV
+   -- Vertical-- ( Left | center | right)
+   if tVerticalPoint1[ "create" ] is true and tVerticalPoint1["distance"] is tDisMinV then
+      _drawingGuideLine tVerticalPoint1, pTergetProperty, "height", "top", "left", 0, tWidthCard, tHeightCard
+   else
+      put false into tVerticalPoint1[ "create" ]
+   end if
 
-    # Top
-    _calcGuideLineProp pLongIdCd, "top", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint1,  tWidthCard, tDisMinH, tDifferenceH
-    # y
-    _calcGuideLineProp pLongIdCd, "y", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint2,  tWidthCard, tDisMinH, tDifferenceH
-    # bottom
-    _calcGuideLineProp pLongIdCd, "bottom", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint3,  tWidthCard, tDisMinH, tDifferenceH
+   if tVerticalPoint2[ "create" ] is true and tVerticalPoint2["distance"] is tDisMinV then
+      add (pTergetProperty["x"] - pTergetProperty["left"]) to tVerticalPoint2["hook"]
+      _drawingGuideLine tVerticalPoint2, pTergetProperty, "height", "top", "left", 0, tWidthCard, tHeightCard
+   else
+      put false into tVerticalPoint2[ "create" ]
+   end if
 
+   if tVerticalPoint3[ "create" ] is true and tVerticalPoint3["distance"] is tDisMinV then
+      add pTergetProperty["width"] to tVerticalPoint3["hook"]
+      _drawingGuideLine tVerticalPoint3, pTergetProperty, "height", "top", "left", 0, tWidthCard, tHeightCard
+   else
+      put false into tVerticalPoint3[ "create" ]
+   end if
 
-    # Calc
-    repeat for each line tLongID in tChildControlIDs
-        -- Ignora a los objetos seleccionados.
-        if the visible of tLongID is false or pTergetProperty["ignore"][tLongID] is true then next repeat
-        -- Elimina los posibles residuos de DevGuides
-        if the cTemporaryGraphic of tLongId is true then
-            try
-                delete tLongId
-            end try
-            next repeat
-        end if
+   -- Horizontal -- ( top | center | bottom)
+   if tHorizontalPoint1[ "create" ] is true and tHorizontalPoint1["distance"] is tDisMinH then
+      _drawingGuideLine tHorizontalPoint1, pTergetProperty, "width", "left", "top", 10, tWidthCard, tHeightCard
+   else
+      put false into tHorizontalPoint1[ "create" ]
+   end if
 
-        # the loc of this control
-        put the loc of tLongId into tLoc
+   if tHorizontalPoint2[ "create" ] is true and tHorizontalPoint2["distance"] is tDisMinH then
+      add (pTergetProperty["y"] - pTergetProperty["top"]) to tHorizontalPoint2["hook"]
+      _drawingGuideLine tHorizontalPoint2, pTergetProperty, "width", "left", "top", 10, tWidthCard, tHeightCard
+   else
+      put false into tHorizontalPoint2[ "create" ]
+   end if
 
-        # the rect of this control
-        put the left of tLongId into tRect["left"]
-        put the top of tLongId into tRect["top"]
-        put the right of tLongId into tRect["right"]
-        put the bottom of tLongId into tRect["bottom"]
-        put the item 1 of tLoc into tRect["x"]
-        put the item 2 of tLoc into tRect["y"]
+   if tHorizontalPoint3[ "create" ] is true and tHorizontalPoint3["distance"] is tDisMinH then
+      add pTergetProperty["height"] to tHorizontalPoint3["hook"]
+      _drawingGuideLine tHorizontalPoint3, pTergetProperty, "width", "left", "top", 10, tWidthCard, tHeightCard
+   else
+      put false into tHorizontalPoint3[ "create" ]
+   end if
 
-        ---> Vertical guides <---
-        # Left
-        _calcGuideLineProp tLongId, "left", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint1, tHeightCard, tDisMinV, tDifferenceV
-        # Right
-        _calcGuideLineProp tLongId, "right", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint3, tHeightCard, tDisMinV, tDifferenceV
-        # X
-        _calcGuideLineProp tLongId, "x", "left", "right", "top", "bottom", "min", "max","x", pTergetProperty, tRect, tVerticalPoint2,   tHeightCard, tDisMinV, tDifferenceV
-
-        --> Horizontal guides <---
-        # Top
-        _calcGuideLineProp tLongId, "top", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint1,   tWidthCard, tDisMinH, tDifferenceH
-        # y
-        _calcGuideLineProp tLongId, "y", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint2,   tWidthCard, tDisMinH, tDifferenceH
-        # bottom
-        _calcGuideLineProp tLongId, "bottom", "top", "bottom", "left", "right", "min", "max","y", pTergetProperty, tRect, tHorizontalPoint3,  tWidthCard, tDisMinH, tDifferenceH
-    end repeat
-
-    -- draw limit
-    _drawLimit tVerticalPoint1, tVerticalPoint2, tVerticalPoint3, tDisMinV
-    _drawLimit tHorizontalPoint1, tHorizontalPoint2, tHorizontalPoint3, tDisMinH
-
-    -- Vertical
-    if tVerticalPoint1[ "create" ] is true and tVerticalPoint1["distance"] is tDisMinV then
-        _drawingGuideLine tVerticalPoint1, pTergetProperty, "height", "top", "left", 0
-
-        put tVerticalPoint1["hook"] into tNewLeft
-    else
-        put false into tVerticalPoint1[ "create" ]
-    end if
-
-    if tVerticalPoint2[ "create" ] is true and tVerticalPoint2["distance"] is tDisMinV then
-        if tNewLeft then
-            put tVerticalPoint2["hook"] into tNewLeft
-        end if
-
-        add (pTergetProperty["x"] - pTergetProperty["left"]) to tVerticalPoint2["hook"]
-        _drawingGuideLine tVerticalPoint2, pTergetProperty, "height", "top", "left", 0
-
-    else
-        put false into tVerticalPoint2[ "create" ]
-    end if
-
-    if tVerticalPoint3[ "create" ] is true and tVerticalPoint3["distance"] is tDisMinV then
-        if tNewLeft then
-            put tVerticalPoint3["hook"] into tNewLeft
-        end if
-
-        add pTergetProperty["width"] to tVerticalPoint3["hook"]
-        _drawingGuideLine tVerticalPoint3, pTergetProperty, "height", "top", "left", 0
-
-    else
-        put false into tVerticalPoint3[ "create" ]
-    end if
-
-    -- Horizontal
-    if tHorizontalPoint1[ "create" ] is true and tHorizontalPoint1["distance"] is tDisMinH then
-        _drawingGuideLine tHorizontalPoint1, pTergetProperty, "width", "left", "top", 10
-
-        put tHorizontalPoint1["hook"] into tNewTop
-    else
-        put false into tHorizontalPoint1[ "create" ]
-    end if
-
-    if tHorizontalPoint2[ "create" ] is true and tHorizontalPoint2["distance"] is tDisMinH then
-        if tNewTop then
-            put tHorizontalPoint2["hook"] into tNewTop
-        end if
-
-        add (pTergetProperty["y"] - pTergetProperty["top"]) to tHorizontalPoint2["hook"]
-        _drawingGuideLine tHorizontalPoint2, pTergetProperty, "width", "left", "top", 10
-
-    else
-        put false into tHorizontalPoint2[ "create" ]
-    end if
-
-    if tHorizontalPoint3[ "create" ] is true and tHorizontalPoint3["distance"] is tDisMinH then
-        if tNewTop then
-            put tHorizontalPoint3["hook"] into tNewTop
-        end if
-
-        add pTergetProperty["height"] to tHorizontalPoint3["hook"]
-        _drawingGuideLine tHorizontalPoint3, pTergetProperty, "width", "left", "top", 10
-
-    else
-        put false into tHorizontalPoint3[ "create" ]
-    end if
-
-    if pTergetProperty["lockloc"] is true then exit _drawGuides
-
-    if tNewLeft is an integer then
-        _toHook pSelectedObjects , pTergetProperty, "left", tNewLeft
-    end if
-
-    if tNewTop is an integer then
-        _toHook pSelectedObjects , pTergetProperty, "top", tNewTop
-    end if
 end _drawGuides
 
 
@@ -397,157 +353,161 @@ private command _drawLimit @pPoint1, @pPoint2, @pPoint3, @pDis
 end _drawLimit
 
 
+private command _drawingGuideLine @pPointArray, @pTergetProperty, pMainSize, pCrossStart, pMainStart, pSpace, @pWidthCard, @pHeightCard
+   local tLongId, tLoc, tCrossEnd, tY, tGuideLineColor, tGuideLabelColor
 
-private command _drawingGuideLine @pVerticalPoint, @pTergetProperty, pMainSize, pCrossStart, pMainStart, pSpace
-    local tLongId, tLoc, tCrossEnd, tY
+   put pPointArray["max"] - pPointArray["min"] into pPointArray["size"]
+   put _createTemporaryGraphic() into tLongId
 
-    put pVerticalPoint["max"] - pVerticalPoint["min"] into pVerticalPoint["size"]
-    put _createTemporaryGraphic() into tLongId
+   if pCrossStart is "top" then
+      put "bottom" into tCrossEnd
 
-    if pCrossStart is "top" then
-        put "bottom" into tCrossEnd
+      if pPointArray["size"] is pHeightCard and (0 is pPointArray["hook"] or (pWidthCard/2) is pPointArray["hook"] or pWidthCard is pPointArray["hook"]) then
+        put kGuideLineCardColor into tGuideLineColor
+        put kGuideLabelCardColor into tGuideLabelColor
+      else
+        put kGuideLineColor into tGuideLineColor
+        put kGuideLabelColor into tGuideLabelColor
+      end if
 
-    else  if pCrossStart is "left" then
-        put "right" into tCrossEnd
+   else  if pCrossStart is "left" then
+      put "right" into tCrossEnd
 
-    end if
+     if pPointArray["size"] is pWidthCard and (0 is pPointArray["hook"] or (pHeightCard/2) is pPointArray["hook"] or pHeightCard is pPointArray["hook"]) then
+        put kGuideLineCardColor into tGuideLineColor
+        put kGuideLabelCardColor into tGuideLabelColor
+      else
+        put kGuideLineColor into tGuideLineColor
+        put kGuideLabelColor into tGuideLabelColor
+      end if
+   end if
 
-    set the pMainSize of tLongId to pVerticalPoint["size"]
-    set the pCrossStart of tLongId to pVerticalPoint["min"]
-    set the pMainStart of tLongId to pVerticalPoint["hook"]
-    set the backColor of tLongId to kGuideLineColor
-    set the foregroundColor of tLongId to kGuideLineColor
-    set the visible of tLongId to true
+   set the pMainSize of tLongId to pPointArray["size"]
+   set the pCrossStart of tLongId to pPointArray["min"]
+   set the pMainStart of tLongId to pPointArray["hook"]
+   set the backColor of tLongId to tGuideLineColor
+   set the foregroundColor of tLongId to tGuideLineColor
+   set the visible of tLongId to true
 
+   if pPointArray[ "drawLimitUp" ] is true then
+      # Back of label 1
+      put pTergetProperty[ pCrossStart ] - pPointArray[ "LimitUp" ] into pPointArray[ "sizeLimitUp" ]
+      put pPointArray[ "sizeLimitUp" ] into pPointArray[ "label-1" ]
+      put _createTemporaryGraphic() into tLongId
+      try
+         set the pMainSize of tLongId to pPointArray["sizeLimitUp"]
+         set the pCrossStart of tLongId to pPointArray["LimitUp"]
+         set the pMainStart of tLongId to pPointArray["hook"]
+         set the backColor of tLongId to tGuideLabelColor
+         set the foregroundColor of tLongId to tGuideLabelColor
+         set the visible of tLongId to true
+         put the loc of tLongId into tLoc
+      end try
 
-    if pVerticalPoint[ "drawLimitUp" ] is true then
-        # Back of label 1
-        put pTergetProperty[ pCrossStart ] - pVerticalPoint[ "LimitUp" ] into pVerticalPoint[ "sizeLimitUp" ]
-        put pVerticalPoint[ "sizeLimitUp" ] into pVerticalPoint[ "label-1" ]
-        put _createTemporaryGraphic() into tLongId
-        try
-            set the pMainSize of tLongId to pVerticalPoint["sizeLimitUp"]
-            set the pCrossStart of tLongId to pVerticalPoint["LimitUp"]
-            set the pMainStart of tLongId to pVerticalPoint["hook"]
-            set the backColor of tLongId to kGuideLabelColor
-            set the foregroundColor of tLongId to kGuideLabelColor
-            set the visible of tLongId to true
-            put the loc of tLongId into tLoc
-        end try
+      if there is no a tLongId then exit _drawingGuideLine
 
-        if there is no a tLongId then exit _drawingGuideLine
+      if item 2 of tLoc > 25 then
+         subtract pSpace from item 2 of tLoc
 
-        if item 2 of tLoc > 25 then
-            subtract pSpace from item 2 of tLoc
+      else if pCrossStart is not "left" then
+         add pSpace to item 2 of tLoc
 
-        else if pCrossStart is not "left" then
-            add pSpace to item 2 of tLoc
+      end if
 
-        end if
+      # Label 1
+      put _createTemporaryGraphic() into tLongId
 
-        # Label 1
-        put _createTemporaryGraphic() into tLongId
+      try
+         set the height of tLongId to 20
+         set the width of tLongId to 50
+         set the backColor of tLongId to tGuideLabelColor
+         set the foregroundColor of tLongId to tGuideLabelColor
+         set the opaque of tLongId to false
+         set the showName of tLongId to true
+         set the label of tLongId to abs(pPointArray[ "label-1" ])
+         put tLongId into sLabels[1][pCrossStart]
+      end try
 
-        try
-            set the height of tLongId to 20
-            set the width of tLongId to 50
-            set the backColor of tLongId to kGuideLabelColor
-            set the foregroundColor of tLongId to kGuideLabelColor
-            set the opaque of tLongId to false
-            set the showName of tLongId to true
-            set the label of tLongId to abs(pVerticalPoint[ "label-1" ])
-            put tLongId into sLabels[1][pCrossStart]
-        end try
+      if pPointArray["hook"] < 50 then
+         set the textAlign of tLongId to "left"
+         add 28 to the item 1 of tLoc
+      else
+         subtract 28 from the item 1 of tLoc
+         set the textAlign of tLongId to "right"
+      end if
 
-        --        if pCrossStart is "left" then
-        --            set the textAlign of tLongId to "center"
-    --else
-        if pVerticalPoint["hook"] < 50 then
-        set the textAlign of tLongId to "left"
-        add 28 to the item 1 of tLoc
-    else
-        subtract 28 from the item 1 of tLoc
-        set the textAlign of tLongId to "right"
-    end if
+      set the loc of tLongId to tLoc
+      _accommodateIntoScreen tLongId
+      set the visible of tLongId to true
+   end if
 
-    set the loc of tLongId to tLoc
-    _accommodateIntoScreen tLongId
-    set the visible of tLongId to true
-end if
+   if pPointArray[ "drawLimitDown" ] is true then
+      # Back of label 2
+      put pPointArray[ "LimitDown" ] - pTergetProperty[ tCrossEnd ] into pPointArray[ "sizeLimitDown" ]
+      put pPointArray[ "sizeLimitDown" ] into pPointArray[ "label-2" ]
+      put _createTemporaryGraphic() into tLongId
 
+      set the pMainSize of tLongId to pPointArray["sizeLimitDown"]
+      set the tCrossEnd of tLongId to pPointArray["LimitDown"]
+      set the pMainStart of tLongId to pPointArray["hook"]
+      set the backColor of tLongId to tGuideLabelColor
+      set the foregroundColor of tLongId to tGuideLabelColor
+      set the visible of tLongId to true
+      put the loc of tLongId into tLoc
 
-if pVerticalPoint[ "drawLimitDown" ] is true then
-    # Back of label 2
-    put pVerticalPoint[ "LimitDown" ] - pTergetProperty[ tCrossEnd ] into pVerticalPoint[ "sizeLimitDown" ]
-    put pVerticalPoint[ "sizeLimitDown" ] into pVerticalPoint[ "label-2" ]
-    put _createTemporaryGraphic() into tLongId
+      if item 2 of tLoc > 25 then
+         subtract pSpace from item 2 of tLoc
+      else  if pCrossStart is not "left" then
+         add pSpace to item 2 of tLoc
+      end if
 
-    set the pMainSize of tLongId to pVerticalPoint["sizeLimitDown"]
-    set the tCrossEnd of tLongId to pVerticalPoint["LimitDown"]
-    set the pMainStart of tLongId to pVerticalPoint["hook"]
-    set the backColor of tLongId to kGuideLabelColor
-    set the foregroundColor of tLongId to kGuideLabelColor
-    set the visible of tLongId to true
-    put the loc of tLongId into tLoc
+      # Label 2
+      put _createTemporaryGraphic() into tLongId
 
-    if item 2 of tLoc > 25 then
-        subtract pSpace from item 2 of tLoc
-    else  if pCrossStart is not "left" then
-        add pSpace to item 2 of tLoc
-    end if
+      set the height of tLongId to 20
+      set the width of tLongId to 50
+      set the backColor of tLongId to tGuideLabelColor
+      set the foregroundColor of tLongId to tGuideLabelColor
+      set the opaque of tLongId to false
+      set the showName of tLongId to true
+      set the label of tLongId to abs( pPointArray[ "label-2" ])
+      put tLongId into sLabels[2][pCrossStart]
 
-    # Label 2
-    put _createTemporaryGraphic() into tLongId
+      if pCrossStart is "left" then
+         set the textAlign of tLongId to "center"
+      else if pPointArray["hook"] < 50 then
+         set the textAlign of tLongId to "left"
+         add 28 to the item 1 of tLoc
+      else
+         subtract 28 from the item 1 of tLoc
+         set the textAlign of tLongId to "right"
+      end if
 
-    set the height of tLongId to 20
-    set the width of tLongId to 50
-    set the backColor of tLongId to kGuideLabelColor
-    set the foregroundColor of tLongId to kGuideLabelColor
-    set the opaque of tLongId to false
-    set the showName of tLongId to true
-    set the label of tLongId to abs( pVerticalPoint[ "label-2" ])
-    put tLongId into sLabels[2][pCrossStart]
-
-    if pCrossStart is "left" then
-        set the textAlign of tLongId to "center"
-    else if pVerticalPoint["hook"] < 50 then
-        set the textAlign of tLongId to "left"
-        add 28 to the item 1 of tLoc
-    else
-        subtract 28 from the item 1 of tLoc
-        set the textAlign of tLongId to "right"
-    end if
-
-    set the loc of tLongId to tLoc
-    _accommodateIntoScreen tLongId
-    set the visible of tLongId to true
-end if
+      set the loc of tLongId to tLoc
+      _accommodateIntoScreen tLongId
+      set the visible of tLongId to true
+   end if
 end _drawingGuideLine
 
 
-
 private command _calcGuideLineProp pLongId, pMain, pMainStart, pMainEnd, pCrossStart, pCrossEnd, pMainV, pMainV2, pItem , @pTergetProperty,@pRect, @pPointArray,  @pMaxLimit, @pDistance, @pDifference
-    local tValue
+   local tValue
 
-    put _hook( pTergetProperty[ pMain ], pRect[pMainStart], pRect[pItem], pRect[pMainEnd ], pMainV) into tValue
+   put _hook( pTergetProperty[ pMain ], pRect[pMainStart], pRect[pItem], pRect[pMainEnd ], pMainV) into tValue
 
-    if tValue["distance"] < pDistance then
+   if tValue["distance"] < pDistance then
+      _resetLimit pTergetProperty, tValue, pDistance,  pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
+      _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
 
-        _resetLimit pTergetProperty, tValue, pDistance,  pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
+   else if tValue["distance"] = pDistance then
+      if pPointArray[ "create" ] is not true then
+         _resetLimit pTergetProperty, tValue, pDistance,  pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
+      end if
 
-        _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
+      _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
 
-    else if tValue["distance"] = pDistance then
-
-        if pPointArray[ "create" ] is not true then
-            _resetLimit pTergetProperty, tValue, pDistance,  pPointArray, pMaxLimit, pMainStart, pCrossStart, pCrossEnd
-        end if
-
-        _updateLimit pLongId, pTergetProperty, pMainStart, pCrossStart, pCrossEnd, tValue, pPointArray
-
-    end if
+   end if
 end _calcGuideLineProp
-
 
 
 private command _resetLimit  @pTergetProperty,  @pValue,  @pDistance,  @pPointArray, @pMaxLimit, @pMainStart, @pCrossStart, @pCrossEnd
@@ -562,7 +522,6 @@ private command _resetLimit  @pTergetProperty,  @pValue,  @pDistance,  @pPointAr
     put false into pPointArray[ "drawLimitUp" ]
     put false into pPointArray[ "drawLimitDown" ]
 end _resetLimit
-
 
 
 private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossStart, @pCrossEnd, @pValue, @pPointArray
@@ -607,25 +566,6 @@ private command _updateLimit @pLongId, @pTergetProperty, @pMainStart, @pCrossSta
 
     end if
 end _updateLimit
-
-
-private command _toHook @pSelectedObjects , @pTergetProperty, pPropName, pNewValue
-    local tOff
-
-    put pNewValue - pTergetProperty[ pPropName ] into tOff
-
-    repeat for each line tControl in pSelectedObjects
-        set the pPropName of tControl to (the pPropName of tControl + tOff)
-    end repeat
-
-    if there is a sLabels[ 1 ][pPropName] then
-        set the label of  sLabels[ 1 ][pPropName] to  abs( the label of sLabels[ 1 ][pPropName] + tOff )
-    end if
-
-    if there is a sLabels[ 2 ][pPropName] then
-        set the label of  sLabels[ 2 ][pPropName] to abs( the label of sLabels[ 2 ][pPropName] - tOff )
-    end if
-end _toHook
 
 
 private command _accommodateIntoScreen pLongId
@@ -682,7 +622,6 @@ private function _hook pCurrentValue, pPoint1, pPoint2, pPoint3, pMinOrMax
 end _hook
 
 
-
 private function _mouseControl
     local tMouseControl, tMouseStack
 
@@ -696,51 +635,45 @@ end _mouseControl
 
 private function _tergetProperty pThisCard, pControls
    local tLongId, tLeft, tTop, tRight, tBottom, tX, tY, tResult, tOwner, tLockloc
-   
+
    put the right of pThisCard into tLeft
    put the bottom of pThisCard into tTop
    put the left of pThisCard into tRight
    put the top of pThisCard into tBottom
-   
+
    repeat for each line tControl in pControls
       if there is a no tControl then exit to top
-      
+
       # calc the Left of rectangle
       if the left of tControl < tLeft then
          put the left of tControl into tLeft
       end if
-      
+
       # calc the top of rectangle
       if the top of tControl < tTop then
          put the top of tControl into tTop
       end if
-      
+
       # calc the right of rectangle
       if the right of tControl > tRight then
          put the right of tControl into tRight
       end if
-      
+
       # calc the bottom of rectangle
       if the bottom of tControl > tBottom then
          put the bottom of tControl into tBottom
       end if
-      
+
       put _biggestOwner(tControl) into tOwner
-      
-      --      if word 1 of tOwner is not "card" then
-      --         put true into tResult["ignore"][tOwner]
-      --      else
-      --         put true into tResult["ignore"][tControl]
-      --      end if
-      
+
       if the lockloc of tControl is true and tLockloc is no true then
          put true into tLockloc
       end if
    end repeat
-   
+
    put trunc( tLeft + (tRight - tLeft)/ 2 ) into tX
    put trunc( tTop + (tBottom - tTop)/2 ) into tY
-   
+
    put tLeft into tResult["left"]
    put tTop into tResult["top"]
    put tRight into tResult["right"]
@@ -750,7 +683,7 @@ private function _tergetProperty pThisCard, pControls
    put tRight - tLeft into tResult["width"]
    put tBottom - tTop into tResult["height"]
    put tLockloc into tResult["lockloc"]
-   
+
    return tResult
 end _tergetProperty
 
@@ -792,7 +725,6 @@ private function _createTemporaryGraphic
     set the defaultStack to tTopStack
 
     lock messages
-
     reset the templateGraphic
     create invisible graphic in this card
     put it into tGrc
@@ -808,8 +740,7 @@ private function _createTemporaryGraphic
     set the opaque of tGrc to true
     set the margins of tGrc to 0
 
-    put tGrc into sControls[ tGrc]
-
+    put tGrc into sControls[tGrc]
     unlock messages
     return tGrc
 end _createTemporaryGraphic
